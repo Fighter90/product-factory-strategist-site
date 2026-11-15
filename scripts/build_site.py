@@ -1,0 +1,1811 @@
+#!/usr/bin/env python3
+"""Генератор лендинга strategyproduct.ru — PRO-66 (дизайн v3 «тёплый тёмный»).
+
+Статическая генерация `/` (RU) и `/en/` (EN): полный текст в HTML, hreflang,
+OG-картинки по языкам, числа — из репозитория (карты знаний, навыки, субагенты,
+хуки, автотесты, демо-проект `projects/демо`). JS — только цели Метрики,
+копирование команд и аналитика аккордеона; без JS видны все тексты и числа.
+
+Только стандартная библиотека. Счётчик Метрики в репозиторий не пишется:
+подключается флагом `--ym-id` (см. site/ANALYTICS.md).
+
+Скоуп PRO-66 — лендинг: эта система генерирует `/` (RU) и `/en/` (EN). PRO-61 добавил
+те же две статические версии для demo/help/materials: исходники — `site_src/<page>.html`
+(языконейтральный шаблон с токенами `{{<page>.<lang>.kNNN}}`), строки — словари
+`site/i18n/{ru,en}.json`, числа — из демо-проекта `projects/демо`. Тёмные фото:
+dark-hero-paper — OG-картинка site/assets/og/og.jpg, dossier-dark — в финальном CTA
+лендинга; dark-double-diamond убрана с лендинга по решению владельца.
+
+Запуск: python3 scripts/build_site.py [--out site] [--ym-id 12345678]
+"""
+from __future__ import annotations
+
+import argparse
+import html
+import json
+import re
+import math
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_OUT = ROOT / "site"
+DEMO = ROOT / "projects" / "демо"
+BASE = "https://strategyproduct.ru"
+
+CLAIM_ID = "C011"
+
+# Метка выбранного варианта для EN-страницы. «03_options.md» пишется по-русски,
+# поэтому D_LABEL из него нельзя подставлять на EN как есть — это утечка RU.
+# Перевод держим картой по точному тексту метки: формулировка в документе
+# изменилась — сборка падает громко, а не показывает русский текст на EN.
+D_LABEL_EN_MAP = {
+    "Оставить как есть": "Keep as is",
+    "Hosted freemium SaaS": "Hosted freemium SaaS",
+    "B2B white-label": "B2B white-label",
+    "Open-core dual-license": "Open-core dual-license",
+    "Закрыть коммерческую ветку": "Shut down the commercial track",
+}
+_CYRILLIC = re.compile(r"[\u0400-\u04FF]")
+
+
+def _label_en(label: str) -> str:
+    if label not in D_LABEL_EN_MAP:
+        raise BuildError(
+            f"Нет EN-перевода метки выбранного варианта: {label!r} — "
+            f"добавьте её в D_LABEL_EN_MAP в scripts/build_site.py")
+    en = D_LABEL_EN_MAP[label]
+    if _CYRILLIC.search(en):
+        raise BuildError(f"EN-метка варианта содержит кириллицу: {en!r}")
+    return en
+
+
+class BuildError(Exception):
+    """Недостающие или испорченные данные репозитория — сборка падает громко."""
+
+
+def _read(path: Path) -> str:
+    if not path.exists():
+        raise BuildError(f"Нет файла: {path}")
+    return path.read_text(encoding="utf-8")
+
+
+def _jsonl(path: Path) -> list[dict]:
+    rows = []
+    for i, line in enumerate(_read(path).splitlines(), 1):
+        line = line.strip()
+        if line:
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                raise BuildError(f"{path}: строка {i} не JSON: {e}") from e
+    return rows
+
+
+# ---------------- данные репозитория ----------------
+
+def repo_numbers() -> dict:
+    return {
+        "N_MAPS": len(list((ROOT / "knowledge" / "methods").glob("*.md"))),
+        "N_MAPS_EN": len(list((ROOT / "knowledge" / "methods_en").glob("*.md"))),
+        "N_SKILLS": len(list((ROOT / ".claude" / "skills").glob("*/SKILL.md"))),
+        "N_AGENTS": len(list((ROOT / ".claude" / "agents").glob("*.md"))),
+        "N_HOOKS": len(list((ROOT / ".claude" / "hooks").glob("*.py"))),
+        "N_TESTS": sum(
+            len(re.findall(r"\bdef test_", p.read_text(encoding="utf-8")))
+            for p in (ROOT / "tests").glob("test_*.py")
+        ),
+    }
+
+
+def _require(m: "re.Match | None", what: str, where: Path) -> str:
+    if not m:
+        raise BuildError(f"Не найдено: {what} в {where}")
+    return m.group(1)
+
+
+def demo_numbers() -> dict:
+    claims = _jsonl(DEMO / "claims.jsonl")
+    kinds: dict[str, int] = {}
+    for c in claims:
+        kinds[c.get("kind", "?")] = kinds.get(c.get("kind", "?"), 0) + 1
+    if not claims:
+        raise BuildError("Реестр утверждений демо-проекта пуст")
+
+    options_path = DEMO / "outputs" / "03_options.md"
+    options_md = _read(options_path)
+    heads = list(re.finditer(r"^## Вариант ([A-ZА-Я])\.", options_md, flags=re.M))
+    if not heads:
+        raise BuildError(f"В {options_path} нет заголовков «## Вариант X.»")
+    letters = [m.group(1) for m in heads]
+
+    # Red team считается по секциям вариантов: у каждого варианта должен быть
+    # пункт списка «Возражения red team» с нумерованными подпунктами «(N)» и строка
+    # «Скрытое допущение». Пункт может быть жёстко перенесён: подпункты (2)…(N)
+    # оказываются на строках продолжения, поэтому захватываем весь блок до
+    # следующего пункта списка / пустой строки — иначе тихое занижение счёта.
+    # Отсутствие или испорченный формат — BuildError, а не тихий ноль.
+    objections = 0
+    assumptions = 0
+    for i, head in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(options_md)
+        sec = options_md[head.end():end]
+        red_lines: list[str] = []
+        for ln in sec.splitlines():
+            if ln.startswith("- Возражения red team:"):
+                red_lines.append(ln)
+                continue
+            if red_lines:
+                # продолжение пункта — только строки с отступом; новый пункт
+                # списка, пустая строка или заголовок заканчивают блок
+                if not ln.strip() or not ln[:1].isspace() or ln.startswith("## "):
+                    break
+                red_lines.append(ln)
+        if not red_lines:
+            raise BuildError(f"Не найдено: строка «Возражения red team» в {options_path}")
+        red = "\n".join(red_lines)
+        nums = [int(x) for x in re.findall(r"\((\d+)\)", red)]
+        if not nums:
+            raise BuildError(
+                f"В «Возражения red team» варианта {head.group(1)} нет нумерованных пунктов «(N)»")
+        objections += max(nums)
+        _require(re.search(r"^(- Скрытое допущени[ея])", sec, flags=re.M),
+                 "строка «Скрытое допущение»", options_path)
+        assumptions += 1
+
+    d001 = next((d for d in _jsonl(DEMO / "decisions.jsonl") if d.get("id") == "D001"), None)
+    if not d001:
+        raise BuildError("В decisions.jsonl нет D001")
+    letter_m = re.search(r"вариант ([A-ZА-Я])\b", d001.get("decision", ""))
+    if not letter_m:
+        raise BuildError("В решении D001 не найден выбранный вариант («вариант B …»)")
+    letter = letter_m.group(1)
+    if letter not in letters:
+        raise BuildError(f"Выбранный вариант {letter} отсутствует среди вариантов {letters}")
+    heading = _require(
+        re.search(rf"^## Вариант {letter}\. (.+)$", options_md, flags=re.M),
+        f"заголовок варианта {letter}", options_path)
+    label = heading.split(" — ")[0].split(" (")[0].strip()
+    review = d001.get("review", {}).get("date", "")
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", review):
+        raise BuildError(f"У D001 нет даты пересмотра в формате YYYY-MM-DD: {review!r}")
+
+    return {
+        "D_SOURCES": len(list((DEMO / "sources").glob("S*.md"))),
+        "D_CLAIMS": len(claims),
+        "D_FACTS": kinds.get("fact", 0),
+        "D_OPT_LAST": letters[-1],
+        "D_OBJ": objections,
+        "D_ASM": assumptions,
+        "D_LETTER": letter,
+        "D_LABEL": label,
+        "D_LABEL_EN": _label_en(label),
+        "REVIEW_RU": f"{review[8:]}.{review[5:7]}.{review[2:4]}",
+        "REVIEW_EN": review,
+    }
+
+
+def claim_facts() -> dict:
+    claims = _jsonl(DEMO / "claims.jsonl")
+    claim = next((c for c in claims if c.get("id") == CLAIM_ID), None)
+    if not claim:
+        raise BuildError(f"В claims.jsonl нет {CLAIM_ID}")
+    sources = claim.get("sources") or []
+    if not sources:
+        raise BuildError(f"У {CLAIM_ID} нет источника — нечего показывать как «цепочку доказательств»")
+    sid = sources[0]
+    src = next((s for s in _jsonl(DEMO / "sources.jsonl") if s.get("id") == sid), None)
+    if not src:
+        raise BuildError(f"Источник {sid} не найден в sources.jsonl")
+    url = src.get("url") or ""
+    dom = re.sub(r"^https?://(www\.)?", "", url).split("/")[0] if url else (src.get("path") or sid)
+    retrieved = (src.get("retrieved") or "")[:10]
+
+    kind = claim.get("kind", "")
+    kind_ru = {"fact": "факт", "hypothesis": "гипотеза", "forecast": "прогноз",
+               "assumption": "допущение", "inference": "вывод"}.get(kind)
+    kind_en = {"fact": "fact", "hypothesis": "hypothesis", "forecast": "forecast",
+               "assumption": "assumption", "inference": "inference"}.get(kind)
+    if not kind_ru:
+        raise BuildError(f"У {CLAIM_ID} неизвестный тип утверждения: {kind!r}")
+    grade = claim.get("grade") or ""
+    if not re.match(r"^[A-D]$", grade):
+        raise BuildError(f"У {CLAIM_ID} нет силы доказательства A–D: {grade!r}")
+
+    usage_ru = _sixpager_usage(DEMO / "outputs" / "SIX_PAGER.md")
+    usage_en = _sixpager_usage(DEMO / "outputs" / "SIX_PAGER_EN.md")
+    text = claim.get("text") or ""
+    if not text:
+        raise BuildError(f"У {CLAIM_ID} пустой текст")
+
+    # Перевод утверждения для EN-страницы (в реестре только RU-текст) сверяется по числам:
+    # если утверждение в реестре изменилось, а перевод — нет, сборка падает громко,
+    # а не показывает на сайте расходящиеся числа.
+    text_en = ("Global online recruitment market: $37.97B in 2025 with a 7.1% CAGR to 2033; "
+               "Indeed — 60+ countries, 28 languages, 685M profiles; "
+               "Bayt (MENA) — 59M+ profiles")
+    if _num_tokens(text) != _num_tokens(text_en):
+        raise BuildError(
+            f"Числа перевода {CLAIM_ID} (TEXT_EN) расходятся с реестром: "
+            f"{_num_tokens(text)} != {_num_tokens(text_en)} — обновите перевод в scripts/build_site.py")
+
+    return {
+        "C_ID": claim["id"],
+        "C_SRC": sid,
+        "C_DOM": dom,
+        "DATE_RU": ".".join(reversed(retrieved.split("-"))) if retrieved else "",
+        "DATE_EN": retrieved,
+        "KIND_RU": kind_ru,
+        "KIND_EN": kind_en,
+        "GRADE": grade,
+        "TEXT": text,
+        "SEG_RU": text.split(";")[0].strip(),
+        "TEXT_EN": text_en,
+        "SEG_EN": text_en.split(";")[0].strip(),
+        "USAGE_RU": usage_ru,
+        "USAGE_EN": usage_en,
+    }
+
+
+def _num_tokens(s: str) -> list[str]:
+    """Числовые токены текста в нормализованном виде: «37,97 млрд» → 37.97, «685M» → 685."""
+    return sorted(t.replace(",", ".") for t in re.findall(r"\d[\d,.]*", s))
+
+
+def _sixpager_usage(path: Path) -> str:
+    """«FAQ-N · Раздел» — ближайший заголовок над строкой с упоминанием CLAIM_ID."""
+    label = ""
+    for line in _read(path).splitlines():
+        m = re.match(r"^## (FAQ-\d+)[.:]?\s*(.*)$", line)
+        if m:
+            title = re.split(r"[.:]", m.group(2), maxsplit=1)[0].strip()
+            label = f"{m.group(1)} · {title}" if title else m.group(1)
+        if CLAIM_ID in line and label:
+            return label
+    raise BuildError(f"{CLAIM_ID} не найден под заголовком FAQ в {path}")
+
+
+def excel_numbers() -> dict:
+    md = _read(DEMO / "outputs" / "03_options.md")
+    price = _require(re.search(r"paid \$([\d]+)/мес", md), "цена Pro", DEMO / "outputs" / "03_options.md")
+    cm = _require(re.search(r"CM \$([\d,]+)", md), "вклад на покрытие", DEMO / "outputs" / "03_options.md")
+    ltv = _require(re.search(r"LTV ≈ \$([\d,]+)", md), "LTV", DEMO / "outputs" / "03_options.md")
+    ratio = _require(re.search(r"LTV/CAC ≈ ([\d,]+)", md), "LTV/CAC", DEMO / "outputs" / "03_options.md")
+    return {"XL_PRICE": price, "XL_CM": cm, "XL_LTV": ltv, "XL_RATIO": ratio}
+
+
+# ---------------- шаблоны ----------------
+
+ARROW = ('<span class="arr"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true">'
+         '<path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" '
+         'stroke-linecap="round" stroke-linejoin="round"/></svg></span>')
+BRAND_SVG = ('<svg viewBox="0 0 40 40" fill="none" aria-hidden="true">'
+             '<rect x="6.5" y="11.5" width="20" height="23" rx="4" stroke="#D6D2CC" stroke-width="1.6"/>'
+             '<rect x="13.5" y="5.5" width="20" height="23" rx="4" fill="#0B0A09" stroke="#D6D2CC" stroke-width="1.6"/>'
+             '<path d="M18 12.5h11M18 16.5h11M18 20.5h6" stroke="#D6D2CC" stroke-width="1.6" stroke-linecap="round"/>'
+             '<circle cx="29" cy="24" r="3" fill="#EE8A3C"/></svg>')
+
+CSS = """
+/* Warm dark v3: warm neutrals, one amber accent, pills, thin lines */
+:root{
+  --bg:#0B0A09; --bg2:#12100E; --card:#151311; --line:rgba(214,210,204,.10); --line2:rgba(214,210,204,.18);
+  --text:#D6D2CC; --strong:#F1EEE9; --muted:#8C877F; --accent:#EE8A3C; --accent-ink:#1A0E05; --pill:#BDB9B3;
+  --font:Inter,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{color:var(--strong);font-weight:500;text-wrap:balance;margin:0}
+h1{font-size:clamp(40px,6.4vw,76px);line-height:1.05;letter-spacing:-.02em}
+h2{font-size:clamp(28px,3.4vw,40px);line-height:1.1;letter-spacing:-.01em}
+h3{font-size:20px;line-height:1.3}
+.acc{color:var(--accent);font-weight:400}
+.muted{color:var(--muted)}
+.skip{position:absolute;left:-9999px}.skip:focus{left:16px;top:16px;z-index:99;background:var(--strong);color:var(--bg);padding:8px 12px;border-radius:8px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:10px}
+
+/* fixed pill header */
+.nav{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:0;right:0;z-index:50}
+.nav .bar{position:relative;display:flex;align-items:center;gap:16px;height:56px;padding:0 8px 0 18px;border:1px solid var(--line2);border-radius:18px;background:rgba(11,10,9,.72);backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--strong);font-weight:600;font-size:16px;letter-spacing:-.01em;white-space:nowrap}
+.brand svg{width:28px;height:28px;flex:none}
+.links{display:flex;gap:22px;margin-left:auto;font-size:14px}
+.links a{display:inline-flex;align-items:center;min-height:44px;padding:0 2px;text-decoration:none;color:var(--muted)}.links a:hover{color:var(--strong)}
+.lang{display:flex;gap:2px;font-size:12px;font-weight:500}
+.lang a,.lang b{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;border-radius:10px;text-decoration:none;color:var(--muted)}
+.lang b{color:var(--strong);font-weight:500}
+.mlink{display:none}
+.mlink summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--line2);border-radius:999px;color:var(--strong)}
+.mlink summary::-webkit-details-marker{display:none}
+.mlink .b{display:block;width:16px;height:2px;border-radius:1px;background:currentColor;position:relative}
+.mlink .b::before,.mlink .b::after{content:"";position:absolute;left:0;width:16px;height:2px;border-radius:1px;background:currentColor}
+.mlink .b::before{top:-5px}.mlink .b::after{top:5px}
+.mlink[open] .b{background:transparent}
+.mlink[open] .b::before{transform:translateY(5px) rotate(45deg)}
+.mlink[open] .b::after{transform:translateY(-5px) rotate(-45deg)}
+.mlink-panel{position:absolute;top:calc(100% + 10px);left:0;right:0;display:flex;flex-direction:column;padding:8px;border:1px solid var(--line2);border-radius:18px;background:var(--card);box-shadow:0 18px 44px rgba(0,0,0,.45)}
+.mlink-panel a{display:flex;align-items:center;min-height:44px;padding:0 14px;border-radius:12px;text-decoration:none;color:var(--strong);font-weight:500;font-size:15px}
+.mlink-panel a:hover{background:var(--bg2)}
+
+/* pill buttons */
+.pill{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 6px 0 20px;border-radius:999px;font-size:16px;font-weight:500;text-decoration:none;border:0;cursor:pointer;font-family:inherit;transition:filter .2s,background .2s}
+.pill .arr{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.18)}
+.pill .arr svg{width:16px;height:16px}
+.pill-a{background:var(--accent);color:var(--accent-ink)}.pill-a:hover{filter:brightness(1.08)}
+.pill-b{background:var(--pill);color:#0A0908}.pill-b:hover{background:#D3CFC9}
+.pill-sm{min-height:44px;font-size:14px;padding-left:16px}.pill-sm .arr{width:32px;height:32px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;min-height:760px;display:flex;align-items:center;padding:150px 0 110px;text-align:center;border-bottom:1px solid var(--line)}
+.hero video{position:absolute;left:50%;top:50%;width:min(1100px,140%);transform:translate(-50%,-48%);opacity:.85;mix-blend-mode:screen;pointer-events:none}
+.hero .tint{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#F6C089 0%,#EE8A3C 38%,#8C4A1E 75%);mix-blend-mode:multiply;pointer-events:none}
+.hero .fade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(11,10,9,.25) 0%,rgba(11,10,9,.7) 55%,var(--bg) 85%);pointer-events:none}
+.hero .inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:26px}
+.hero p.lead{max-width:36em;margin:0;color:var(--text);font-size:18px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.facts{display:flex;flex-wrap:wrap;justify-content:center;gap:0;margin-top:18px;font-size:13px;color:var(--muted)}
+.facts span{padding:0 18px;border-left:1px solid var(--line2)}.facts span:first-child{border-left:0}
+.facts b{color:var(--strong);font-weight:500}
+
+section{padding:110px 0;border-bottom:1px solid var(--line)}
+.head{display:flex;flex-direction:column;gap:14px;max-width:760px;margin-bottom:48px}
+.head p{margin:0;color:var(--muted)}
+
+/* flow: request -> evidence registry -> result */
+.flow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);gap:0;align-items:center}
+.col{display:flex;flex-direction:column;gap:12px}
+.node{position:relative;display:flex;gap:12px;align-items:flex-start;padding:16px 18px;border:1px solid var(--line2);border-radius:14px;background:var(--card)}
+.node .dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:8px}
+.node small{display:block;color:var(--muted);font-size:13px;line-height:1.45}
+.node strong{font-weight:500;color:var(--strong);font-size:15px}
+.col.in .node::after,.col.out .node::before{content:"";position:absolute;top:50%;width:44px;height:1px;background:linear-gradient(90deg,var(--line2),var(--accent))}
+.col.in .node::after{right:-45px}.col.out .node::before{left:-45px;background:linear-gradient(90deg,var(--accent),var(--line2))}
+.core{margin:0 44px;padding:30px 26px;border:1px solid rgba(238,138,60,.45);border-radius:20px;background:linear-gradient(180deg,#1A1511,#120F0D);text-align:center;display:flex;flex-direction:column;gap:14px}
+.core .name{font-size:22px;font-weight:600;color:var(--strong);letter-spacing:-.01em}
+.core ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.core li{font-size:12px;padding:5px 10px;border:1px solid var(--line2);border-radius:999px;color:var(--text)}
+
+/* comparison with a plain chat */
+.cmp{border-top:1px solid var(--line2)}
+.cmp .row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr) minmax(0,1.3fr);gap:24px;padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.cmp .row.hd{padding:12px 0}
+.cmp .what{color:var(--strong);font-weight:500}
+.cmp .yes{display:flex;gap:10px;align-items:baseline}.cmp .yes::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);transform:translateY(-2px)}
+
+/* bento grid of features */
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.card{grid-column:span 4;min-width:0;padding:26px;border:1px solid var(--line2);border-radius:18px;background:var(--card);display:flex;flex-direction:column;gap:14px}
+.card.w6{grid-column:span 6}.card.w8{grid-column:span 8}
+.card .ic{width:36px;height:36px;border-radius:10px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.card .ic svg{width:18px;height:18px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.faqlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.faqlist li{list-style:none;padding:10px 12px;border-radius:10px;background:var(--bg2);font-size:14px}
+.faqlist b{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* process */
+.phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.ph{padding:22px;border:1px solid var(--line2);border-radius:18px;background:var(--card);display:flex;flex-direction:column;gap:12px;min-width:0}
+.ph ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.ph li{display:flex;align-items:center;gap:12px;font-size:15px}
+.ph .n{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted)}
+.ph li.h .n{border:1.5px solid var(--accent);color:var(--accent)}
+/* badge on human-decision steps: the text comes from a per-language token to avoid leaks */
+.ph li.h::after{content:"{{YOU}}";margin-left:auto;font-size:11px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+
+/* evidence chain: terminal, claim, excel */
+.proof{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;align-items:start}
+.proof-side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.term{border:1px solid var(--line2);border-radius:18px;background:#0D0C0A;overflow:hidden;min-width:0}
+.term .bar{display:flex;gap:6px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.term .bar i{width:10px;height:10px;border-radius:50%;background:var(--line2)}
+.term pre{margin:0;padding:18px 20px;overflow-x:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text)}
+.term .p{color:var(--muted)}.term .a{color:var(--strong)}.term .hi{color:var(--accent)}
+.claim{border:1px solid rgba(238,138,60,.45);border-radius:18px;background:var(--card);padding:24px;display:flex;flex-direction:column;gap:14px}
+.claim .tags{display:flex;gap:8px;flex-wrap:wrap}
+.claim .tag{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);color:var(--muted)}
+.claim .tag.a{border-color:rgba(238,138,60,.5);color:var(--accent)}
+.claim p{margin:0;color:var(--text);font-size:15px}
+.chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+.chip{padding:8px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--bg2);min-width:0}
+.chip.a{border-color:rgba(238,138,60,.5)}
+.chip em{font-style:normal;color:var(--accent)}
+.xl{border:1px solid var(--line2);border-radius:18px;background:var(--card);padding:20px 24px}
+.xl table{width:100%;border-collapse:collapse;font-size:14px}
+.xl td{padding:9px 0;border-bottom:1px solid var(--line);color:var(--text)}
+.xl tr:last-child td{border-bottom:0}
+.xl td:last-child{text-align:right;color:var(--strong);font-variant-numeric:tabular-nums}
+
+/* architecture */
+.stack{display:flex;flex-direction:column;max-width:760px;margin:0 auto;width:100%}
+.layer{position:relative;display:flex;gap:16px;align-items:flex-start;padding:20px 24px;border:1px solid var(--line2);border-radius:16px;background:var(--card);min-width:0}
+.layer+.layer{margin-top:26px}
+.layer+.layer::before{content:"";position:absolute;left:50%;top:-27px;width:1px;height:26px;background:linear-gradient(180deg,var(--accent),var(--line2))}
+.layer .n{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:13px}
+.layer b{display:block;color:var(--strong);font-weight:500;font-size:16px;margin-bottom:4px}
+.layer small{color:var(--muted);font-size:14px;line-height:1.5;display:block}
+
+/* demo */
+.demo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);border-radius:18px;overflow:hidden;margin:0}
+.stats div{background:var(--card);padding:22px;display:flex;flex-direction:column-reverse;gap:6px}
+.stats b{font-size:30px;font-weight:500;color:var(--strong);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--muted)}
+
+/* install */
+.inst{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.cmd{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 16px;border:1px solid var(--line2);border-radius:14px;background:var(--card)}
+.cmd code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--strong)}
+.copy{flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--text);font:500 13px var(--font);cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+blockquote{margin:6px 0 0;padding:18px 20px;border-radius:14px;background:var(--card);border:1px solid var(--line2);color:var(--strong)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:40px}
+/* accordion styles are scoped to the FAQ section: the header details (mlink) is styled separately */
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center;min-height:64px;padding:12px 0;color:var(--strong);font-size:18px;font-weight:500}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .pm{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line2);display:inline-flex;align-items:center;justify-content:center;color:var(--accent);transition:transform .2s}
+.faq details[open] summary .pm{transform:rotate(45deg)}
+.faq details p{margin:0 0 22px;color:var(--muted);max-width:44em}
+
+/* final CTA and footer */
+.final{position:relative;overflow:hidden;text-align:center;border-bottom:0}
+.final .box{position:relative;margin:0 auto;max-width:980px;padding:80px 28px;border:1px solid rgba(238,138,60,.4);border-radius:28px;background:radial-gradient(ellipse at 50% 0%,rgba(238,138,60,.16),rgba(11,10,9,0) 60%),var(--bg2);display:flex;flex-direction:column;align-items:center;gap:22px}
+.dosfig{margin:0 auto;width:100%;max-width:520px}
+.dosfig img{display:block;width:100%;height:auto;border-radius:20px;border:1px solid var(--line2)}
+footer{border-top:1px solid var(--line);padding:36px 0 calc(36px + env(safe-area-inset-bottom,0px));font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}footer nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 2px}footer a:hover{color:var(--strong)}
+
+@media (max-width:980px){
+  .links{display:none}
+  .mlink{display:block}
+  .nav .bar{padding-right:6px}
+  .flow{grid-template-columns:minmax(0,1fr);gap:14px}.core{margin:6px 0}
+  .col.in .node::after,.col.out .node::before{display:none}
+  .card,.card.w6,.card.w8{grid-column:1/-1}
+  .phases{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .proof,.demo,.inst,.faq{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  section{padding:80px 0}
+  .hero{min-height:640px;padding:130px 0 80px}
+  .phases,.faqlist{grid-template-columns:minmax(0,1fr)}
+  .cmp .row{grid-template-columns:minmax(0,1fr);gap:4px}.cmp .row.hd{display:none}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts span{border-left:0;padding:2px 10px}
+  .nav .bar{gap:8px}
+  .bar .pill{display:none}
+}
+@media (prefers-reduced-motion:reduce){.hero video{display:none}html{scroll-behavior:auto}}
+"""
+
+JS = """
+(function(){
+  function goal(name,params){if(window.ym&&window.YM_ID){window.ym(window.YM_ID,'reachGoal',name,params||{})}}
+  document.querySelectorAll('[data-goal]').forEach(function(el){
+    el.addEventListener('click',function(){goal(el.dataset.goal)});
+  });
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.parentNode.querySelector('code').textContent;
+      var done=function(){var o=b.textContent;b.textContent=b.dataset.ok||'OK';setTimeout(function(){b.textContent=o},1600)};
+      try{navigator.clipboard.writeText(t).then(done,done)}catch(e){done()}
+      goal('copy_command',{i:b.dataset.copy});
+    });
+  });
+  document.querySelectorAll('.mlink').forEach(function(d){
+    d.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){d.removeAttribute('open')});
+    });
+  });
+  document.querySelectorAll('details:not(.mlink)').forEach(function(d){
+    d.addEventListener('toggle',function(){
+      if(d.open){var s=d.querySelector('summary');goal('faq_open',{q:s?s.textContent.trim().slice(0,60):''})}
+    });
+  });
+})();
+"""
+
+YM_LOADER = (
+    "<script>window.YM_ID=@ID@;\n"
+    "(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};"
+    "m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,"
+    "k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script',"
+    "'https://mc.yandex.ru/metrika/tag.js','ym');\n"
+    'ym(@ID@,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:false});\n'
+    "</script>\n"
+    '<noscript><img src="https://mc.yandex.ru/watch/@ID@" alt=""></noscript>'
+)
+
+# Общий блок hreflang для обеих страниц
+HREFLANGS = (f'<link rel="alternate" hreflang="ru" href="{BASE}/">\n'
+             f'<link rel="alternate" hreflang="en" href="{BASE}/en/">\n'
+             f'<link rel="alternate" hreflang="x-default" href="{BASE}/">')
+
+
+def _page(lang_attrs: str, title: str, desc: str, canonical: str, og: str,
+          body: str, tokens: dict) -> str:
+    head = f"""<!doctype html>
+<html lang="{lang_attrs}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{title}</title>
+<meta name="description" content="{desc}">
+<link rel="canonical" href="{canonical}">
+{HREFLANGS}
+<link rel="icon" href="{{{{A}}}}assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+{og}
+<style>{{{{CSS}}}}</style>
+</head>
+<body>"""
+    tail = """
+<script>{{JS}}</script>
+{{YM}}
+</body>
+</html>"""
+    full = head + body + tail
+    mapping = {"CSS": CSS, "JS": JS, "YM": tokens.pop("YM", "")}
+    mapping.update(tokens)
+    return render(full, mapping)
+
+
+# Ключи, значения которых — уже готовая разметка/скрипты и не подлежат экранированию.
+# Всё остальное (числа, TEXT/SEG, C_DOM/path, D_LABEL, USAGE, даты, KIND, A…) —
+# пользовательские данные репозитория: экранируются html.escape.
+RAW_KEYS = frozenset({"CSS", "JS", "YM", "BRAND"})
+
+
+def render(template: str, mapping: dict) -> str:
+    out = template
+    for key, val in mapping.items():
+        text = val if isinstance(val, str) else str(val)
+        if key not in RAW_KEYS:
+            text = html.escape(text, quote=True)
+        out = out.replace("{{" + key + "}}", text)
+    if "{{" in out:
+        left = re.findall(r"\{\{(\w+)\}\}", out)
+        raise BuildError(f"Остались незаполненные токены: {sorted(set(left))}")
+    return out
+
+
+RU_BODY = f"""
+<a class="skip" href="#main">К содержимому</a>
+
+<header class="nav">
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="#top" aria-label="Стратег Фабрики продуктов — на главную">
+        {{{{BRAND}}}}
+        Стратег
+      </a>
+      <nav class="links" aria-label="Разделы">
+        <a href="#how">Как работает</a><a href="#features">Возможности</a><a href="#demo">Демо</a><a href="#install">Установка</a><a href="#faq">Вопросы</a>
+      </nav>
+      <div class="lang"><b aria-current="true">RU</b><a href="en/" hreflang="en" data-goal="lang_switch">EN</a></div>
+      <a class="pill pill-a pill-sm" href="#install" data-goal="cta_install_click">Запустить{ARROW}</a>
+      <details class="mlink">
+        <summary aria-label="Меню разделов"><span class="b" aria-hidden="true"></span></summary>
+        <nav class="mlink-panel" aria-label="Разделы">
+          <a href="#how">Как работает</a><a href="#features">Возможности</a><a href="#demo">Демо</a><a href="#install">Установка</a><a href="#faq">Вопросы</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" id="top" aria-labelledby="h1">
+  <video src="{{{{A}}}}assets/hero-swarm-2.mp4" poster="{{{{A}}}}assets/hero-poster.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+  <div class="tint" aria-hidden="true"></div><div class="fade" aria-hidden="true"></div>
+  <div class="wrap inner">
+    <div class="eyebrow">Исследование, а не текст про стратегию</div>
+    <h1 id="h1">От размытого запроса<br><span class="acc">к стратегии,</span><br>которую можно проверить</h1>
+    <p class="lead">Открытый ИИ-агент для руководителя продукта. У каждого числа есть источник, среди вариантов всегда есть «оставить как есть» и «закрыть», а решение сопровождается и после выбора.</p>
+    <div class="ctas">
+      <a class="pill pill-a" href="#install" data-goal="cta_install_click">Запустить за 5 минут{ARROW}</a>
+      <a class="pill pill-b" href="#demo" data-goal="cta_demo_click">Смотреть демо{ARROW}</a>
+    </div>
+    <div class="facts"><span><b>12</b> шагов</span><span><b>3</b> решения за вами</span><span><b>{{{{N_MAPS}}}}</b> методических карт</span><span><b>0</b> внешних зависимостей</span></div>
+  </div>
+</section>
+
+<section id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Как это устроено</div>
+      <h2 id="how-h">Между запросом и решением <span class="acc">появляется слой доказательств</span></h2>
+      <p>Агент собирает материалы, отделяет факты от гипотез и только потом предлагает варианты. Каждое утверждение остаётся в реестре со ссылкой на источник.</p>
+    </div>
+    <div class="flow">
+      <div class="col in">
+        <div class="node"><span class="dot"></span><div><strong>Запрос руководителя</strong><small>«Почему падает удержание?», «Кому продавать?»</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Ваши материалы</strong><small>документы, таблицы, интервью, скриншоты</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Открытые источники</strong><small>только разрешённые домены</small></div></div>
+      </div>
+      <div class="core">
+        <div class="label" style="color:var(--accent)">Стратег</div>
+        <div class="name">Реестр утверждений</div>
+        <ul><li>факт</li><li>гипотеза</li><li>прогноз</li><li>допущение</li><li>вывод</li><li>сила A–D</li></ul>
+        <p class="muted" style="margin:0;font-size:14px">Синтетические респонденты дают только гипотезы, не доказательства.</p>
+      </div>
+      <div class="col out">
+        <div class="node"><span class="dot"></span><div><strong>Варианты и red team</strong><small>от трёх, включая «оставить» и «закрыть»</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Six-pager и Excel</strong><small>документ для комитета, RU и EN</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Решение и пересмотр</strong><small>основания, сроки, обязательства</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="cmp-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Зачем отдельный агент</div>
+      <h2 id="cmp-h">Чем он отличается <span class="acc">от обычного чата</span></h2>
+    </div>
+    <div class="cmp">
+      <div class="row hd label"><span>Что важно для решения</span><span>Обычный чат</span><span style="color:var(--accent)">Стратег</span></div>
+      <div class="row"><span class="what">Источник у каждого числа</span><span class="muted">по просьбе, ссылки не проверяются</span><span class="yes">утверждение C### ведёт к источнику S### с цитатой</span></div>
+      <div class="row"><span class="what">Факты отдельно от гипотез</span><span class="muted">смешаны в одном ответе</span><span class="yes">тип утверждения и сила доказательства A–D</span></div>
+      <div class="row"><span class="what">Варианты, включая «оставить» и «закрыть»</span><span class="muted">обычно один ответ</span><span class="yes">не меньше трёх, red team атакует каждый</span></div>
+      <div class="row"><span class="what">Расчёты</span><span class="muted">числа внутри текста</span><span class="yes">Excel с формулами и листом «Ввод»</span></div>
+      <div class="row"><span class="what">Продолжение после перерыва</span><span class="muted">контекст теряется</span><span class="yes">состояние в файлах, новый чат продолжает с того же шага</span></div>
+      <div class="row"><span class="what">Сколько стоил результат</span><span class="muted">неизвестно</span><span class="yes">токены по моделям и минуты человека</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" aria-labelledby="feat-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Возможности</div>
+      <h2 id="feat-h">Всё, чтобы решению <span class="acc">можно было верить</span></h2>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 10h6M10 4v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="10" r="7.2" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Цепочка доказательств</h3>
+        <p>Видно, на чём держится каждый вывод и что изменится, если обновится источник.</p>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 5h12M4 10h12M4 15h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Варианты и red team</h3>
+        <p>Отдельный субагент атакует каждый вариант до того, как вы его увидите.</p>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="4" y="3" width="12" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 7h6M7 10h6M7 13h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Расчёты на формулах</h3>
+        <p>Юнит-экономика, модель роста, когорты и размер рынка в Excel. Входные данные можно поменять.</p>
+      </article>
+      <article class="card w8">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 3h8l2 3v11H4V6l2-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <h3>Документ для комитета</h3>
+        <p>Six-pager из шести ответов, которых ждёт комитет. RU и EN, MD, PDF, DOCX и четыре книги Excel.</p>
+        <ul class="faqlist" style="margin:0;padding:0">
+          <li><b>1</b>Рынок, тренды, конкуренты</li><li><b>2</b>Кто пользователи и что мешает</li>
+          <li><b>3</b>Инициативы и обоснование</li><li><b>4</b>Тактики под потребности</li>
+          <li><b>5</b>План, вклад, сезонность</li><li><b>6</b>KPI бизнеса и продукта</li>
+        </ul>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.5" y="4.5" width="13" height="11" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8.5h13M9.5 8.5v7" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Данные и когорты</h3>
+        <p>Профиль таблицы, когорты удержания, воронки и статистика — расчёты сохраняются и повторяются одной командой.</p>
+      </article>
+      <article class="card w6">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.2" stroke="currentColor" stroke-width="1.6"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>После решения</h3>
+        <p>Решение хранит основания, обязательства и дату пересмотра. Новые данные показывают, какие выводы устарели.</p>
+      </article>
+      <article class="card w6">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Журнал и стоимость</h3>
+        <p>Что сделано, на каком основании и сколько стоило: токены по моделям и время людей.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="process" aria-labelledby="proc-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Процесс</div>
+      <h2 id="proc-h">Двенадцать шагов. <span class="acc">Три решения за вами.</span></h2>
+      <p>Между точками решения агент работает сам и показывает прогресс строкой «Шаг N/12». «Стоп» ставит паузу, «уточни» меняет задачу.</p>
+    </div>
+    <div class="phases">
+      <div class="ph"><h3>Исследовать</h3><ol><li class="h"><span class="n">1</span>Бриф</li><li><span class="n">2</span>Источники</li><li><span class="n">3</span>Исследование</li><li><span class="n">4</span>Сегменты</li></ol></div>
+      <div class="ph"><h3>Определить</h3><ol><li><span class="n">5</span>Картина ситуации</li><li><span class="n">6</span>Варианты и red team</li><li class="h"><span class="n">7</span>Выбор</li></ol></div>
+      <div class="ph"><h3>Разработать</h3><ol><li><span class="n">8</span>Стратегии</li><li><span class="n">9</span>План проверки</li><li><span class="n">10</span>Ревью качества</li></ol></div>
+      <div class="ph"><h3>Довести</h3><ol><li class="h"><span class="n">11</span>Решение</li><li><span class="n">12</span>Мониторинг</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" aria-labelledby="proof-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Цепочка доказательств</div>
+      <h2 id="proof-h">Фрагменты реальной работы <span class="acc">демо-проекта CVStart</span></h2>
+      <p>Ниже — настоящие данные из реестра демо-проекта: сессия, утверждение с источником и расчёт. Ничего не нарисовано «для красоты».</p>
+    </div>
+    <div class="proof">
+      <div class="term" aria-label="Фрагмент сессии агента в демо-проекте">
+        <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <pre><span class="p">$</span> pfs new "CVStart: платная версия" "Разработать коммерческую версию cvstart.org и стратегию вывода на рынок"
+<span class="a">Шаг 1/12 · intake</span> · бриф подтверждён · дальше: sources
+<span class="a">Шаг 2/12 · sources</span> · {{{{D_SOURCES}}}} источников · 0 запрещённых доменов · дальше: research
+<span class="p">$</span> pfs claim add "{{{{SEG}}}}" --kind fact --source {{{{C_SRC}}}} --grade {{{{GRADE}}}}
+<span class="hi">{{{{C_ID}}}} · {{{{KIND}}}} · сила {{{{GRADE}}}} · цитата сохранена</span>
+<span class="a">Шаг 3/12 · research</span> · {{{{D_CLAIMS}}}} утверждений в реестре · дальше: discovery
+<span class="p">&gt;</span> стоп — пауза: состояние в файлах, новый чат продолжит с шага 3</pre>
+      </div>
+      <div class="proof-side">
+        <div class="claim">
+          <div class="tags"><span class="tag a">{{{{C_ID}}}} · {{{{KIND}}}}</span><span class="tag">сила {{{{GRADE}}}}</span><span class="tag">источник {{{{C_SRC}}}}</span></div>
+          <p>{{{{TEXT}}}}</p>
+          <div class="chain">
+            <span class="chip a"><em>{{{{C_ID}}}}</em> · {{{{KIND}}}} · сила {{{{GRADE}}}}</span><span aria-hidden="true" class="muted">→</span>
+            <span class="chip"><em>{{{{C_SRC}}}}</em> · {{{{DOM}}}} · {{{{DATE}}}}</span><span aria-hidden="true" class="muted">→</span>
+            <span class="chip">six-pager · {{{{USAGE}}}}</span>
+          </div>
+        </div>
+        <div class="xl">
+          <div class="label" style="margin-bottom:10px">Excel · лист «Ввод»</div>
+          <table>
+            <tr><td>Цена Pro</td><td>${{{{XL_PRICE}}}}/мес</td></tr>
+            <tr><td>Переменные 25% → вклад на покрытие</td><td>${{{{XL_CM}}}}</td></tr>
+            <tr><td>LTV</td><td>≈ ${{{{XL_LTV}}}}</td></tr>
+            <tr><td>LTV / CAC</td><td>≈ {{{{XL_RATIO}}}}</td></tr>
+          </table>
+          <p class="muted" style="margin:10px 0 0;font-size:13px">Значения можно поменять — формулы пересчитаются.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" aria-labelledby="demo-h">
+  <div class="wrap demo">
+    <div class="head" style="margin:0">
+      <div class="label">Демо-проект</div>
+      <h2 id="demo-h">CVStart: <span class="acc">платная версия</span> и выход на рынок</h2>
+      <p>Задача руководителя дословно: «Разработать коммерческую версию cvstart.org и стратегию вывода на рынок на весь мир». Числа — из проекта, не руками.</p>
+      <div><a class="pill pill-b pill-sm" href="demo.html" data-goal="cta_demo_click">Открыть разбор{ARROW}</a></div>
+    </div>
+    <div>
+      <!-- числа подставляет scripts/build_site.py из projects/demo -->
+      <dl class="stats">
+        <div><dt><span>источников</span></dt><dd style="margin:0"><b>{{{{D_SOURCES}}}}</b></dd></div>
+        <div><dt><span>утверждений, из них факты — {{{{D_FACTS}}}}</span></dt><dd style="margin:0"><b>{{{{D_CLAIMS}}}}</b></dd></div>
+        <div><dt><span>вариантов A–{{{{D_OPT_LAST}}}}, со статус-кво и закрытием</span></dt><dd style="margin:0"><b>A–{{{{D_OPT_LAST}}}}</b></dd></div>
+        <div><dt><span>возражений и скрытых допущений red team</span></dt><dd style="margin:0"><b>{{{{D_OBJ}}}} + {{{{D_ASM}}}}</b></dd></div>
+        <div><dt><span>выбор: {{{{D_LABEL}}}}</span></dt><dd style="margin:0"><b>{{{{D_LETTER}}}}</b></dd></div>
+        <div><dt><span>пересмотр решения D001</span></dt><dd style="margin:0"><b>{{{{REVIEW}}}}</b></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="arch" aria-labelledby="arch-h">
+  <div class="wrap">
+    <div class="head" style="margin:0 auto 48px;text-align:center;align-items:center">
+      <div class="label">Архитектура</div>
+      <h2 id="arch-h">Гарантии — не в промптах, <span class="acc">а в коде и файлах</span></h2>
+      <p>Автотесты CLI ({{{{N_TESTS}}}}) проверяют ядро после каждого изменения. Состояние проекта лежит в файлах рядом с кодом — работа переживает перерыв и переезд между средами.</p>
+    </div>
+    <div class="stack">
+      <div class="layer"><span class="n">1</span><div><b>Среда · AGENTS.md</b><small>правила: источник у каждого числа, синтетика — только гипотезы, существенное решает человек · навыков: {{{{N_SKILLS}}}} · субагентов: {{{{N_AGENTS}}}} · хуков: {{{{N_HOOKS}}}}</small></div></div>
+      <div class="layer"><span class="n">2</span><div><b>Ядро · tools/pfs</b><small>CLI и MCP: шаги 1–12, реестр утверждений, источники с sha256, экспорт six-pager · только стандартная библиотека Python</small></div></div>
+      <div class="layer"><span class="n">3</span><div><b>Знания · knowledge/</b><small>{{{{N_MAPS}}}} карт методик на русском · {{{{N_MAPS_EN}}}} зеркал на английском · шаблоны документов и рубрики оценки</small></div></div>
+      <div class="layer"><span class="n">4</span><div><b>Файлы проекта</b><small>state.json · claims.jsonl · sources/ — основания решений остаются читаемыми и после года перерыва</small></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="install" aria-labelledby="inst-h">
+  <div class="wrap inst">
+    <div class="head" style="margin:0">
+      <div class="label">Установка</div>
+      <h2 id="inst-h">Пять минут <span class="acc">до первой задачи</span></h2>
+      <p>Нужны Python 3.9+ и одна из сред: Claude Code, OpenCode, Cursor или Codex.</p>
+      <blockquote>«Платная защита от спам-звонков теряет подписчиков. Что делать с продуктом и что говорить абонентам?»</blockquote>
+    </div>
+    <ol class="steps">
+      <li><span class="label">1 · Скачайте репозиторий</span><div class="cmd"><code>git clone https://github.com/Fighter90/product-factory-strategist-agent.git</code><button class="copy" type="button" data-copy="0" data-ok="Скопировано">Копировать</button></div></li>
+      <li><span class="label">2 · Установите pfs</span><div class="cmd"><code>cd product-factory-strategist-agent &amp;&amp; ./scripts/install.sh</code><button class="copy" type="button" data-copy="1" data-ok="Скопировано">Копировать</button></div></li>
+      <li><span class="label">3 · Проверьте окружение</span><div class="cmd"><code>pfs doctor</code><button class="copy" type="button" data-copy="2" data-ok="Скопировано">Копировать</button></div></li>
+      <li><span class="label">4 · Откройте папку в своей среде</span><div class="cmd"><code>opencode</code><button class="copy" type="button" data-copy="3" data-ok="Скопировано">Копировать</button></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-h">
+  <div class="wrap faq">
+    <div class="head" style="margin:0"><div class="label">Вопросы</div><h2 id="faq-h">Частые <span class="acc">вопросы</span></h2></div>
+    <div>
+      <details><summary>Какие данные использует агент?<span class="pm" aria-hidden="true">+</span></summary><p>Только открытые источники и материалы, которые вы передали сами. Разрешённые домены задаются в проекте. Команды из текстов источников агент не выполняет.</p></details>
+      <details><summary>Можно ли остановить и поправить работу?<span class="pm" aria-hidden="true">+</span></summary><p>Да. «Стоп» ставит паузу, «уточни: …» меняет задачу, ваши ручные правки агент читает и не затирает. Новый чат продолжает с того же шага.</p></details>
+      <details><summary>Сколько стоит прогон?<span class="pm" aria-hidden="true">+</span></summary><p>Зависит от модели и объёма исследования. Токены по моделям и время людей видны командой pfs cost и в приложении к отчёту.</p></details>
+      <details><summary>Чем это лучше обычного чата?<span class="pm" aria-hidden="true">+</span></summary><p>Агент ведёт процесс по шагам, хранит доказательства в реестре и проверяет документы. Обычный чат отвечает текстом, который трудно проверить и продолжить.</p></details>
+      <details><summary>Работает ли на русском и английском?<span class="pm" aria-hidden="true">+</span></summary><p>Да: инструкции, база знаний и итоговые документы есть на обоих языках, язык выбирается при создании проекта.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final" aria-labelledby="fin-h">
+  <div class="wrap">
+    <div class="box">
+      <figure class="dosfig">
+        <picture>
+          <source type="image/avif" srcset="{{{{A}}}}assets/dossier-dark.avif">
+          <img src="{{{{A}}}}assets/dossier-dark.webp" width="1800" height="1012" alt="Пакет решения: документы, собранные нитью в стопку, на тёмном фоне" loading="lazy" decoding="async">
+        </picture>
+      </figure>
+      <div class="eyebrow">Открытый код · MIT</div>
+      <h2 id="fin-h">Проверьте агента <span class="acc">на своей задаче</span></h2>
+      <p class="muted" style="margin:0;max-width:34em">Откройте папку в своей среде и опишите задачу как есть. Агент задаст до трёх вопросов и начнёт исследование.</p>
+      <div class="ctas">
+        <a class="pill pill-a" href="#install" data-goal="cta_install_click">Установить{ARROW}</a>
+        <a class="pill pill-b" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click">GitHub{ARROW}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span style="color:var(--strong);font-weight:500">Стратег Фабрики продуктов</span>
+    <nav aria-label="Ссылки"><a href="https://github.com/Fighter90/product-factory-strategist-agent">GitHub</a><a href="help.html">Справка</a><a href="materials.html">Материалы демо</a><a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/CHANGELOG.md">Changelog</a></nav>
+    <span>MIT · открытый код</span>
+  </div>
+</footer>
+"""
+
+EN_BODY = f"""
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand" href="#top" aria-label="Product Factory Strategist — home">
+        {{{{BRAND}}}}
+        Strategist
+      </a>
+      <nav class="links" aria-label="Sections">
+        <a href="#how">How it works</a><a href="#features">Features</a><a href="#demo">Demo</a><a href="#install">Install</a><a href="#faq">FAQ</a>
+      </nav>
+      <div class="lang"><a href="../" hreflang="ru" data-goal="lang_switch">RU</a><b aria-current="true">EN</b></div>
+      <a class="pill pill-a pill-sm" href="#install" data-goal="cta_install_click">Start{ARROW}</a>
+      <details class="mlink">
+        <summary aria-label="Sections menu"><span class="b" aria-hidden="true"></span></summary>
+        <nav class="mlink-panel" aria-label="Sections">
+          <a href="#how">How it works</a><a href="#features">Features</a><a href="#demo">Demo</a><a href="#install">Install</a><a href="#faq">FAQ</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" id="top" aria-labelledby="h1">
+  <video src="{{{{A}}}}assets/hero-swarm-2.mp4" poster="{{{{A}}}}assets/hero-poster.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+  <div class="tint" aria-hidden="true"></div><div class="fade" aria-hidden="true"></div>
+  <div class="wrap inner">
+    <div class="eyebrow">Research, not prose about strategy</div>
+    <h1 id="h1">From a vague request<br><span class="acc">to a strategy</span><br>you can actually check</h1>
+    <p class="lead">An open-source AI agent for product leads. Every number has a source, the options always include “keep as is” and “shut it down”, and the decision is tracked after you make it.</p>
+    <div class="ctas">
+      <a class="pill pill-a" href="#install" data-goal="cta_install_click">Start in 5 minutes{ARROW}</a>
+      <a class="pill pill-b" href="#demo" data-goal="cta_demo_click">See the demo{ARROW}</a>
+    </div>
+    <div class="facts"><span><b>12</b> steps</span><span><b>3</b> decisions are yours</span><span><b>{{{{N_MAPS}}}}</b> method cards</span><span><b>0</b> external dependencies</span></div>
+  </div>
+</section>
+
+<section id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">How it works</div>
+      <h2 id="how-h">Between the request and the decision <span class="acc">sits a layer of evidence</span></h2>
+      <p>The agent gathers material, separates facts from guesses and only then proposes options. Every claim stays in a registry with a link to its source.</p>
+    </div>
+    <div class="flow">
+      <div class="col in">
+        <div class="node"><span class="dot"></span><div><strong>The product lead’s question</strong><small>“Why is retention falling?”, “Who should we sell to?”</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Your materials</strong><small>documents, spreadsheets, interviews, screenshots</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Open sources</strong><small>allowed domains only</small></div></div>
+      </div>
+      <div class="core">
+        <div class="label" style="color:var(--accent)">Strategist</div>
+        <div class="name">Claim registry</div>
+        <ul><li>fact</li><li>hypothesis</li><li>forecast</li><li>assumption</li><li>inference</li><li>grade A–D</li></ul>
+        <p class="muted" style="margin:0;font-size:14px">Synthetic respondents only ever produce hypotheses, never proof.</p>
+      </div>
+      <div class="col out">
+        <div class="node"><span class="dot"></span><div><strong>Options and red team</strong><small>three or more, incl. “keep” and “shut down”</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Six-pager and Excel</strong><small>a committee document in RU and EN</small></div></div>
+        <div class="node"><span class="dot"></span><div><strong>Decision and review</strong><small>grounds, deadlines, commitments</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="cmp-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Why a dedicated agent</div>
+      <h2 id="cmp-h">How it differs <span class="acc">from a plain chat</span></h2>
+    </div>
+    <div class="cmp">
+      <div class="row hd label"><span>What the decision needs</span><span>Plain chat</span><span style="color:var(--accent)">Strategist</span></div>
+      <div class="row"><span class="what">A source for every number</span><span class="muted">on request, links unchecked</span><span class="yes">claim C### links to source S### with a quote</span></div>
+      <div class="row"><span class="what">Facts kept apart from guesses</span><span class="muted">mixed into one answer</span><span class="yes">claim type plus evidence grade A–D</span></div>
+      <div class="row"><span class="what">Options that include “keep” and “shut down”</span><span class="muted">usually a single answer</span><span class="yes">at least three, each attacked by a red team</span></div>
+      <div class="row"><span class="what">Calculations</span><span class="muted">numbers inside prose</span><span class="yes">Excel with formulas and an input sheet</span></div>
+      <div class="row"><span class="what">Picking up after a break</span><span class="muted">context is lost</span><span class="yes">state lives in files, a new chat resumes at the same step</span></div>
+      <div class="row"><span class="what">What the result cost</span><span class="muted">unknown</span><span class="yes">tokens per model and human minutes</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" aria-labelledby="feat-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Features</div>
+      <h2 id="feat-h">Everything a decision needs <span class="acc">to be trusted</span></h2>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 10h6M10 4v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="10" r="7.2" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Chain of evidence</h3>
+        <p>See what every conclusion rests on and what changes when a source is updated.</p>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 5h12M4 10h12M4 15h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Options and red team</h3>
+        <p>A separate subagent attacks every option before you see it.</p>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="4" y="3" width="12" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 7h6M7 10h6M7 13h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Models built on formulas</h3>
+        <p>Unit economics, a growth model, cohorts and market size in Excel, with editable inputs.</p>
+      </article>
+      <article class="card w8">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 3h8l2 3v11H4V6l2-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <h3>A document for the committee</h3>
+        <p>A six-pager built on the six answers a committee expects. RU and EN, MD, PDF, DOCX and four Excel workbooks.</p>
+        <ul class="faqlist" style="margin:0;padding:0">
+          <li><b>1</b>Market, trends, competitors</li><li><b>2</b>Who the users are, what blocks them</li>
+          <li><b>3</b>Initiatives and the case for each</li><li><b>4</b>Tactics mapped to needs</li>
+          <li><b>5</b>Plan, contribution, seasonality</li><li><b>6</b>Business and product KPIs</li>
+        </ul>
+      </article>
+      <article class="card">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.5" y="4.5" width="13" height="11" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8.5h13M9.5 8.5v7" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Data and cohorts</h3>
+        <p>Table profiles, retention cohorts, funnels and statistics — calculations are saved and rerun with one command.</p>
+      </article>
+      <article class="card w6">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.2" stroke="currentColor" stroke-width="1.6"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>After the decision</h3>
+        <p>The decision keeps its grounds, commitments and review date. New data shows which conclusions went stale.</p>
+      </article>
+      <article class="card w6">
+        <div class="ic"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 15V9M8 15V5M12 15v-4M16 15V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Log and cost</h3>
+        <p>What was done, on what grounds and at what cost: tokens per model and people’s time.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="process" aria-labelledby="proc-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Process</div>
+      <h2 id="proc-h">Twelve steps. <span class="acc">Three decisions are yours.</span></h2>
+      <p>Between the decision points the agent works on its own and reports progress as “Step N/12”. Say “stop” to pause or “refine” to change the task.</p>
+    </div>
+    <div class="phases">
+      <div class="ph"><h3>Discover</h3><ol><li class="h"><span class="n">1</span>Brief</li><li><span class="n">2</span>Sources</li><li><span class="n">3</span>Research</li><li><span class="n">4</span>Segments</li></ol></div>
+      <div class="ph"><h3>Define</h3><ol><li><span class="n">5</span>Situation</li><li><span class="n">6</span>Options and red team</li><li class="h"><span class="n">7</span>Choice</li></ol></div>
+      <div class="ph"><h3>Develop</h3><ol><li><span class="n">8</span>Strategies</li><li><span class="n">9</span>Validation plan</li><li><span class="n">10</span>Quality review</li></ol></div>
+      <div class="ph"><h3>Deliver</h3><ol><li class="h"><span class="n">11</span>Decision</li><li><span class="n">12</span>Monitoring</li></ol></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" aria-labelledby="proof-h">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Chain of evidence</div>
+      <h2 id="proof-h">Fragments of the real CVStart <span class="acc">demo project</span></h2>
+      <p>Below is real data from the demo project registry: a session, a claim with its source and a calculation. Nothing is drawn “for beauty”.</p>
+    </div>
+    <div class="proof">
+      <div class="term" aria-label="An excerpt of an agent session in the demo project">
+        <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <pre><span class="p">$</span> pfs new "CVStart: paid version" "Build a commercial version of cvstart.org and take it to market worldwide"
+<span class="a">Step 1/12 · intake</span> · brief confirmed · next: sources
+<span class="a">Step 2/12 · sources</span> · {{{{D_SOURCES}}}} sources · 0 blocked domains · next: research
+<span class="p">$</span> pfs claim add "{{{{SEG}}}}" --kind fact --source {{{{C_SRC}}}} --grade {{{{GRADE}}}}
+<span class="hi">{{{{C_ID}}}} · {{{{KIND}}}} · grade {{{{GRADE}}}} · quote saved</span>
+<span class="a">Step 3/12 · research</span> · {{{{D_CLAIMS}}}} claims in the registry · next: discovery
+<span class="p">&gt;</span> stop — pause: the state lives in files, a new chat resumes at step 3</pre>
+      </div>
+      <div class="proof-side">
+        <div class="claim">
+          <div class="tags"><span class="tag a">{{{{C_ID}}}} · {{{{KIND}}}}</span><span class="tag">grade {{{{GRADE}}}}</span><span class="tag">source {{{{C_SRC}}}}</span></div>
+          <p>{{{{TEXT}}}}</p>
+          <div class="chain">
+            <span class="chip a"><em>{{{{C_ID}}}}</em> · {{{{KIND}}}} · grade {{{{GRADE}}}}</span><span aria-hidden="true" class="muted">→</span>
+            <span class="chip"><em>{{{{C_SRC}}}}</em> · {{{{DOM}}}} · {{{{DATE}}}}</span><span aria-hidden="true" class="muted">→</span>
+            <span class="chip">six-pager · {{{{USAGE}}}}</span>
+          </div>
+        </div>
+        <div class="xl">
+          <div class="label" style="margin-bottom:10px">Excel · input sheet</div>
+          <table>
+            <tr><td>Pro price</td><td>${{{{XL_PRICE}}}}/mo</td></tr>
+            <tr><td>25% variable costs → contribution margin</td><td>${{{{XL_CM}}}}</td></tr>
+            <tr><td>LTV</td><td>≈ ${{{{XL_LTV}}}}</td></tr>
+            <tr><td>LTV / CAC</td><td>≈ {{{{XL_RATIO}}}}</td></tr>
+          </table>
+          <p class="muted" style="margin:10px 0 0;font-size:13px">Change the inputs and the formulas recalculate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" aria-labelledby="demo-h">
+  <div class="wrap demo">
+    <div class="head" style="margin:0">
+      <div class="label">Demo project</div>
+      <h2 id="demo-h">CVStart: <span class="acc">a paid version</span> and a go-to-market plan</h2>
+      <p>The product lead’s request, word for word: “Build a commercial version of cvstart.org and a strategy to take it to market worldwide.” Numbers come from the project, not from hands.</p>
+      <div><a class="pill pill-b pill-sm" href="demo.html" data-goal="cta_demo_click">Open the walkthrough{ARROW}</a></div>
+    </div>
+    <div>
+      <!-- numbers are substituted by scripts/build_site.py from the demo project -->
+      <dl class="stats">
+        <div><dt><span>sources</span></dt><dd style="margin:0"><b>{{{{D_SOURCES}}}}</b></dd></div>
+        <div><dt><span>claims, of them facts — {{{{D_FACTS}}}}</span></dt><dd style="margin:0"><b>{{{{D_CLAIMS}}}}</b></dd></div>
+        <div><dt><span>options A–{{{{D_OPT_LAST}}}}, incl. status quo and shut-down</span></dt><dd style="margin:0"><b>A–{{{{D_OPT_LAST}}}}</b></dd></div>
+        <div><dt><span>red-team objections and hidden assumptions</span></dt><dd style="margin:0"><b>{{{{D_OBJ}}}} + {{{{D_ASM}}}}</b></dd></div>
+        <div><dt><span>chosen: {{{{D_LABEL}}}}</span></dt><dd style="margin:0"><b>{{{{D_LETTER}}}}</b></dd></div>
+        <div><dt><span>review of decision D001</span></dt><dd style="margin:0"><b>{{{{REVIEW}}}}</b></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="arch" aria-labelledby="arch-h">
+  <div class="wrap">
+    <div class="head" style="margin:0 auto 48px;text-align:center;align-items:center">
+      <div class="label">Architecture</div>
+      <h2 id="arch-h">The guarantees live <span class="acc">in code and files</span>, not in prompts</h2>
+      <p>CLI automated tests ({{{{N_TESTS}}}}) check the core after every change. The project state lives in files next to the code — work survives breaks and moves between tools.</p>
+    </div>
+    <div class="stack">
+      <div class="layer"><span class="n">1</span><div><b>Environment · AGENTS.md</b><small>rules: a source for every number, synthetics produce hypotheses only, a human decides what matters · skills: {{{{N_SKILLS}}}} · subagents: {{{{N_AGENTS}}}} · hooks: {{{{N_HOOKS}}}}</small></div></div>
+      <div class="layer"><span class="n">2</span><div><b>Core · tools/pfs</b><small>CLI and MCP: steps 1–12, the claim registry, sha256-stamped sources, six-pager export · Python standard library only</small></div></div>
+      <div class="layer"><span class="n">3</span><div><b>Knowledge · knowledge/</b><small>{{{{N_MAPS}}}} method cards in Russian · {{{{N_MAPS_EN}}}} English mirrors · document templates and scoring rubrics</small></div></div>
+      <div class="layer"><span class="n">4</span><div><b>Project files</b><small>state.json · claims.jsonl · sources/ — the grounds of decisions stay readable even after a year-long break</small></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="install" aria-labelledby="inst-h">
+  <div class="wrap inst">
+    <div class="head" style="margin:0">
+      <div class="label">Install</div>
+      <h2 id="inst-h">Five minutes <span class="acc">to your first task</span></h2>
+      <p>You need Python 3.9+ and one of Claude Code, OpenCode, Cursor or Codex.</p>
+      <blockquote>“Our paid spam-call protection keeps losing subscribers. What should we do with the product, and what should we tell customers?”</blockquote>
+    </div>
+    <ol class="steps">
+      <li><span class="label">1 · Clone the repository</span><div class="cmd"><code>git clone https://github.com/Fighter90/product-factory-strategist-agent.git</code><button class="copy" type="button" data-copy="0" data-ok="Copied">Copy</button></div></li>
+      <li><span class="label">2 · Install pfs</span><div class="cmd"><code>cd product-factory-strategist-agent &amp;&amp; ./scripts/install.sh</code><button class="copy" type="button" data-copy="1" data-ok="Copied">Copy</button></div></li>
+      <li><span class="label">3 · Check your setup</span><div class="cmd"><code>pfs doctor</code><button class="copy" type="button" data-copy="2" data-ok="Copied">Copy</button></div></li>
+      <li><span class="label">4 · Open the folder in your tool</span><div class="cmd"><code>opencode</code><button class="copy" type="button" data-copy="3" data-ok="Copied">Copy</button></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-h">
+  <div class="wrap faq">
+    <div class="head" style="margin:0"><div class="label">FAQ</div><h2 id="faq-h">Frequently <span class="acc">asked</span></h2></div>
+    <div>
+      <details><summary>What data does the agent use?<span class="pm" aria-hidden="true">+</span></summary><p>Only open sources and the materials you give it. Allowed domains are set per project. The agent never follows instructions found inside source texts.</p></details>
+      <details><summary>Can I stop it and make corrections?<span class="pm" aria-hidden="true">+</span></summary><p>Yes. “Stop” pauses the run, “refine: …” changes the task, and the agent reads your manual edits instead of overwriting them. A new chat resumes from the same step.</p></details>
+      <details><summary>How much does a run cost?<span class="pm" aria-hidden="true">+</span></summary><p>It depends on the model and how much research the task needs. Tokens per model and people’s time are shown by pfs cost and in the report appendix.</p></details>
+      <details><summary>Why not just use a chat?<span class="pm" aria-hidden="true">+</span></summary><p>The agent runs a step-by-step process, keeps evidence in a registry and checks its documents. A plain chat gives you text that is hard to verify or continue.</p></details>
+      <details><summary>Does it work in Russian and English?<span class="pm" aria-hidden="true">+</span></summary><p>Yes. Instructions, the knowledge base and the final documents exist in both languages; you pick the language when you create a project.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final" aria-labelledby="fin-h">
+  <div class="wrap">
+    <div class="box">
+      <figure class="dosfig">
+        <picture>
+          <source type="image/avif" srcset="{{{{A}}}}assets/dossier-dark.avif">
+          <img src="{{{{A}}}}assets/dossier-dark.webp" width="1800" height="1012" alt="Decision package: documents bundled with thread on a dark background" loading="lazy" decoding="async">
+        </picture>
+      </figure>
+      <div class="eyebrow">Open source · MIT</div>
+      <h2 id="fin-h">Try the agent <span class="acc">on your own problem</span></h2>
+      <p class="muted" style="margin:0;max-width:34em">Open the folder in your tool and describe the task as it is. The agent asks up to three questions and starts the research.</p>
+      <div class="ctas">
+        <a class="pill pill-a" href="#install" data-goal="cta_install_click">Install{ARROW}</a>
+        <a class="pill pill-b" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click">GitHub{ARROW}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span style="color:var(--strong);font-weight:500">Product Factory Strategist</span>
+    <nav aria-label="Links"><a href="https://github.com/Fighter90/product-factory-strategist-agent">GitHub</a><a href="help.html">Help</a><a href="materials.html">Demo materials</a><a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/CHANGELOG.md">Changelog</a></nav>
+    <span>MIT · open source</span>
+  </div>
+</footer>
+"""
+
+
+# OG-картинка одна на оба языка: og-ru.jpg и og-en.jpg были побайтово одинаковы
+# (ревью PRO-66), а сама картинка — языконезависимое фото. Текст расшаривающейся
+# ссылки подставляет соцсеть из og:title/og:description, а не из картинки.
+def _og(lang: str, title: str, desc: str, canonical: str) -> str:
+    return f"""<meta property="og:type" content="website">
+<meta property="og:site_name" content="{'Стратег Фабрики продуктов' if lang == 'ru' else 'Product Factory Strategist'}">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{BASE}/assets/og/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">"""
+
+
+def build(out: Path, ym_id: str | None) -> list[Path]:
+    tokens = {}
+    tokens.update(repo_numbers())
+    tokens.update(demo_numbers())
+    tokens.update(claim_facts())
+    tokens.update(excel_numbers())
+    tokens["YM"] = YM_LOADER.replace("@ID@", ym_id) if ym_id else ""
+
+    ru_title = "Стратег Фабрики продуктов — ИИ-агент для руководителя продукта"
+    ru_desc = ("Агент проводит исследование и собирает стратегию, которую можно проверить: "
+               "источник у каждого числа, разные варианты, six-pager для комитета и "
+               "сопровождение решения.")
+    en_title = "Product Factory Strategist — an AI agent for product leads"
+    en_desc = ("The agent runs real research and builds a strategy you can check: a source for "
+               "every number, genuinely different options, a committee six-pager and follow-up "
+               "after the decision.")
+
+    # Пер-языковые подстановки: KIND/TEXT/SEG/DATE/USAGE/REVIEW/YOU/префикс ассетов
+    ru = dict(tokens)
+    ru.update({"KIND": tokens["KIND_RU"], "TEXT": tokens["TEXT"], "SEG": tokens["SEG_RU"],
+               "DATE": tokens["DATE_RU"], "USAGE": tokens["USAGE_RU"], "REVIEW": tokens["REVIEW_RU"],
+               "DOM": tokens["C_DOM"], "A": "", "BRAND": BRAND_SVG, "YOU": "вы"})
+    en = dict(tokens)
+    # EN-лендинг: десятичные точки вместо русских запятых в плитке Excel
+    for k in ("XL_CM", "XL_LTV", "XL_RATIO"):
+        en[k] = en[k].replace(",", ".")
+    en.update({"KIND": tokens["KIND_EN"], "TEXT": tokens["TEXT_EN"], "SEG": tokens["SEG_EN"],
+               "DATE": tokens["DATE_EN"], "USAGE": tokens["USAGE_EN"], "REVIEW": tokens["REVIEW_EN"],
+               "DOM": tokens["C_DOM"], "A": "../", "BRAND": BRAND_SVG, "YOU": "you",
+               # метка выбранного варианта — EN-перевод, не текст русского 03_options.md
+               "D_LABEL": tokens["D_LABEL_EN"]})
+
+    ru_page = _page("ru", ru_title, ru_desc, f"{BASE}/", _og("ru", ru_title, ru_desc, f"{BASE}/"),
+                    RU_BODY, ru)
+    en_page = _page("en", en_title, en_desc, f"{BASE}/en/", _og("en", en_title, en_desc, f"{BASE}/en/"),
+                    EN_BODY, en)
+
+    written = []
+    for rel, content in ((Path("index.html"), ru_page), (Path("en") / "index.html", en_page)):
+        path = out / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        written.append(path)
+    return written
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Генератор лендинга strategyproduct.ru (RU и EN)")
+    ap.add_argument("--out", type=Path, default=DEFAULT_OUT,
+                    help=f"каталог вывода (по умолчанию {DEFAULT_OUT.relative_to(ROOT)})")
+    ap.add_argument("--ym-id", default=None,
+                    help="ID счётчика Яндекс Метрики; не хранится в репозитории (см. site/ANALYTICS.md)")
+    args = ap.parse_args(argv)
+    if args.ym_id and not args.ym_id.isdigit():
+        print("Ошибка: --ym-id должен быть числом", file=sys.stderr)
+        return 2
+    try:
+        written = build(args.out.resolve(), args.ym_id)
+        written += build_pages(args.out.resolve())
+    except BuildError as e:
+        print(f"Ошибка сборки: {e}", file=sys.stderr)
+        return 1
+    for p in written:
+        try:
+            shown = p.relative_to(ROOT)
+        except ValueError:
+            shown = p
+        print(f"Записан {shown} ({p.stat().st_size} байт)")
+    return 0
+
+
+
+# ==================== PRO-61: страницы demo/help/materials ====================
+# Источники: site_src/<page>.html — языконейтральный шаблон с токенами
+# {{<page>.<lang>.kNNN}} (пары RU/EN из бывшего двухъязычного DOM),
+# site/i18n/{ru,en}.json — словарь строк страниц, projects/демо — числа.
+
+SITE_SRC = ROOT / "site_src"
+html_mod = html  # страницы используют то же экранирование, что и лендинг
+from html.parser import HTMLParser  # фильтр языка готовых страниц
+I18N_DIR = ROOT / "site" / "i18n"
+PAGES_I18N = ("demo", "help", "materials")
+PAGE_DICT = {"demo": "demo_page", "help": "help_page", "materials": "materials_page"}
+LANGSWITCH = {
+    ("demo", "ru"): '<a href="demo.html" class="on" aria-current="true">RU</a><a href="en/demo.html" hreflang="en" data-goal="lang_switch">EN</a>',
+    ("demo", "en"): '<a href="../demo.html" hreflang="ru" data-goal="lang_switch">RU</a><a href="demo.html" class="on" aria-current="true">EN</a>',
+    ("help", "ru"): '<a href="help.html" class="on" aria-current="true">RU</a><a href="en/help.html" hreflang="en" data-goal="lang_switch">EN</a>',
+    ("help", "en"): '<a href="../help.html" hreflang="ru" data-goal="lang_switch">RU</a><a href="help.html" class="on" aria-current="true">EN</a>',
+    ("materials", "ru"): '<a href="materials.html" class="on" aria-current="true">RU</a><a href="en/materials.html" hreflang="en" data-goal="lang_switch">EN</a>',
+    ("materials", "en"): '<a href="../materials.html" hreflang="ru" data-goal="lang_switch">RU</a><a href="materials.html" class="on" aria-current="true">EN</a>',
+}
+
+
+def _rnd(v, nd: int) -> str:
+    """Округление half-up, чтобы совпадать с six-pager (271,875 -> 271,88)."""
+    from decimal import Decimal, ROUND_HALF_UP
+    q = Decimal(1).scaleb(-nd)
+    return str(Decimal(str(v)).quantize(q, rounding=ROUND_HALF_UP))
+
+
+def fmt(v, lang: str, nd: int = 2) -> str:
+    s = _rnd(v, nd)
+    return s.replace(".", ",") if lang == "ru" else s
+
+
+def _id_range(ids: list) -> str:
+    """Сплошной ряд — «S001–S003», ряд с дырой — «S001–S002, S004–S011»."""
+    nums = sorted(int(x[1:]) for x in ids)
+    runs = []
+    for n in nums:
+        if runs and n == runs[-1][-1] + 1:
+            runs[-1].append(n)
+        else:
+            runs.append([n])
+    prefix = ids[0][0] if ids else "S"
+    parts = []
+    for r in runs:
+        a, b = r[0], r[-1]
+        parts.append(f"{prefix}{a:03d}–{prefix}{b:03d}" if b > a else f"{prefix}{a:03d}")
+    return ", ".join(parts)
+
+
+def ru_date(iso: str) -> str:
+    y, m, d = iso.split("-")
+    return f"{d}.{m}.{y}"
+
+
+def validation_data(demo: Path | None = None) -> dict:
+    demo = demo or DEMO
+    """Воронка, пороги и срок беты — из outputs/06_validation_plan.md демо."""
+    plan = (demo / "outputs" / "06_validation_plan.md").read_text(encoding="utf-8")
+    m_funnel = re.search(r"(\d[\d ]*) посетителей → (\d[\d ]*) регистрации → "
+                         r"(\d[\d ]*) активаций → (\d+) платящих \(MRR \$([\d ]+)\)", plan)
+    if not m_funnel:
+        raise BuildError(f"Не удалось разобрать воронку недели 12 в {demo}/outputs/06_validation_plan.md")
+    m_cont = re.search(r"paid ≥ (\d+) к нед\. (\d+), activation ≥ (\d+)%, churn платящих ≤ (\d+)%/мес", plan)
+    m_adj = re.search(r"paid (\d+)–(\d+) → пересобрать тир/цену \(\$(\d+)\?\)", plan)
+    m_stop = re.search(r"paid < (\d+) к нед\. (\d+) при activation < (\d+)%", plan)
+    if not (m_cont and m_adj and m_stop):
+        raise BuildError(f"Не удалось разобрать пороги (Продолжить/Изменить/Остановить) "
+                         f"в {demo}/outputs/06_validation_plan.md")
+    m_days = re.search(r"\((\d+) дней\)", plan)
+    if not m_days:
+        raise BuildError(f"В {demo}/outputs/06_validation_plan.md нет срока беты «(N дней)»")
+    m_range = re.search(r"нед\. 12 — \*\*(\d+)–(\d+) платящих", plan)
+    if not m_range:
+        raise BuildError(f"В {demo}/outputs/06_validation_plan.md нет диапазона ожидания «50–60 платящих»")
+    m_gdpr = re.search(r"GDPR-запросы > (\d+)", plan)
+    m_infra = re.search(r"free-тира > \$(\d+)/мес", plan)
+    m_nps = re.search(r"NPS беты < (\d+)", plan)
+    if not (m_gdpr and m_infra and m_nps):
+        raise BuildError(f"Не удалось разобрать контрметрики (GDPR/инференс/NPS) "
+                         f"в {demo}/outputs/06_validation_plan.md")
+    # Цель «MRR ≥ $N» — из интро плана. Без неё брейк-евен не от чего считать
+    # (ревью PRO-61: считали от факта недели 12 и расходились с цитатой six-pager).
+    # Проверяем последней, чтобы диагностические ошибки воронки/порогов были первыми.
+    m_target = re.search(r"MRR ≥ \$([\d ]+)", plan)
+    if not m_target:
+        raise BuildError(f"В {demo}/outputs/06_validation_plan.md нет цели «MRR ≥ $N»")
+    g = lambda m: [x.replace(" ", "") for x in m.groups()]
+    return {
+        "visitors": int(g(m_funnel)[0]), "signups": int(g(m_funnel)[1]),
+        "activations": int(g(m_funnel)[2]), "paid_w12": int(g(m_funnel)[3]),
+        "mrr_w12": int(g(m_funnel)[4]),
+        "mrr_target": int(m_target.group(1).replace(" ", "")),
+        "paid_target": int(m_cont.group(1)), "funnel_weeks": int(m_cont.group(2)),
+        "act_target": int(m_cont.group(3)), "churn_max": int(m_cont.group(4)),
+        "paid_change_low": int(m_adj.group(1)), "paid_high": int(m_adj.group(2)),
+        "price_alt": m_adj.group(3),
+        "paid_low": int(m_stop.group(1)), "act_stop": int(m_stop.group(3)),
+        "target_lo": int(m_range.group(1)), "target_hi": int(m_range.group(2)),
+        "gdpr_max": int(m_gdpr.group(1)), "infra_max": int(m_infra.group(1)),
+        "nps_min": int(m_nps.group(1)),
+        "beta_days": int(m_days.group(1)),
+    }
+
+
+def decision_data(demo: Path | None = None) -> dict:
+    demo = demo or DEMO
+    """D001: тарифы, срок беты, метрика, триггеры, обязательство, основания."""
+    d1 = next((d for d in _jsonl(demo / ("decisions" + ".jsonl")) if d.get("id") == "D001"), None)
+    if not d1:
+        raise BuildError("В реестре решений демо-проекта нет D001")
+    metrics = d1.get("metrics") or []
+    if not metrics:
+        raise BuildError("У D001 нет метрик — сайт не покажет метрику беты")
+    m = re.search(r"Pro \$(\d+) / Unlimited \$(\d+)", d1.get("decision", ""))
+    if not m:
+        raise BuildError("В решении D001 нет строки тарифов «Pro $N / Unlimited $N»")
+    days_dec = re.search(r"(\d+)-дневная бета", d1.get("decision", ""))
+    days_plan = validation_data(demo)["beta_days"]
+    if not days_dec:
+        raise BuildError("В решении D001 нет срока беты «N-дневная бета»")
+    if int(days_dec.group(1)) != days_plan:
+        raise BuildError(f"Срок беты в D001 ({days_dec.group(1)} дней) расходится "
+                         f"с планом проверки ({days_plan} дней)")
+    review = d1.get("review") or {}
+    date = review.get("date", "")
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
+        raise BuildError(f"У D001 нет даты пересмотра YYYY-MM-DD: {date!r}")
+    commitments = d1.get("commitments") or []
+    due_m = re.search(r"(\d{4}-\d{2}-\d{2})", (commitments[0].get("due") if commitments else "") or "")
+    if not due_m:
+        raise BuildError("У первого обязательства D001 нет даты")
+    return {
+        "tiers": (m.group(1), m.group(2)),
+        "beta_days": int(days_dec.group(1)),
+        "metric": metrics[0],
+        "review_date": date,
+        "triggers": review.get("triggers") or [],
+        "commit_date": due_m.group(1),
+        "grounds": [c for c in (d1.get("grounds") or [])],
+    }
+
+
+def ground_claims(data_en: dict, demo: Path | None = None) -> dict:
+    demo = demo or DEMO
+    """Тексты оснований D001: RU — из реестра, EN — из demo_data_en (сверка чисел)."""
+    rows = {c["id"]: c for c in _jsonl(demo / ("claims" + ".jsonl"))}
+    grounds = decision_data(demo)["grounds"]
+    out = {"ru": [], "en": []}
+    for cid in grounds:
+        row = rows.get(cid)
+        if not row:
+            raise BuildError(f"Основание {cid} решения D001 отсутствует в реестре утверждений")
+        out["ru"].append((cid, row.get("text", "")))
+        tr = (data_en.get("claims") or {}).get(cid)
+        if not tr:
+            raise BuildError(f"Нет EN-перевода утверждения {cid} (demo_data_en.claims в site/i18n/en.json)")
+        if sorted(_num_tokens(row.get("text", ""))) != sorted(_num_tokens(tr)):
+            raise BuildError(f"Числа EN-перевода {cid} расходятся с реестром — обновите demo_data_en")
+        out["en"].append((cid, tr))
+    return out
+
+
+# Числа рынка показываются как данные демо-проекта, поэтому читаются из реестра
+# утверждений, а не набиваются константами (ревью PRO-61 r3):
+# коридор рынка resume builders и CAGR ИИ-подсегмента — C005,
+# рынок онлайн-рекрутинга и его CAGR — C011.
+CLAIM_MARKET = "C005"
+CLAIM_RECRUIT = "C011"
+
+
+def market_numbers(claims: list) -> dict:
+    """MARKET_RU/MARKET_EN, AI_CAGR — из {CLAIM_MARKET};
+    RECRUIT_MARKET, RECRUIT_CAGR — из {CLAIM_RECRUIT}.
+
+    Утверждение исчезло или потеряло структуру «$N–N млрд» / «CAGR N%» —
+    сборка падает громко, а не показывает на сайте числа без реестра.
+    """
+    rows = {c.get("id"): c for c in claims}
+    m = rows.get(CLAIM_MARKET)
+    if not m:
+        raise BuildError(f"В реестре демо нет {CLAIM_MARKET} — "
+                         f"MARKET_RU/MARKET_EN/AI_CAGR брать неоткуда")
+    mtext = m.get("text", "")
+    m_corr = re.search(r"\$([\d,]+)–([\d,]+)\s*млрд", mtext)
+    m_cagr = re.search(r"CAGR\s*([\d,]+)\s*%", mtext)
+    if not (m_corr and m_cagr):
+        raise BuildError(f"В {CLAIM_MARKET} нет коридора «$N–N млрд» или «CAGR N%»: {mtext!r}")
+    r = rows.get(CLAIM_RECRUIT)
+    if not r:
+        raise BuildError(f"В реестре демо нет {CLAIM_RECRUIT} — "
+                         f"RECRUIT_MARKET/RECRUIT_CAGR брать неоткуда")
+    rtext = r.get("text", "")
+    r_amt = re.search(r"\$([\d,]+)\s*млрд", rtext)
+    r_cagr = re.search(r"CAGR\s*([\d,]+)\s*%", rtext)
+    if not (r_amt and r_cagr):
+        raise BuildError(f"В {CLAIM_RECRUIT} нет «$N млрд» или «CAGR N%»: {rtext!r}")
+
+    def dot(s: str) -> str:
+        return s.replace(",", ".")
+
+    corridor_ru = f"${m_corr.group(1)}–{m_corr.group(2)} млрд"
+    corridor_en = f"${dot(m_corr.group(1))}–{dot(m_corr.group(2))}B"
+    return {
+        "MARKET_RU": corridor_ru,
+        "MARKET_EN": corridor_en,
+        "AI_CAGR": float(dot(m_cagr.group(1))),
+        "RECRUIT_MARKET": float(dot(r_amt.group(1))),
+        "RECRUIT_CAGR": float(dot(r_cagr.group(1))),
+    }
+
+
+def page_values() -> dict:
+    """{{TOKEN}} -> (kind, value) для страниц demo/help/materials."""
+    reg = repo_numbers()
+    plan = validation_data()
+    dec = decision_data()
+    claims = _jsonl(DEMO / ("claims" + ".jsonl"))
+    sources = _jsonl(DEMO / ("sources" + ".jsonl"))
+    kinds = {}
+    for c in claims:
+        kinds[c.get("kind", "?")] = kinds.get(c.get("kind", "?"), 0) + 1
+    ue = json.loads((DEMO / "calcs.json").read_text(encoding="utf-8"))["unit_econ"]
+    arpu = float(ue["arpu"]); vc = float(ue["vc_share"])
+    cac = float(ue["cac"]); churn = float(ue["churn_month"])
+    cm = arpu * (1 - vc)
+    ltv = cm / churn
+    mk = market_numbers(claims)
+    n_xlsx = len(list((DEMO / "outputs" / "attachments").glob("*.xlsx")))
+    n_six = len(list((DEMO / "outputs").glob("SIX_PAGER*")))
+    n_shots = len(list((ROOT / "site" / "assets").glob("cv_*.jpg")))
+    n_mcp = len(set(re.findall(r'"(pfs_[a-z_]+)"',
+        (ROOT / "tools" / "pfs" / "mcp_server.py").read_text(encoding="utf-8"))))
+    v = {
+        "SOURCES_COUNT": ("int", len(sources)),
+        "S_RANGE": ("str", _id_range([x["id"] for x in sources])),
+        "CLAIMS_COUNT": ("int", len(claims)),
+        "C_RANGE": ("str", _id_range([c["id"] for c in claims])),
+        "FACTS_COUNT": ("int", kinds.get("fact", 0)),
+        "XLSX_COUNT": ("int", n_xlsx),
+        "SIX_COUNT": ("int", n_six),
+        "SHOTS_COUNT": ("int", n_shots),
+        "N_MAPS": ("int", reg["N_MAPS"]), "N_SKILLS": ("int", reg["N_SKILLS"]),
+        "N_AGENTS": ("int", reg["N_AGENTS"]), "N_HOOKS": ("int", reg["N_HOOKS"]),
+        "N_TESTS": ("int", reg["N_TESTS"]),
+        "N_MCP": ("int", n_mcp),
+        "OPT_COUNT": ("int", len(demo_numbers()["D_OPT_LAST"]) and (ord(demo_numbers()["D_OPT_LAST"]) - 64)),
+        "OPT_LAST": ("str", demo_numbers()["D_OPT_LAST"]),
+        "D_OBJ": ("int", demo_numbers()["D_OBJ"]),
+        "D_ASM": ("int", demo_numbers()["D_ASM"]),
+        "RT_HITS": ("int", demo_numbers()["D_OBJ"] + demo_numbers()["D_ASM"]),
+        "ARPU": ("money0", arpu), "CAC": ("money0", cac),
+        "VC_PCT": ("int", round(vc * 100)),
+        "VC_COEF_RU": ("str", fmt(vc, "ru", 2)), "VC_COEF_EN": ("str", fmt(vc, "en", 2)),
+        "VC_NEG": ("neg2", arpu * vc),
+        "CM": ("money2", cm), "LTV": ("money2", ltv),
+        "LTV_CAC": ("num2", ltv / cac), "PAYBACK": ("num1", cac / cm),
+        "BREAKEVEN": ("int", math.ceil(plan["mrr_target"] / cm) if cm else 0),
+        "PRO_PRICE": ("str", "$" + dec["tiers"][0]),
+        "UNLIMITED_PRICE": ("str", "$" + dec["tiers"][1]),
+        "PRICE_ALT": ("str", "$" + plan["price_alt"] + "?"),
+        "BETA_DAYS": ("int", plan["beta_days"]),
+        "FUNNEL_WEEKS": ("int", plan["funnel_weeks"]),
+        "PAID_W12": ("int", plan["paid_w12"]),
+        "PAID_TARGET": ("int", plan["paid_target"]),
+        "PAID_LOW": ("int", plan["paid_low"]),
+        "TARGET_LO": ("int", plan["target_lo"]), "TARGET_HI": ("int", plan["target_hi"]),
+        "CONT_GDPR": ("int", plan["gdpr_max"]), "CONT_INFRA": ("int", plan["infra_max"]),
+        "CONT_NPS": ("int", plan["nps_min"]),
+        "PAID_CHANGE_LOW": ("int", plan["paid_change_low"]),
+        "PAID_HIGH": ("int", plan["paid_high"]),
+        "ACT_TARGET": ("int", plan["act_target"]),
+        "ACT_STOP": ("int", plan["act_stop"]),
+        "CHURN_MAX": ("int", plan["churn_max"]),
+        "VISITORS_W12": ("count", plan["visitors"]),
+        "SIGNUPS_W12": ("count", plan["signups"]),
+        "ACTIVATIONS_W12": ("count", plan["activations"]),
+        "MRR_W12_RU": ("mrr", plan["mrr_w12"]), "MRR_W12_EN": ("mrr", plan["mrr_w12"]),
+        "MRR_TARGET_RU": ("mrr", plan["mrr_target"]), "MRR_TARGET_EN": ("mrr", plan["mrr_target"]),
+        "ARR_W12_RU": ("arr", plan["mrr_w12"] * 12 / 1000),
+        "ARR_W12_EN": ("arr", plan["mrr_w12"] * 12 / 1000),
+        "MARKET": ("market", (mk["MARKET_RU"], mk["MARKET_EN"])),
+        "MARKET_RU": ("str", mk["MARKET_RU"]),
+        "MARKET_EN": ("str", mk["MARKET_EN"]),
+        "AI_CAGR": ("pct1", mk["AI_CAGR"]),
+        "RECRUIT_MARKET": ("recruit", mk["RECRUIT_MARKET"]),
+        "RECRUIT_CAGR": ("pct1", mk["RECRUIT_CAGR"]),
+        "COMMIT_RU": ("str", ru_date(dec["commit_date"])),
+        "COMMIT_EN": ("str", dec["commit_date"]),
+        "REVIEW_RU": ("str", ru_date(dec["review_date"])),
+        "REVIEW_EN": ("str", dec["review_date"]),
+    }
+    return v
+
+
+def render_value(kind, val, lang: str) -> str:
+    if kind in ("int", "count"):
+        return f"{val:,}" if (kind == "count" and lang == "en" and val >= 1000) else str(val)
+    if kind == "money0":
+        return "$" + fmt(val, lang, 0)
+    if kind == "money2":
+        return "$" + fmt(val, lang, 2)
+    if kind == "neg2":
+        return "−$" + fmt(val, lang, 2)
+    if kind == "num2":
+        return fmt(val, lang, 2)
+    if kind == "num1":
+        return fmt(val, lang, 1)
+    if kind == "pct1":
+        return fmt(val, lang, 1 if val % 1 else 0) + "%"
+    if kind == "mrr":
+        d = str(int(val))
+        return ("$" + d[:-3] + "\u202f" + d[-3:]) if lang == "ru" and len(d) > 3 else "$" + f"{int(val):,}"
+    if kind == "arr":
+        return ("$" + fmt(val, lang, 1) + " тыс") if lang == "ru" else ("$" + fmt(val, lang, 1) + "K")
+    if kind == "market":
+        ru_v, en_v = val
+        return ru_v if lang == "ru" else en_v
+    if kind == "recruit":
+        return "$" + fmt(val, lang, 2) + (" млрд" if lang == "ru" else "B")
+    if kind == "str":
+        return str(val)
+    raise BuildError(f"Неизвестный тип значения {kind!r}")
+
+
+def _grounds_html(pairs: list) -> str:
+    return " · ".join(f"<b>{cid}</b> — {text}" for cid, text in pairs)
+
+
+
+
+class PageLangFilter(HTMLParser):
+    """Убирает элементы чужого языка из готовой страницы (фрагменты с lang=...)."""
+
+    VOID = {"meta", "link", "br", "hr", "img", "input", "source", "track", "wbr",
+            "area", "base", "col", "embed", "param"}
+
+    def __init__(self, lang: str):
+        super().__init__(convert_charrefs=False)
+        self.lang = lang
+        self.out = []
+        # стек: (тег в нижнем регистре, skip, тег как в исходнике)
+        self.stack = []
+        # регистр исходника по нижнему регистру — для закрывающих тегов вне стека
+        self.tagcase = {}
+
+    def _skipping(self):
+        return any(skip for _, skip, _ in self.stack)
+
+    def _remember_case(self):
+        """HTMLParser даёт имена тегов в нижнем регистре, а get_starttag_text()
+        — исходный текст тега. Запоминаем регистр (<linearGradient>), чтобы
+        закрывающий тег не превратился в </lineargradient> (ревью PRO-61 r3)."""
+        m = re.match(r"<\s*([^\s>/]+)", self.get_starttag_text() or "")
+        if m:
+            name = m.group(1)
+            self.tagcase[name.lower()] = name
+            return name
+        return ""
+
+    def handle_starttag(self, tag, attrs):
+        orig = self._remember_case() or tag
+        if tag == "html":
+            self.out.append(f'<html lang="{self.lang}">')
+            self.stack.append(("html", False, "html"))
+            return
+        if tag in self.VOID:
+            if not self._skipping():
+                d = dict(attrs)
+                if d.get("lang") in (None, self.lang):
+                    self.out.append(self.get_starttag_text())
+            return
+        own = dict(attrs).get("lang")
+        skip = self._skipping() or (own is not None and own != self.lang)
+        self.stack.append((tag, skip, orig))
+        if not skip:
+            self.out.append(self.get_starttag_text())
+
+    def handle_startendtag(self, tag, attrs):
+        self._remember_case()
+        if tag == "html":
+            self.out.append(f'<html lang="{self.lang}">')
+            return
+        if not self._skipping():
+            own = dict(attrs).get("lang")
+            if own in (None, self.lang):
+                self.out.append(self.get_starttag_text())
+
+    def handle_endtag(self, tag):
+        orig = self.tagcase.get(tag, tag)
+        if self.stack and self.stack[-1][0] == tag:
+            _, skip, orig = self.stack.pop()
+            if not skip:
+                self.out.append(f"</{orig}>")
+        elif not self._skipping():
+            self.out.append(f"</{orig}>")
+
+    def handle_data(self, data):
+        if not self._skipping():
+            self.out.append(data)
+
+    def handle_entityref(self, name):
+        if not self._skipping():
+            self.out.append(f"&{name};")
+
+    def handle_charref(self, name):
+        if not self._skipping():
+            self.out.append(f"&#{name};")
+
+    def handle_comment(self, data):
+        if not self._skipping():
+            self.out.append(f"<!--{data}-->")
+
+    def handle_decl(self, decl):
+        self.out.append(f"<!{decl}>")
+
+    def handle_pi(self, data):
+        self.out.append(f"<?{data}>")
+
+
+def filter_lang(html: str, lang: str) -> str:
+    p = PageLangFilter(lang)
+    p.feed(html)
+    p.close()
+    return "".join(p.out)
+
+def build_pages(out: Path) -> list:
+    """RU- и EN-версии demo/help/materials: статический HTML одного языка."""
+    ru_d = json.loads((I18N_DIR / "ru.json").read_text(encoding="utf-8"))
+    en_d = json.loads((I18N_DIR / "en.json").read_text(encoding="utf-8"))
+    # паритет ключей словарей — громко, а не тихая утечка
+    def keyset(obj, prefix=""):
+        ks = set()
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                pk = f"{prefix}.{k}" if prefix else str(k)
+                ks.add(pk)
+                ks |= keyset(v, pk)
+        return ks
+    ru_keys = {k for k in keyset(ru_d) if not k.startswith("demo_data_en")}
+    en_keys = {k for k in keyset(en_d) if not k.startswith("demo_data_en")}
+    if ru_keys != en_keys:
+        raise BuildError(f"Ключи site/i18n расходятся: {sorted(ru_keys ^ en_keys)[:8]}")
+
+    data_en = en_d["demo_data_en"]
+    gc = ground_claims(data_en)
+    dec = decision_data()
+    metric = dec["metric"]
+    metric_en = data_en.get("metric_target")
+    if not metric_en or sorted(_num_tokens(metric["target"] + " " + metric["baseline"])) != \
+            sorted(_num_tokens(metric_en)):
+        raise BuildError("Числа demo_data_en.metric_target расходятся с метрикой D001")
+    tr_ru = " ; ".join(dec["triggers"])
+    tr_en = " ; ".join(data_en.get("triggers") or [])
+    if sorted(_num_tokens(tr_ru)) != sorted(_num_tokens(tr_en)):
+        raise BuildError("Числа EN-перевода триггеров расходятся с D001.review.triggers")
+
+    values = page_values()
+    written = []
+    for page in PAGES_I18N:
+        src = (SITE_SRC / f"{page}.html").read_text(encoding="utf-8")
+        for lang in ("ru", "en"):
+            d = ru_d if lang == "ru" else en_d
+            pd_ = d[PAGE_DICT[page]]
+            html = src
+            # 0) head-мета без языка: title/description/og_title/og_url из словаря
+            for mk in ("title", "description", "og_title", "og_url"):
+                html = html.replace("{{" + page + "." + mk + "}}", pd_[mk])
+            # 1) чужие токены позиций — долой
+            html = re.sub(r"\{\{" + page + r"\.(ru|en)\.[A-Za-z0-9_]+\}\}",
+                          lambda m: "" if m.group(1) != lang else m.group(0), html)
+            # 2) пары страниц из словаря (готовая разметка — без экранирования)
+            html = re.sub(r"\{\{" + page + r"\." + lang + r"\.([A-Za-z0-9_]+)\}\}",
+                          lambda m: pd_[m.group(1)], html)
+            # 3) ui-строки
+            html = re.sub(r"\{\{ui\.([a-z_]+)\}\}", lambda m: d["ui"][m.group(1)], html)
+            # 4) числа демо — с форматом языка и экранированием строковых
+            def repl(m):
+                key = m.group(1)
+                if key in ("GROUNDS_RU", "GROUNDS_EN", "TRIGGERS_RU", "TRIGGERS_EN",
+                           "METRIC_RU", "METRIC_EN"):
+                    if key == "GROUNDS_RU": return _grounds_html(gc["ru"])
+                    if key == "GROUNDS_EN": return _grounds_html(gc["en"])
+                    if key == "TRIGGERS_RU": return html_mod.escape(tr_ru, quote=False)
+                    if key == "TRIGGERS_EN": return html_mod.escape(tr_en, quote=False)
+                    if key == "METRIC_RU":
+                        return html_mod.escape(f"{metric['name']}: {metric['target']} "
+                                               f"к {ru_date(metric['by'])} (базовый {metric['baseline']})", quote=False)
+                    return html_mod.escape(metric_en, quote=False)
+                base = key[:-3] if key.endswith(("_RU", "_EN")) else key
+                if base in values and key.endswith(("_RU", "_EN")):
+                    kind, val = values[base]
+                    return render_value(kind, val, "ru" if key.endswith("_RU") else "en")
+                if key not in values:
+                    raise BuildError(f"{page}/{lang}: неизвестный токен {{{{{key}}}}}")
+                kind, val = values[key]
+                text = render_value(kind, val, lang)
+                if kind == "str":
+                    text = html_mod.escape(text, quote=True)
+                return text
+            html = re.sub(r"\{\{([A-Z_0-9]+)\}\}", repl, html)
+            # 5) head: единые title/description/OG/canonical/hreflang. Родные
+            #    строки head'а источника убираем — иначе задвоение (вредно
+            #    для краулеров и превью ссылок).
+            meta = pd_
+            canon = f"{BASE}/" if page == "index" else f"{BASE}/{page}.html"
+            canon = f"{BASE}/en/" if (page == "index" and lang == "en") else (
+                f"{BASE}/en/{page}.html" if lang == "en" else canon)
+            head = (f"<title>{html_mod.escape(meta['title'], quote=True)}</title>\n"
+                    f'<meta name="description" content="{html_mod.escape(meta["description"], quote=True)}">\n'
+                    f'<meta property="og:type" content="website">\n'
+                    f'<meta property="og:title" content="{html_mod.escape(meta["og_title"], quote=True)}">\n'
+                    f'<meta property="og:description" content="{html_mod.escape(meta["description"], quote=True)}">\n'
+                    f'<meta property="og:url" content="{canon}">\n'
+                    f'<link rel="canonical" href="{canon}">\n'
+                    f'<link rel="alternate" hreflang="ru" href="{BASE}/{page}.html">\n'
+                    f'<link rel="alternate" hreflang="en" href="{BASE}/en/{page}.html">\n'
+                    f'<link rel="alternate" hreflang="x-default" href="{BASE}/{page}.html">')
+            html, n_title = re.subn(r"<title>.*?</title>\n?", "", html, flags=re.S)
+            html, n_desc = re.subn(r'<meta name="description"[^>]*>\n?', "", html)
+            html = re.subn(r'<meta property="og:[a-z_]+"[^>]*>\n?', "", html)[0]
+            if n_title != 1 or n_desc != 1:
+                raise BuildError(f"{page}: в исходнике не ровно одна строка title/description "
+                                 f"(title={n_title}, description={n_desc}) — проверьте site_src")
+            mark = '<meta charset="UTF-8">'
+            if mark not in html:
+                raise BuildError(f"{page}: нет {mark}")
+            html = html.replace(mark, mark + "\n" + head, 1)
+            # 6) переключатель языка — ссылки вместо JS
+            html = html.replace("<!--LANGSWITCH-->", LANGSWITCH[(page, lang)], 1)
+            if lang == "en":
+                # навигация остаётся в дереве /en/ (logo, «← Landing page», якоря),
+                # ../ нужен только ассетам и переключателю (LANGSWITCH)
+                html = re.sub(r'((?:src|href)=")assets/', r"\1../assets/", html)
+            html = filter_lang(html, lang)
+            html = re.sub(r"\n{3,}", "\n\n", html)
+            if "{{" in html:
+                left = sorted(set(re.findall(r"\{\{([^}]+)\}\}", html)))
+                raise BuildError(f"{page}/{lang}: неразрешённые токены: {left[:6]}")
+            dest = out / (f"en/{page}.html" if lang == "en" else f"{page}.html")
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(html, encoding="utf-8")
+            written.append(dest)
+    return written
+
+if __name__ == "__main__":
+    sys.exit(main())
