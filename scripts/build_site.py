@@ -1498,8 +1498,10 @@ def page_values() -> dict:
     n_xlsx = len(list((DEMO / "outputs" / "attachments").glob("*.xlsx")))
     n_six = len(list((DEMO / "outputs").glob("SIX_PAGER*")))
     n_shots = len(list((ROOT / "site" / "assets").glob("cv_*.jpg")))
-    n_mcp = len(set(re.findall(r'"(pfs_[a-z_]+)"',
-        (ROOT / "tools" / "pfs" / "mcp_server.py").read_text(encoding="utf-8"))))
+    meta_p = ROOT / "vendor" / "meta.json"
+    n_mcp = (json.loads(meta_p.read_text(encoding="utf-8"))["N_MCP"]
+             if meta_p.exists() else len(set(re.findall(r'"(pfs_[a-z_]+)"',
+        (ROOT / "tools" / "pfs" / "mcp_server.py").read_text(encoding="utf-8")))))
     v = {
         "SOURCES_COUNT": ("int", len(sources)),
         "S_RANGE": ("str", _id_range([x["id"] for x in sources])),
