@@ -85,6 +85,11 @@ def _jsonl(path: Path) -> list[dict]:
 # ---------------- данные репозитория ----------------
 
 def repo_numbers() -> dict:
+    """Числа агента в -site берутся из vendor/meta.json (снапшот приватного репо);
+    при запуске внутри полного репо считаются по файлам, как раньше."""
+    meta_p = ROOT / "vendor" / "meta.json"
+    if meta_p.exists():
+        return json.loads(meta_p.read_text(encoding="utf-8"))
     return {
         "N_MAPS": len(list((ROOT / "knowledge" / "methods").glob("*.md"))),
         "N_MAPS_EN": len(list((ROOT / "knowledge" / "methods_en").glob("*.md"))),
