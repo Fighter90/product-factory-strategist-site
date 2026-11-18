@@ -1318,8 +1318,8 @@ def _id_range(ids: list) -> str:
 
 
 def ru_date(iso: str) -> str:
-    y, m, d = iso.split("-")
-    return f"{d}.{m}.{y}"
+    # QA D11: даты на обеих версиях сайта — ISO, как в документах проекта
+    return iso
 
 
 def validation_data(demo: Path | None = None) -> dict:
