@@ -359,6 +359,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       
       <table lang="en"> <tr><th>Phrase</th><th>What happens</th></tr> <tr><td><b>"stop"</b></td><td>Pause: state saved, the agent stays quiet until a new command</td></tr> <tr><td><b>"clarify: …"</b></td><td>Adjust the task; only the affected part is redone, sources are not duplicated</td></tr> <tr><td><b>"redo section X"</b></td><td>Targeted rework of a single document section</td></tr> <tr><td><b>"what should I decide now"</b></td><td><code>pfs next</code>: current step, overdue decisions, stale grounds, open questions</td></tr> <tr><td><b>"what's due"</b></td><td><code>pfs decision due</code>: decisions and commitments whose review date arrived</td></tr> <tr><td><b>"what will this new source affect"</b></td><td><code>pfs impact</code>: which conclusions, document lines and decisions go stale</td></tr> <tr><td><b>"build the six-pager"</b></td><td><code>pfs calc all</code> + <code>pfs export --six-pager</code>: FAQ-1…6 report and 4 Excel workbooks</td></tr> <tr><td><b>"recalculate Excel"</b></td><td><code>pfs calc all</code> — workbooks rebuilt from current calcs.json</td></tr> <tr><td><b>"build the report" / "build the deck"</b></td><td><code>pfs export</code> → REPORT.md; <code>pfs export --deck</code> → 16:9 HTML deck</td></tr> <tr><td><b>"make it a doc"</b></td><td><code>pfs docx file.md</code> — Markdown to Word, dependency-free</td></tr> <tr><td><b>"check the project"</b></td><td><code>pfs check --strict</code> — numbers, links, options</td></tr> <tr><td><b>"how much did it cost"</b></td><td><code>pfs cost</code> — tokens and money per model</td></tr> </table>
     </div>
+      <p lang="en">Full end-to-end agent testing guide: <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/docs/QUICKSTART_EN.md">QUICKSTART_EN.md</a> in the repository.</p>
 
     <div class="faq rv" id="h-quickstart"><h3 lang="en">Quick start — 5 minutes</h3>
       
@@ -539,7 +540,7 @@ $ pfs new "Why is retention dropping" "the request verbatim"</pre>
 
     <div class="faq rv" id="h-models"><h3 lang="en">Models and routing</h3>
       
-      <p lang="en">The model profile lives in <code>config/models.json</code>: cheap models for classification, extraction, rubric scoring, AI respondents; strong ones for synthesis, options, red team, strategy. <code>pfs models</code> — table; <code>pick</code> — per task; <code>use</code> — switch profile; <code>pfs route --economy</code> downgrades deep→balanced except red team. <b>Escalation:</b> two consecutive check failures or a borderline rubric score → <code>pfs models escalate &lt;task&gt;</code> and retry with a stronger model. Subagents inherit the profile; <code>pfs models sync</code> after changes.</p></div>
+      <p lang="en">The model profile lives in <code>config/models.json</code> (tasks: route, judge, editor, red_team… — <code>pfs models pick judge</code>): cheap models for classification, extraction, rubric scoring, AI respondents; strong ones for synthesis, options, red team, strategy. <code>pfs models</code> — table; <code>pick</code> — per task; <code>use</code> — switch profile; <code>pfs route --economy</code> downgrades deep→balanced except red team. <b>Escalation:</b> two consecutive check failures or a borderline rubric score → <code>pfs models escalate &lt;task&gt;</code> and retry with a stronger model. Subagents inherit the profile; <code>pfs models sync</code> after changes.</p></div>
 
     <div class="faq rv" id="h-cost"><h3 lang="en">Cost: tokens, money, human time</h3>
       
@@ -556,7 +557,8 @@ $ pfs new "Why is retention dropping" "the request verbatim"</pre>
 
     <div class="faq rv" id="h-media-ux"><h3 lang="en">Media and UX analysis</h3>
       
-      <p lang="en"><code>pfs media add shot.png --desc "what is visible" --title "…"</code> copies the media to <code>sources/raw/</code> and turns the description into a text source: the agent analyzes exactly what is described. <code>pfs ux scaffold S003 --focus "onboarding"</code> builds a heuristics + journey scaffold bound to the material; the <code>ux-analyst</code> subagent fills it without inventing beyond the screenshots.</p></div>
+      <p lang="en"><code>pfs media add shot.png --desc "what is visible" --title "…"</code> copies the media to <code>sources/raw/</code> and turns the description into a text source: the agent analyzes exactly what is described. <code>pfs ux scaffold S003 --focus "onboarding"</code> builds a heuristics + journey scaffold bound to the material; the <code>ux-analyst</code> subagent fills it without inventing beyond the screenshots.</p>
+      <p lang="en"><code>pfs ab --hypothesis "…" --metric "…"</code> — A/B test design: proxy, guardrail, MDE, traffic, stop rule (PRO-71).</p></div>
 
     <div class="faq rv" id="h-env-claude"><h3 lang="en">Environment: Claude Code — the full experience</h3>
       

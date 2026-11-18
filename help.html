@@ -359,6 +359,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       <table lang="ru"> <tr><th>Фраза</th><th>Что произойдёт</th></tr> <tr><td><b>«стоп»</b></td><td>Пауза: состояние сохранено, агент замолчит до новой команды</td></tr> <tr><td><b>«уточни: …»</b></td><td>Корректировка задачи; переделается только затронутое, источники не дублируются</td></tr> <tr><td><b>«переделай раздел X»</b></td><td>Точечная переработка одного раздела документа</td></tr> <tr><td><b>«что решать сейчас»</b></td><td><code>pfs next</code>: текущий шаг, просроченные решения, устаревшие основания, открытые вопросы</td></tr> <tr><td><b>«что решать по срокам»</b></td><td><code>pfs decision due</code>: решения и обязательства с наступившей датой пересмотра</td></tr> <tr><td><b>«что затронет новый источник»</b></td><td><code>pfs impact</code>: какие выводы, строки документов и решения устареют</td></tr> <tr><td><b>«собери six-pager»</b></td><td><code>pfs calc all</code> + <code>pfs export --six-pager</code>: отчёт FAQ-1…6 и 4 книги Excel</td></tr> <tr><td><b>«пересчитай Excel»</b></td><td><code>pfs calc all</code> — книги пересобираются с текущим calcs.json</td></tr> <tr><td><b>«собери отчёт» / «собери деку»</b></td><td><code>pfs export</code> → REPORT.md; <code>pfs export --deck</code> → HTML-дека 16:9</td></tr> <tr><td><b>«сделай доку»</b></td><td><code>pfs docx файл.md</code> — Markdown в Word без зависимостей</td></tr> <tr><td><b>«проверь проект»</b></td><td><code>pfs check --strict</code> — контроль чисел, ссылок, вариантов</td></tr> <tr><td><b>«сколько стоило»</b></td><td><code>pfs cost</code> — токены и деньги по моделям</td></tr> </table>
       
     </div>
+      <p lang="ru">Полное тестирование агента от и до — пошаговая инструкция: <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/docs/QUICKSTART_RU.md">QUICKSTART_RU.md</a> в репозитории.</p>
 
     <div class="faq rv" id="h-quickstart"><h3 lang="ru">Быстрый старт — 5 минут</h3>
       <pre lang="ru">$ git clone https://github.com/Fighter90/product-factory-strategist-agent.git
@@ -559,7 +560,7 @@ pfs decision rebase --id D001 --note "основания обновлены"</pr
       </div>
 
     <div class="faq rv" id="h-models"><h3 lang="ru">Модели и маршрутизация</h3>
-      <p lang="ru">Профиль моделей живёт в <code>config/models.json</code>: дешёвые — классификация, выписки, оценка по рубрике, ИИ-респонденты; сильные — синтез, варианты, red team, стратегии. <code>pfs models</code> — таблица, <code>pfs models pick &lt;задача&gt;</code> — конкретная модель, <code>pfs models use &lt;профиль&gt;</code> — переключение среды (например, экономный профиль), <code>pfs route --economy</code> — понижение deep→balanced кроме red team. <b>Эскалация:</b> если check дважды нашёл ошибки в результате шага или оценка пограничная — <code>pfs models escalate &lt;задача&gt; --reason "…"</code> и повтор моделью выше. Субагенты наследуют профиль из frontmatter; после смены профиля — <code>pfs models sync</code>.</p>
+      <p lang="ru">Профиль моделей живёт в <code>config/models.json</code> (задачи: route, judge, editor, red_team… — <code>pfs models pick judge</code>): дешёвые — классификация, выписки, оценка по рубрике, ИИ-респонденты; сильные — синтез, варианты, red team, стратегии. <code>pfs models</code> — таблица, <code>pfs models pick &lt;задача&gt;</code> — конкретная модель, <code>pfs models use &lt;профиль&gt;</code> — переключение среды (например, экономный профиль), <code>pfs route --economy</code> — понижение deep→balanced кроме red team. <b>Эскалация:</b> если check дважды нашёл ошибки в результате шага или оценка пограничная — <code>pfs models escalate &lt;задача&gt; --reason "…"</code> и повтор моделью выше. Субагенты наследуют профиль из frontmatter; после смены профиля — <code>pfs models sync</code>.</p>
       </div>
 
     <div class="faq rv" id="h-cost"><h3 lang="ru">Стоимость: токены, деньги, ручное время</h3>
@@ -580,6 +581,7 @@ pfs data stats file.csv --col revenue --group seg              # статист�
 
     <div class="faq rv" id="h-media-ux"><h3 lang="ru">Медиа и UX-анализ</h3>
       <p lang="ru"><code>pfs media add скрин.png --desc "что видно" --title "…"</code> — изображение/аудио/видео копируется в <code>sources/raw/</code>, а описание становится текстовым источником: агент анализирует строго то, что описано. <code>pfs ux scaffold S003 --focus "онбординг"</code> — каркас разбора по эвристикам и пути пользователя с привязкой к материалу; субагент <code>ux-analyst</code> заполняет его, не фантазируя за пределами скриншотов.</p>
+      <p lang="ru"><code>pfs ab --hypothesis "…" --metric "…"</code> — дизайн A/B-теста: прокси, гардрейл, MDE, трафик, правило остановки (PRO-71).</p>
       </div>
 
     <div class="faq rv" id="h-env-claude"><h3 lang="ru">Среда: Claude Code — полный опыт</h3>
