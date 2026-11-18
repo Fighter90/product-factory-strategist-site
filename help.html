@@ -270,7 +270,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   <h1 lang="ru">Справка <span class="grad">·</span> агент</h1>
   <p class="sub" lang="ru">Полная документация: как общаться с агентом, все 12 шагов процесса, доказательства S### → C### → D###, Excel-модели и six-pager, инструменты (CLI, MCP, навыки, субагенты, хуки), среды и интеграции, безопасность, глоссарий и частые проблемы.</p>
   
-  <div class="meta" lang="ru">12 шагов · 100 карт знаний (RU + EN-индекс) · 101 навыков · 9 субагентов · 6 хуков · 18 MCP-инструментов · 0 зависимостей</div>
+  <div class="meta" lang="ru">12 шагов · 111 карт знаний (RU + EN-индекс) · 101 навыков · 10 субагентов · 6 хуков · 18 MCP-инструментов · 0 зависимостей</div>
   
   <div class="search"><input id="q" type="search" placeholder="Поиск по справке… / Search the help…" aria-label="Поиск по справке / Search the help"></div>
 </div></div>
@@ -312,7 +312,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <a href="#h-cli" lang="ru">CLI: все группы</a>
     <a href="#h-mcp" lang="ru">MCP: 18 инструментов</a>
     <a href="#h-skills" lang="ru">Навыки (101)</a>
-    <a href="#h-subagents" lang="ru">Субагенты (9)</a>
+    <a href="#h-subagents" lang="ru">Субагенты (10)</a>
     <a href="#h-hooks" lang="ru">Хуки (6)</a>
     <a href="#h-models" lang="ru">Модели и маршрутизация</a>
     <a href="#h-cost" lang="ru">Стоимость</a>
@@ -356,16 +356,15 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       </div>
 
     <div class="faq rv" id="h-phrases"><h3 lang="ru">Управляющие фразы</h3>
-      <table lang="ru"> <tr><th>Фраза</th><th>Что произойдёт</th></tr> <tr><td><b>«стоп»</b></td><td>Пауза: состояние сохранено, агент замолчит до новой команды</td></tr> <tr><td><b>«уточни: …»</b></td><td>Корректировка задачи; переделается только затронутое, источники не дублируются</td></tr> <tr><td><b>«переделай раздел X»</b></td><td>Точечная переработка одного раздела документа</td></tr> <tr><td><b>«что решать сейчас»</b></td><td><code>pfs next</code>: текущий шаг, просроченные решения, устаревшие основания, открытые вопросы</td></tr> <tr><td><b>«что решать по срокам»</b></td><td><code>pfs decision due</code>: решения и обязательства с наступившей датой пересмотра</td></tr> <tr><td><b>«что затронет новый источник»</b></td><td><code>pfs impact</code>: какие выводы, строки документов и решения устареют</td></tr> <tr><td><b>«собери six-pager»</b></td><td><code>pfs calc all</code> + <code>pfs export --six-pager</code>: отчёт FAQ-1…6 и 4 книги Excel</td></tr> <tr><td><b>«пересчитай Excel»</b></td><td><code>pfs calc all</code> — книги пересобираются с текущим calcs.json</td></tr> <tr><td><b>«собери отчёт» / «собери деку»</b></td><td><code>pfs export</code> → REPORT.md; <code>pfs export --deck</code> → HTML-дека 16:9</td></tr> <tr><td><b>«сделай доку»</b></td><td><code>pfs docx файл.md</code> — Markdown в Word без зависимостей</td></tr> <tr><td><b>«проверь проект»</b></td><td><code>pfs check --strict</code> — контроль чисел, ссылок, вариантов</td></tr> <tr><td><b>«сколько стоило»</b></td><td><code>pfs cost</code> — токены и деньги по моделям</td></tr> </table>
+      <table lang="ru"> <tr><th>Фраза</th><th>Что произойдёт</th></tr> <tr><td><b>«стоп»</b></td><td>Пауза: состояние сохранено, агент замолчит до новой команды</td></tr> <tr><td><b>«уточни: …»</b></td><td>Корректировка задачи; переделается только затронутое, источники не дублируются</td></tr> <tr><td><b>«переделай раздел X»</b></td><td>Точечная переработка одного раздела документа</td></tr> <tr><td><b>«что решать сейчас»</b></td><td><code>pfs next</code>: текущий шаг, просроченные решения, устаревшие основания, открытые вопросы</td></tr> <tr><td><b>«что решать по срокам»</b></td><td><code>pfs decision due</code>: решения и обязательства с наступившей датой пересмотра</td></tr> <tr><td><b>«что затронет новый источник»</b></td><td><code>pfs impact</code>: какие выводы, строки документов и решения устареют</td></tr> <tr><td><b>«собери six-pager»</b></td><td><code>pfs calc all</code> + <code>pfs export --six-pager</code>: отчёт FAQ-1…6 и 4 книги Excel</td></tr> <tr><td><b>«пересчитай Excel»</b></td><td><code>pfs calc all</code> — книги пересобираются с текущим calcs.json</td></tr> <tr><td><b>«собери отчёт» / «собери деку»</b></td><td><code>pfs export</code> → REPORT.md; <code>pfs export --deck</code> → HTML-дека 16:9</td></tr> <tr><td><b>«сделай доку»</b></td><td><code>pfs docx файл.md</code> — Markdown в Word без зависимостей</td></tr> <tr><td><b>«проверь проект»</b></td><td><code>pfs check --strict</code> — контроль чисел, ссылок, вариантов</td></tr> <tr><td><b>«сколько стоило»</b></td><td><code>pfs cost</code> — токены и деньги по моделям</td></tr> </table><p lang="ru">Двухшаговый воркфлоу six-pager (PRO-46): <code>pfs export --six-pager</code> собирает <b>пакет данных</b> (six_pager_pack.json/md) и <b>каркас FAQ-1…6 со слотами</b>; текст по слотам пишет субагент six-pager-writer с обязательным циклом «написать → <code>pfs check --six-pager</code> → 0 ошибок».</p><p lang="ru">Полное тестирование агента от и до: <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/docs/QUICKSTART_RU.md">QUICKSTART_RU.md</a> в репозитории.</p>
       
     </div>
-      <p lang="ru">Полное тестирование агента от и до — пошаговая инструкция: <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/docs/QUICKSTART_RU.md">QUICKSTART_RU.md</a> в репозитории.</p>
 
     <div class="faq rv" id="h-quickstart"><h3 lang="ru">Быстрый старт — 5 минут</h3>
       <pre lang="ru">$ git clone https://github.com/Fighter90/product-factory-strategist-agent.git
 $ cd product-factory-strategist
 $ python3 -m tools.pfs doctor      # проверка окружения
-$ python3 -m unittest discover -s tests          # 626 тестов, опционально
+$ python3 -m unittest discover -s tests          # 910 тестов, опционально
 $ pfs new "Почему падает удержание" "запрос дословно"</pre>
       
       <p lang="ru">Требования: Python 3.9+ и любая поддерживаемая среда. Пакеты не устанавливаются — только стандартная библиотека. Секреты (ключи Linear и других MCP) кладутся в <code>.env</code> — он не коммитится и не обязателен для базового цикла.</p><div class="cmdrow"><code>git clone https://github.com/Fighter90/product-factory-strategist-agent.git</code><button class="copy" type="button" data-copy="0" data-ok="Скопировано">Копировать</button></div><div class="cmdrow"><code>cd product-factory-strategist-agent &amp;&amp; ./scripts/install.sh</code><button class="copy" type="button" data-copy="1" data-ok="Скопировано">Копировать</button></div><div class="cmdrow"><code>pfs doctor</code><button class="copy" type="button" data-copy="2" data-ok="Скопировано">Копировать</button></div><div class="cmdrow"><code>opencode</code><button class="copy" type="button" data-copy="3" data-ok="Скопировано">Копировать</button></div>
@@ -414,7 +413,7 @@ $ python3 -m tools.pfs new "Название" "Запрос дословно"</p
       </div>
 
     <div class="faq rv" id="h-step2"><h3><span class="lbl" lang="ru">шаг 3</span><span lang="ru">Исследование</span></h3>
-      <p lang="ru"><b>Агент:</b> строит план от вопросов, которые могут <i>изменить решение</i> («вопрос → если да / если нет → как влияет»), ведёт выписки утверждений с типом, силой и цитатой, считает расчёты по данным, при необходимости готовит интервью. Факт без источника записать невозможно — инструмент откажет. <b>Выход:</b> <code>outputs/01_research_plan.md</code>, <code>claims.jsonl</code> (C###), <code>analysis/</code>. <b>Команды:</b> <code>pfs claim add</code>, <code>pfs data profile|cohort|funnel|stats</code>, <code>pfs interview guide|save</code>, <code>pfs media add</code>. <b>Ворота:</b> каждый ключевой вопрос — с ответом и C### или названным пробелом.</p>
+      <p lang="ru"><b>Агент:</b> строит план от вопросов, которые могут <i>изменить решение</i> («вопрос → если да / если нет → как влияет»), ведёт выписки утверждений с типом, силой и цитатой, считает расчёты по данным, при необходимости готовит интервью. Факт без источника записать невозможно — инструмент откажет. <b>Выход:</b> <code>outputs/01_research_plan.md</code>, <code>claims.jsonl</code> (C###), <code>analysis/</code>. <b>Команды:</b> <code>pfs claim add</code>, <code>pfs data profile|cohort|funnel|stats</code>, <code>pfs interview guide|save</code>, <code>pfs media add</code>. <b>Ворота:</b> каждый ключевой вопрос — с ответом и C### или названным пробелом.</p><p lang="ru"><code>pfs ab --hypothesis "…" --metric "…"</code> — дизайн A/B-теста: прокси, гардрейл, MDE, трафик, правило остановки (PRO-71).</p>
       </div>
 
     <div class="faq rv" id="h-step3"><h3><span class="lbl" lang="ru">шаг 4</span><span lang="ru">Дискавери</span></h3>
@@ -581,7 +580,6 @@ pfs data stats file.csv --col revenue --group seg              # статист�
 
     <div class="faq rv" id="h-media-ux"><h3 lang="ru">Медиа и UX-анализ</h3>
       <p lang="ru"><code>pfs media add скрин.png --desc "что видно" --title "…"</code> — изображение/аудио/видео копируется в <code>sources/raw/</code>, а описание становится текстовым источником: агент анализирует строго то, что описано. <code>pfs ux scaffold S003 --focus "онбординг"</code> — каркас разбора по эвристикам и пути пользователя с привязкой к материалу; субагент <code>ux-analyst</code> заполняет его, не фантазируя за пределами скриншотов.</p>
-      <p lang="ru"><code>pfs ab --hypothesis "…" --metric "…"</code> — дизайн A/B-теста: прокси, гардрейл, MDE, трафик, правило остановки (PRO-71).</p>
       </div>
 
     <div class="faq rv" id="h-env-claude"><h3 lang="ru">Среда: Claude Code — полный опыт</h3>

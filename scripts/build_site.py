@@ -185,7 +185,7 @@ def demo_numbers() -> dict:
         "D_LETTER": letter,
         "D_LABEL": label,
         "D_LABEL_EN": _label_en(label),
-        "REVIEW_RU": f"{review[8:]}.{review[5:7]}.{review[2:4]}",
+        "REVIEW_RU": review[:10],  # QA D11: ISO
         "REVIEW_EN": review,
     }
 
@@ -238,7 +238,7 @@ def claim_facts() -> dict:
         "C_ID": claim["id"],
         "C_SRC": sid,
         "C_DOM": dom,
-        "DATE_RU": ".".join(reversed(retrieved.split("-"))) if retrieved else "",
+        "DATE_RU": retrieved[:10],  # QA D11: даты — ISO на обеих версиях
         "DATE_EN": retrieved,
         "KIND_RU": kind_ru,
         "KIND_EN": kind_en,
@@ -663,7 +663,7 @@ RU_BODY = f"""
     </div>
     <div class="cmp">
       <div class="row hd label"><span>Что важно для решения</span><span>Обычный чат</span><span style="color:var(--accent)">Стратег</span></div>
-      <div class="row"><span class="what">Источник у каждого числа</span><span class="muted">по просьбе, ссылки не проверяются</span><span class="yes">утверждение C### ведёт к источнику S### с цитатой</span></div>
+      <div class="row"><span class="what">Источник у каждого числа</span><span class="muted">по просьбе, ссылки не проверяются</span><span class="yes">каждое утверждение ведёт к своему источнику с сохранённой цитатой</span></div>
       <div class="row"><span class="what">Факты отдельно от гипотез</span><span class="muted">смешаны в одном ответе</span><span class="yes">тип утверждения и сила доказательства A–D</span></div>
       <div class="row"><span class="what">Варианты, включая «оставить» и «закрыть»</span><span class="muted">обычно один ответ</span><span class="yes">не меньше трёх, red team атакует каждый</span></div>
       <div class="row"><span class="what">Расчёты</span><span class="muted">числа внутри текста</span><span class="yes">Excel с формулами и листом «Ввод»</span></div>
@@ -960,7 +960,7 @@ EN_BODY = f"""
     </div>
     <div class="cmp">
       <div class="row hd label"><span>What the decision needs</span><span>Plain chat</span><span style="color:var(--accent)">Strategist</span></div>
-      <div class="row"><span class="what">A source for every number</span><span class="muted">on request, links unchecked</span><span class="yes">claim C### links to source S### with a quote</span></div>
+      <div class="row"><span class="what">A source for every number</span><span class="muted">on request, links unchecked</span><span class="yes">every claim links to its source with the saved quote</span></div>
       <div class="row"><span class="what">Facts kept apart from guesses</span><span class="muted">mixed into one answer</span><span class="yes">claim type plus evidence grade A–D</span></div>
       <div class="row"><span class="what">Options that include “keep” and “shut down”</span><span class="muted">usually a single answer</span><span class="yes">at least three, each attacked by a red team</span></div>
       <div class="row"><span class="what">Calculations</span><span class="muted">numbers inside prose</span><span class="yes">Excel with formulas and an input sheet</span></div>

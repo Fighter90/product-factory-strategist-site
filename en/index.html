@@ -262,7 +262,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       <a class="pill pill-a" href="#install" data-goal="cta_install_click">Start in 5 minutes<span class="arr"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
       <a class="pill pill-b" href="#demo" data-goal="cta_demo_click">See the demo<span class="arr"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
     </div>
-    <div class="facts"><span><b>12</b> steps</span><span><b>3</b> decisions are yours</span><span><b>100</b> method cards</span><span><b>0</b> external dependencies</span></div>
+    <div class="facts"><span><b>12</b> steps</span><span><b>3</b> decisions are yours</span><span><b>111</b> method cards</span><span><b>0</b> external dependencies</span></div>
   </div>
 </section>
 
@@ -302,7 +302,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     </div>
     <div class="cmp">
       <div class="row hd label"><span>What the decision needs</span><span>Plain chat</span><span style="color:var(--accent)">Strategist</span></div>
-      <div class="row"><span class="what">A source for every number</span><span class="muted">on request, links unchecked</span><span class="yes">claim C### links to source S### with a quote</span></div>
+      <div class="row"><span class="what">A source for every number</span><span class="muted">on request, links unchecked</span><span class="yes">every claim links to its source with the saved quote</span></div>
       <div class="row"><span class="what">Facts kept apart from guesses</span><span class="muted">mixed into one answer</span><span class="yes">claim type plus evidence grade A–D</span></div>
       <div class="row"><span class="what">Options that include “keep” and “shut down”</span><span class="muted">usually a single answer</span><span class="yes">at least three, each attacked by a red team</span></div>
       <div class="row"><span class="what">Calculations</span><span class="muted">numbers inside prose</span><span class="yes">Excel with formulas and an input sheet</span></div>
@@ -433,7 +433,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <div>
       <!-- numbers are substituted by scripts/build_site.py from the demo project -->
       <dl class="stats">
-        <div><dt><span>sources</span></dt><dd style="margin:0"><b>10</b></dd></div>
+        <div><dt><span>sources</span></dt><dd style="margin:0"><b>11</b></dd></div>
         <div><dt><span>claims, of them facts — 12</span></dt><dd style="margin:0"><b>20</b></dd></div>
         <div><dt><span>options A–E, incl. status quo and shut-down</span></dt><dd style="margin:0"><b>A–E</b></dd></div>
         <div><dt><span>red-team objections and hidden assumptions</span></dt><dd style="margin:0"><b>15 + 5</b></dd></div>
@@ -449,12 +449,12 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <div class="head" style="margin:0 auto 48px;text-align:center;align-items:center">
       <div class="label">Architecture</div>
       <h2 id="arch-h">The guarantees live <span class="acc">in code and files</span>, not in prompts</h2>
-      <p>CLI automated tests (626) check the core after every change. The project state lives in files next to the code — work survives breaks and moves between tools.</p>
+      <p>CLI automated tests (910) check the core after every change. The project state lives in files next to the code — work survives breaks and moves between tools.</p>
     </div>
     <div class="stack">
-      <div class="layer"><span class="n">1</span><div><b>Environment · AGENTS.md</b><small>rules: a source for every number, synthetics produce hypotheses only, a human decides what matters · skills: 101 · subagents: 9 · hooks: 6</small></div></div>
+      <div class="layer"><span class="n">1</span><div><b>Environment · AGENTS.md</b><small>rules: a source for every number, synthetics produce hypotheses only, a human decides what matters · skills: 101 · subagents: 10 · hooks: 6</small></div></div>
       <div class="layer"><span class="n">2</span><div><b>Core · tools/pfs</b><small>CLI and MCP: steps 1–12, the claim registry, sha256-stamped sources, six-pager export · Python standard library only</small></div></div>
-      <div class="layer"><span class="n">3</span><div><b>Knowledge · knowledge/</b><small>100 method cards in Russian · 100 English mirrors · document templates and scoring rubrics</small></div></div>
+      <div class="layer"><span class="n">3</span><div><b>Knowledge · knowledge/</b><small>111 method cards in Russian · 111 English mirrors · document templates and scoring rubrics</small></div></div>
       <div class="layer"><span class="n">4</span><div><b>Project files</b><small>state.json · claims.jsonl · sources/ — the grounds of decisions stay readable even after a year-long break</small></div></div>
     </div>
   </div>

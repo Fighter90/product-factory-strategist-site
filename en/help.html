@@ -271,7 +271,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   
   <p class="sub" lang="en">Full documentation: talking to the agent, all 12 process steps, evidence S### → C### → D###, Excel models and the six-pager, tooling (CLI, MCP, skills, subagents, hooks), environments and integrations, security, glossary and troubleshooting.</p>
   
-  <div class="meta" lang="en">12 steps · 100 knowledge cards · 101 skills · 9 subagents · 6 hooks · 18 MCP tools · 0 dependencies</div>
+  <div class="meta" lang="en">12 steps · 111 knowledge cards · 101 skills · 10 subagents · 6 hooks · 18 MCP tools · 0 dependencies</div>
   <div class="search"><input id="q" type="search" placeholder="Поиск по справке… / Search the help…" aria-label="Поиск по справке / Search the help"></div>
 </div></div>
 
@@ -312,7 +312,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <a href="#h-cli" lang="en">CLI: all groups</a>
     <a href="#h-mcp" lang="en">MCP: 18 tools</a>
     <a href="#h-skills" lang="en">Skills (101)</a>
-    <a href="#h-subagents" lang="en">Subagents (9)</a>
+    <a href="#h-subagents" lang="en">Subagents (10)</a>
     <a href="#h-hooks" lang="en">Hooks (6)</a>
     <a href="#h-models" lang="en">Models &amp; routing</a>
     <a href="#h-cost" lang="en">Cost</a>
@@ -357,16 +357,15 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
 
     <div class="faq rv" id="h-phrases"><h3 lang="en">Control phrases</h3>
       
-      <table lang="en"> <tr><th>Phrase</th><th>What happens</th></tr> <tr><td><b>"stop"</b></td><td>Pause: state saved, the agent stays quiet until a new command</td></tr> <tr><td><b>"clarify: …"</b></td><td>Adjust the task; only the affected part is redone, sources are not duplicated</td></tr> <tr><td><b>"redo section X"</b></td><td>Targeted rework of a single document section</td></tr> <tr><td><b>"what should I decide now"</b></td><td><code>pfs next</code>: current step, overdue decisions, stale grounds, open questions</td></tr> <tr><td><b>"what's due"</b></td><td><code>pfs decision due</code>: decisions and commitments whose review date arrived</td></tr> <tr><td><b>"what will this new source affect"</b></td><td><code>pfs impact</code>: which conclusions, document lines and decisions go stale</td></tr> <tr><td><b>"build the six-pager"</b></td><td><code>pfs calc all</code> + <code>pfs export --six-pager</code>: FAQ-1…6 report and 4 Excel workbooks</td></tr> <tr><td><b>"recalculate Excel"</b></td><td><code>pfs calc all</code> — workbooks rebuilt from current calcs.json</td></tr> <tr><td><b>"build the report" / "build the deck"</b></td><td><code>pfs export</code> → REPORT.md; <code>pfs export --deck</code> → 16:9 HTML deck</td></tr> <tr><td><b>"make it a doc"</b></td><td><code>pfs docx file.md</code> — Markdown to Word, dependency-free</td></tr> <tr><td><b>"check the project"</b></td><td><code>pfs check --strict</code> — numbers, links, options</td></tr> <tr><td><b>"how much did it cost"</b></td><td><code>pfs cost</code> — tokens and money per model</td></tr> </table>
+      <table lang="en"> <tr><th>Phrase</th><th>What happens</th></tr> <tr><td><b>"stop"</b></td><td>Pause: state saved, the agent stays quiet until a new command</td></tr> <tr><td><b>"clarify: …"</b></td><td>Adjust the task; only the affected part is redone, sources are not duplicated</td></tr> <tr><td><b>"redo section X"</b></td><td>Targeted rework of a single document section</td></tr> <tr><td><b>"what should I decide now"</b></td><td><code>pfs next</code>: current step, overdue decisions, stale grounds, open questions</td></tr> <tr><td><b>"what's due"</b></td><td><code>pfs decision due</code>: decisions and commitments whose review date arrived</td></tr> <tr><td><b>"what will this new source affect"</b></td><td><code>pfs impact</code>: which conclusions, document lines and decisions go stale</td></tr> <tr><td><b>"build the six-pager"</b></td><td><code>pfs calc all</code> + <code>pfs export --six-pager</code>: FAQ-1…6 report and 4 Excel workbooks</td></tr> <tr><td><b>"recalculate Excel"</b></td><td><code>pfs calc all</code> — workbooks rebuilt from current calcs.json</td></tr> <tr><td><b>"build the report" / "build the deck"</b></td><td><code>pfs export</code> → REPORT.md; <code>pfs export --deck</code> → 16:9 HTML deck</td></tr> <tr><td><b>"make it a doc"</b></td><td><code>pfs docx file.md</code> — Markdown to Word, dependency-free</td></tr> <tr><td><b>"check the project"</b></td><td><code>pfs check --strict</code> — numbers, links, options</td></tr> <tr><td><b>"how much did it cost"</b></td><td><code>pfs cost</code> — tokens and money per model</td></tr> </table><p lang="en">Two-step six-pager workflow (PRO-46): <code>pfs export --six-pager</code> builds a <b>data pack</b> (six_pager_pack.json/md) and a <b>FAQ-1…6 skeleton with slots</b>; slot text is written by the six-pager-writer subagent with the mandatory loop "write → <code>pfs check --six-pager</code> → 0 errors".</p><p lang="en">Full end-to-end testing guide: <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/docs/QUICKSTART_EN.md">QUICKSTART_EN.md</a> in the repository.</p>
     </div>
-      <p lang="en">Full end-to-end agent testing guide: <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/docs/QUICKSTART_EN.md">QUICKSTART_EN.md</a> in the repository.</p>
 
     <div class="faq rv" id="h-quickstart"><h3 lang="en">Quick start — 5 minutes</h3>
       
       <pre lang="en">$ git clone https://github.com/Fighter90/product-factory-strategist-agent.git
 $ cd product-factory-strategist
 $ python3 -m tools.pfs doctor      # environment check
-$ python3 -m unittest discover -s tests          # 626 tests, optional
+$ python3 -m unittest discover -s tests          # 910 tests, optional
 $ pfs new "Why is retention dropping" "the request verbatim"</pre>
       <div class="cmdrow"><code>git clone https://github.com/Fighter90/product-factory-strategist-agent.git</code><button class="copy" type="button" data-copy="0" data-ok="Copied">Copy</button></div><div class="cmdrow"><code>cd product-factory-strategist-agent &amp;&amp; ./scripts/install.sh</code><button class="copy" type="button" data-copy="1" data-ok="Copied">Copy</button></div><div class="cmdrow"><code>pfs doctor</code><button class="copy" type="button" data-copy="2" data-ok="Copied">Copy</button></div><div class="cmdrow"><code>opencode</code><button class="copy" type="button" data-copy="3" data-ok="Copied">Copy</button></div>
       <p lang="en">Requirements: Python 3.9+ and any supported environment. No packages to install — standard library only. Secrets (Linear and other MCP keys) go to <code>.env</code> — it is git-ignored and not required for the basic loop.</p></div>
@@ -407,7 +406,7 @@ $ pfs new "Why is retention dropping" "the request verbatim"</pre>
 
     <div class="faq rv" id="h-step2"><h3><span class="lbl" lang="en">step 3</span><span lang="en">Research</span></h3>
       
-      <p lang="en"><b>Agent:</b> builds a plan from questions that could <i>change the decision</i> ("question → if yes / if no → how it affects"), extracts claims with type, grade and quote, runs calculations, prepares interviews when needed. A fact without a source cannot be stored — the tool refuses. <b>Output:</b> <code>outputs/01_research_plan.md</code>, <code>claims.jsonl</code> (C###), <code>analysis/</code>. <b>Commands:</b> <code>pfs claim add</code>, <code>pfs data profile|cohort|funnel|stats</code>, <code>pfs interview guide|save</code>, <code>pfs media add</code>. <b>Gate:</b> every key question answered with a C### or an explicitly named gap.</p></div>
+      <p lang="en"><b>Agent:</b> builds a plan from questions that could <i>change the decision</i> ("question → if yes / if no → how it affects"), extracts claims with type, grade and quote, runs calculations, prepares interviews when needed. A fact without a source cannot be stored — the tool refuses. <b>Output:</b> <code>outputs/01_research_plan.md</code>, <code>claims.jsonl</code> (C###), <code>analysis/</code>. <b>Commands:</b> <code>pfs claim add</code>, <code>pfs data profile|cohort|funnel|stats</code>, <code>pfs interview guide|save</code>, <code>pfs media add</code>. <b>Gate:</b> every key question answered with a C### or an explicitly named gap.</p><p lang="en"><code>pfs ab --hypothesis "…" --metric "…"</code> — A/B test design: proxy, guardrail, MDE, traffic, stop rule (PRO-71).</p></div>
 
     <div class="faq rv" id="h-step3"><h3><span class="lbl" lang="en">step 4</span><span lang="en">Discovery</span></h3>
       
@@ -557,8 +556,7 @@ $ pfs new "Why is retention dropping" "the request verbatim"</pre>
 
     <div class="faq rv" id="h-media-ux"><h3 lang="en">Media and UX analysis</h3>
       
-      <p lang="en"><code>pfs media add shot.png --desc "what is visible" --title "…"</code> copies the media to <code>sources/raw/</code> and turns the description into a text source: the agent analyzes exactly what is described. <code>pfs ux scaffold S003 --focus "onboarding"</code> builds a heuristics + journey scaffold bound to the material; the <code>ux-analyst</code> subagent fills it without inventing beyond the screenshots.</p>
-      <p lang="en"><code>pfs ab --hypothesis "…" --metric "…"</code> — A/B test design: proxy, guardrail, MDE, traffic, stop rule (PRO-71).</p></div>
+      <p lang="en"><code>pfs media add shot.png --desc "what is visible" --title "…"</code> copies the media to <code>sources/raw/</code> and turns the description into a text source: the agent analyzes exactly what is described. <code>pfs ux scaffold S003 --focus "onboarding"</code> builds a heuristics + journey scaffold bound to the material; the <code>ux-analyst</code> subagent fills it without inventing beyond the screenshots.</p></div>
 
     <div class="faq rv" id="h-env-claude"><h3 lang="en">Environment: Claude Code — the full experience</h3>
       

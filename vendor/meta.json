@@ -1,9 +1,9 @@
 {
- "N_MAPS": 100,
- "N_MAPS_EN": 100,
- "N_SKILLS": 101,
- "N_AGENTS": 9,
- "N_HOOKS": 6,
- "N_TESTS": 626,
- "N_MCP": 18
+  "N_MAPS": 111,
+  "N_MAPS_EN": 111,
+  "N_SKILLS": 101,
+  "N_AGENTS": 10,
+  "N_HOOKS": 6,
+  "N_TESTS": 910,
+  "N_MCP": 18
 }
