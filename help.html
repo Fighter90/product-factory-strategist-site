@@ -283,7 +283,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <a href="#h-phrases" lang="ru">Управляющие фразы</a>
     <a href="#h-quickstart" lang="ru">Быстрый старт</a>
     <a href="#h-first" lang="ru">Первый проект</a>
-    <a href="#h-demo" lang="ru">Демо CVStart ★</a>
+    <a href="#h-demo" lang="ru">Демо «Связь для близких» ★</a>
 
     <div class="cap" lang="ru">Процесс</div>
     <a href="#h-workflow" lang="ru">Устройство цикла</a>
@@ -377,10 +377,10 @@ $ pfs new "Почему падает удержание" "запрос досл�
       </div>
 
     
-    <div class="faq rv" id="h-demo"><h3 lang="ru">Демо CVStart: как это сделано и что посмотреть</h3>
-      <p lang="ru">Полный сквозной прогон агента на живом open-source продукте — <b>cvstart.org</b> (AI-конструктор резюме и поиск вакансий: скан 129 джоб-бордов, AI-скоринг, 19 языков): 12 шагов, 5 вариантов, 20 возражений red team, обе стратегии, six-pager в 6 форматах (RU/EN × MD/PDF/DOCX — детальный текст с выводами, обоснованиями и расчётами), 4 книги Excel, решение D001, <b>check --strict 100/100</b>. Проект: <code>projects/демо/</code>; интерактивный разбор: <a href="demo.html">demo.html</a>.</p>
+    <div class="faq rv" id="h-demo"><h3 lang="ru">Демо «Связь для близких»: как это сделано и что посмотреть</h3>
+      <p lang="ru">Полный сквозной прогон агента на брифе заказчика — <b>«Связь для близких и собственных устройств»</b> (услуги вымышленного мобильного оператора): 12 шагов, 5 вариантов, 20 ударов red team (15 возражений + 5 скрытых допущений), обе стратегии, six-pager в 4 форматах (RU/EN × MD/DOCX), 4 книги Excel, решение D001 — пилот 600 групп, <b>check --strict: 0 ошибок, ревью 98/100</b>. Проект: <code>projects/связь-для-близких-и-собственных-устройств/</code>; интерактивный разбор: <a href="demo.html">demo.html</a>.</p>
       
-      <p lang="ru"><b>Что смотреть (по порядку):</b> <code>00_brief.md</code> → <code>01_research_plan.md</code> → <code>02_situation.md</code> → <code>03_options.md</code> (5 вариантов + 20 возражений red team) → <code>04/05</code> (стратегии) → <code>06_validation_plan.md</code> (пороги, 90 дней) → <code>REPORT.md</code> и <b>SIX_PAGER_RU / SIX_PAGER_EN</b> в .md / .pdf / .docx; Excel — <code>outputs/attachments/</code>; скриншоты продукта — <code>outputs/img/</code> (19 локалей); журнал — <code>log.jsonl</code>.</p>
+      <p lang="ru"><b>Что смотреть (по порядку):</b> <code>00_brief.md</code> → <code>01_research_plan.md</code> → <code>02_situation.md</code> → <code>03_options.md</code> (5 вариантов + 20 ударов red team) → <code>04/05</code> (стратегии) → <code>06_validation_plan.md</code> (пороги пилота, ~8–10 недель) → <code>BRIEF_RESPONSE.md</code> (ответ на бриф из 5 частей), <code>REPORT.md</code> и <b>SIX_PAGER / SIX_PAGER_EN</b> в .md / .docx; Excel — <code>outputs/attachments/</code>; вайрфрейм кабинета — <code>sources/raw/</code>; журнал шагов — <code>log.jsonl</code>.</p>
       
       <p lang="ru"><b>Как повторить:</b></p>
       
@@ -389,7 +389,7 @@ $ python3 -m tools.pfs next        # что решать сейчас
 $ python3 -m tools.pfs check --strict
 # своя задача:
 $ python3 -m tools.pfs new "Название" "Запрос дословно"</pre>
-      <p lang="ru"><b>Сверка с заданием:</b> обязательный минимум (задача · материалы · исследование · ≥3 варианта с возражениями · обе стратегии · план проверки · workflow · порядок в знаниях · продолжение после перерыва · прозрачность) и дополнительный уровень (синтетика · медиа · данные · решения · пересмотр · маршрутизация · субагенты/хуки · MCP/CLI · устойчивость · переносимость · сравнение с чатом) — закрыты; полная таблица соответствия — в <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/README.md#демонстрационный-проект-cvstart--полный-разбор">README</a> и <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/docs/COMPLIANCE.md">docs/COMPLIANCE.md</a>.</p>
+      <p lang="ru"><b>Сверка с заданием:</b> обязательный минимум (задача · материалы · исследование · ≥3 варианта с возражениями · обе стратегии · план проверки · workflow · порядок в знаниях · продолжение после перерыва · прозрачность) и дополнительный уровень (синтетика · медиа · данные · решения · пересмотр · маршрутизация · субагенты/хуки · MCP/CLI · устойчивость · переносимость · сравнение с чатом) — закрыты; полная таблица соответствия — в <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/README.md">README</a> и <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/docs/COMPLIANCE.md">docs/COMPLIANCE.md</a>.</p>
       
       <p lang="ru"><b>Ошибки по пути (честно):</b> рыночные оценки агрегаторов расходятся ×2 — записаны диапазонами [S006]; нумерация источников сдвинулась при перерегистрации — теги перепривязаны и перепроверены check --strict; часть ссылок C### при переносе съехала к соседним утверждениям — поймано сверкой реестра, исправлено. Человек помогал на трёх паузах: бриф, выбор варианта B, утверждение решения D001.</p>
       
@@ -429,7 +429,7 @@ $ python3 -m tools.pfs new "Название" "Запрос дословно"</p
       </div>
 
     <div class="faq rv" id="h-step6"><h3><span class="lbl" lang="ru">шаг 7</span><span lang="ru">Выбор — пауза человека</span></h3>
-      <p lang="ru"><b>Агент:</b> показывает сравнение вариантов (критерии, экономика, риски) и одну рекомендацию, затем спрашивает — <code>pfs ask "Какой вариант принимаем?" --options "A,B,C"</code>. <b>Человек:</b> <span class="pause">выбирает вариант</span> — ответ сохраняется в state.json и становится основанием стратегий и решения D### (как S009 в демо CVStart). Никакие стратегии не пишутся до выбора.</p>
+      <p lang="ru"><b>Агент:</b> показывает сравнение вариантов (критерии, экономика, риски) и одну рекомендацию, затем спрашивает — <code>pfs ask "Какой вариант принимаем?" --options "A,B,C"</code>. <b>Человек:</b> <span class="pause">выбирает вариант</span> — ответ сохраняется в state.json и становится основанием стратегий и решения D### (как в демо «Связь для близких»: выбор B «Предупреждение до перебоя»). Никакие стратегии не пишутся до выбора.</p>
       </div>
 
     <div class="faq rv" id="h-step7"><h3><span class="lbl" lang="ru">шаг 8</span><span lang="ru">Стратегии</span></h3>

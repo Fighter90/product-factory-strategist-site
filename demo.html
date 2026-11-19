@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Демо-разбор: CVStart — от задачи руководителя до six-pager</title>
-<meta name="description" content="Сквозной разбор работы ИИ-агента на живом open-source продукте cvstart.org: задание руководителя, 12 шагов, рынок resume builders, 5 вариантов с red team, экономика платящего, six-pager RU/EN с Excel и решение D001.">
+<title>Демо-разбор: «Связь для близких» — от задачи руководителя до six-pager</title>
+<meta name="description" content="Сквозной 12-шаговый прогон ИИ-агента на брифе заказчика «Связь для близких и собственных устройств» (мобильный оператор): 26 утверждений с источниками, 5 вариантов и red team — 20 ударов, решение D001 «Предупреждение до перебоя» — пилот 600 групп с порогом −3 п.п.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Демо-разбор: CVStart — от задачи руководителя до six-pager">
-<meta property="og:description" content="Сквозной разбор работы ИИ-агента на живом open-source продукте cvstart.org: задание руководителя, 12 шагов, рынок resume builders, 5 вариантов с red team, экономика платящего, six-pager RU/EN с Excel и решение D001.">
+<meta property="og:title" content="Демо-разбор: «Связь для близких» — от задачи руководителя до six-pager">
+<meta property="og:description" content="Сквозной 12-шаговый прогон ИИ-агента на брифе заказчика «Связь для близких и собственных устройств» (мобильный оператор): 26 утверждений с источниками, 5 вариантов и red team — 20 ударов, решение D001 «Предупреждение до перебоя» — пилот 600 групп с порогом −3 п.п.">
 <meta property="og:url" content="https://strategyproduct.ru/demo.html">
 <link rel="canonical" href="https://strategyproduct.ru/demo.html">
 <link rel="alternate" hreflang="ru" href="https://strategyproduct.ru/demo.html">
@@ -259,7 +259,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       <nav class="links" lang="ru" aria-label="Разделы"><a href="index.html">Главная</a><a href="demo.html">Демо</a><a href="help.html">Справка</a><a href="materials.html">Материалы</a></nav>
       
       <div class="lang" role="group" aria-label="Язык / Language"><a href="demo.html" class="on" aria-current="true">RU</a><a href="en/demo.html" hreflang="en" data-goal="lang_switch">EN</a></div>
-      <a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click"><span lang="ru">Репозиторий</span></a>
+      <a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist" data-goal="github_click"><span lang="ru">Репозиторий</span></a>
       <details class="mlink">
         <summary aria-label="Меню"><span class="b" aria-hidden="true"></span></summary>
         <nav class="mlink-panel" lang="ru" aria-label="Разделы"><a href="index.html">Главная</a><a href="demo.html">Демо</a><a href="help.html">Справка</a><a href="materials.html">Материалы</a></nav>
@@ -276,19 +276,19 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
 <div id="bar"></div>
 
 <div class="hero"><div class="wrap">
-  <h1 lang="ru">Демо-разбор: <span class="grad">CVStart</span> — от задачи руководителя до six-pager</h1>
+  <h1 lang="ru">Демо-разбор: <span class="grad">«Связь для близких»</span> — от задачи руководителя до six-pager</h1>
   
-  <p class="sub" lang="ru">Сквозной прогон агента на живом open-source продукте — cvstart.org: AI-конструктор резюме и дашборд поиска работы. Ниже — сама задача, как агент работал, что нашёл о рынке, как атаковал собственные варианты red team, и финальный отчёт с Excel-моделью. Каждое число — с источником.</p>
+  <p class="sub" lang="ru">Сквозной прогон агента на брифе заказчика — услуги вымышленного мобильного оператора для семейных групп и владельцев нескольких номеров. Ниже — сама задача, 12 шагов, доказательная база, 5 вариантов с red team и решение с пилотом.</p>
   
   <div class="chips">
     <span class="chip"><b>12</b><span lang="ru"> шагов процесса</span></span>
-    <span class="chip"><b>11</b><span lang="ru"> источников S001–S002, S004–S012</span></span>
-    <span class="chip"><b>20</b><span lang="ru"> утверждений C001–C020</span></span>
+    <span class="chip"><b>4</b><span lang="ru"> источников S001–S004</span></span>
+    <span class="chip"><b>26</b><span lang="ru"> утверждений C001–C027</span></span>
     <span class="chip"><b>5</b><span lang="ru"> вариантов + red team</span></span>
     <span class="chip"><b>20</b><span lang="ru"> ударов red team</span></span>
     <span class="chip"><b>4</b><span lang="ru"> книги Excel</span></span>
-    <span class="chip"><b>RU + EN</b><span lang="ru"> six-pager × 3 формата</span></span>
-    <span class="chip"><b>100/100</b> check --strict</span>
+    <span class="chip"><b>RU + EN</b><span lang="ru"> six-pager × 2 формата</span></span>
+    <span class="chip"><b>98/100</b> review · check --strict: 0</span>
   </div>
   <div class="split">
     <div class="cv-card">
@@ -296,64 +296,58 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       
       <div class="cv-head">
         <svg class="cv-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="cvGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset=".55" stop-color="#818cf8"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs><g fill="none" stroke="url(#cvGrad)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M13 6h15l8 8v22a6 6 0 0 1-6 6H13a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6Z"/><path d="M28 6v8h8" opacity=".65"/><path d="M15 23h14" opacity=".7"/><path d="M15 29h14" opacity=".5"/><path d="M15 35h8" opacity=".35"/></g></svg>
-        <div><div class="cv-name">CV<em>Start</em></div><div class="cv-tag">open-source AI resume builder · cvstart.org</div></div>
+        <div><div class="cv-name">Связь<em> для близких</em></div><div class="cv-tag">учебный бриф: услуги мобильного оператора</div></div>
       </div>
-      <p lang="ru">Открытый (MIT) AI-конструктор резюме и дашборд поиска работы: скан ~129 джоб-бордов (124 EN + 5 RU — hh.ru, Habr Career, GeekJob, GetMatch, Trudvsem), AI-скоринг вакансий 0.0–5.0 против резюме, CV Studio (тюминг под JD, humanize, ATS-буллеты), PDF/DOCX-экспорт, cover letters, авто-пайплайн, трекер заявок с follow-up, карта вакансий, mock-интервью.</p>
+      <p lang="ru">Учебный бриф заказчика: вымышленный мобильный оператор; одни клиенты помогают близким со связью, другие обслуживают несколько собственных номеров. Цель планового года — валовая прибыль ≥285 млн ₽; разрыв к прогнозу «без изменений» — 6 млн ₽ = 12 000 доп. оплаченных месяцев × 500 ₽.</p>
       
-      <p lang="ru">100% локально — данные у пользователя; 18 LLM-провайдеров BYOK + keyless; 19 языков интерфейса; ~7 602 автотеста. Монетизации нет — «$0 forever», публичного хостинга нет.</p>
+      <p lang="ru">Прогон полный: 12 шагов, 3 обязательные паузы человека. Реестр: 26 утверждений — 10 фактов, 8 допущений, 4 гипотезы, 4 вывода; 4 источника (бриф, 2 ИИ-респондента — только гипотезы, вайрфрейм); расчёты воспроизводимы: economics.py и 4 книги Excel на формулах.</p>
       
-      <p><a href="https://cvstart.org/" target="_blank" rel="noopener">cvstart.org</a> · <a href="https://github.com/Fighter90/career-ops-ui" target="_blank" rel="noopener">github.com/Fighter90/career-ops-ui</a></p>
+      <p><a href="https://github.com/Fighter90/product-factory-strategist/tree/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2" target="_blank" rel="noopener">projects/связь-для-близких-и-собственных-устройств</a> · <a href="https://github.com/Fighter90/product-factory-strategist" target="_blank" rel="noopener">github.com/Fighter90/product-factory-strategist</a></p>
     </div>
     <div class="agent-card">
       <h3 lang="ru">Задание руководителя</h3>
       
-      <p lang="ru"><b>Задание агенту:</b> «Разработать коммерческую версию проекта cvstart.org (open-source AI-конструктор резюме и поиск вакансий: скан ~129 джоб-бордов, AI-скоринг, CV Studio, локальный пайплайн, 19 языков) — формирование резюме, поиск вакансий — и стратегия вывода на рынок на весь мир».</p>
+      <p lang="ru"><b>Задание агенту (дословно из project.json):</b> «Ваша команда отвечает за услуги вымышленного мобильного оператора. Одни клиенты помогают близким со связью. Другие обслуживают несколько собственных номеров. Решите, кому помочь в первую очередь, что именно изменить и почему оператору стоит вложить в это деньги. Подготовьте план на ближайший год и задайте ориентир на конец третьего года работы…»</p>
       
-      <p lang="ru"><b>Ось сравнения:</b> рост платящих подписчиков и ARR.</p>
+      <p lang="ru"><b>Ось сравнения:</b> вклад в валовую прибыль планового года (доп. оплаченные месяцы × 500 ₽) и активные группы (цель 8 000).</p>
       
-      <p lang="ru"><b>Ограничения:</b> open-source core остаётся MIT; соло-разработчик; не сломать доверие локального режима (ответы руководителя в intake).</p>
+      <p lang="ru"><b>Ограничения:</b> числа учебные, заданы брифом; два решения руководителя — конец Q1 (запускать ли пилот) и конец Q2 (расширять ли охват); согласия участников гранулярные: остаток / платежи / оплата за меня.</p>
       
     </div>
   </div>
 </div></div>
 
 <section id="shots"><div class="wrap">
-  <h2 class="rv" lang="ru">Продукт демо: скриншоты cvstart.org</h2>
+  <h2 class="rv" lang="ru">Обзор демо: видео и материалы прогона</h2>
   
-  <p class="lead rv d1" lang="ru">Живой open-source продукт, на котором агент вёл весь прогон: лендинг в двух локалях, дашборд поиска работы с AI-скорингом, карта вакансий и трекер заявок.</p>
+  <p class="lead rv d1" lang="ru">Видео-обзор прогона на русском и английском, вайрфрейм кабинета семьи с предупреждениями (источник S004) и схема архитектуры агента. Всё смотрится прямо со страницы.</p>
   
   <div class="split rv d2">
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">cvstart.org — лендинг · RU</span></span></div>
-      <div class="shot-crop"><img src="assets/cv_landing_ru.jpg?v=9" alt="Лендинг cvstart.org (русский): AI-конструктор резюме, скан ~129 джоб-бордов, AI-скоринг 0.0–5.0, 19 языков"></div>
-      <div class="shot-cap"><span lang="ru">Лендинг в русской локали: позиционирование «$0 forever», скан ~129 джоб-бордов (124 EN + 5 RU), 19 языков интерфейса. Источник продукта [S001].</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">svyaz-overview — видео · RU · 4:20</span></span></div>
+      <video controls preload="metadata" poster="assets/svyaz-poster-ru.png" src="assets/svyaz-overview-ru.mp4" style="width:100%;display:block;background:#000"></video>
+      <div class="shot-cap" lang="ru">Сквозной прогон «Связь для близких» за 4 минуты: задача, реестр утверждений, red team, решение D001 с пилотом 600 групп.</div>
+      
     </div>
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>cvstart.org — landing · EN</span></div>
-      <div class="shot-crop"><img src="assets/cv_landing_en.jpg?v=9" alt="Лендинг cvstart.org (English): open-source AI resume builder, job-search dashboard, ATS bullets"></div>
-      <div class="shot-cap"><span lang="ru">Тот же лендинг в английской локали — одна кодовая база, 19 языковых версий с hreflang: отсюда волны локалей в стратегии.</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">svyaz-overview — видео · EN · 4:14</span></span></div>
+      <video controls preload="metadata" poster="assets/svyaz-poster-en.png" src="assets/svyaz-overview-en.mp4" style="width:100%;display:block;background:#000"></video>
+      <div class="shot-cap" lang="ru">Тот же прогон на английском — six-pager, Excel и реестры существуют в двух языках.</div>
+      
     </div>
   </div>
-  <div class="shots4 rv d3">
+  <div class="split2 rv d3">
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">cvstart.org — дашборд · RU</span></span></div>
-      <div class="shot-crop"><img src="assets/cv_dash_ru.jpg?v=9" alt="Дашборд поиска работы CVStart (русский): AI-скоринг вакансий против резюме"></div>
-      <div class="shot-cap"><span lang="ru">Дашборд поиска работы: AI-скоринг вакансий 0.0–5.0 против резюме — ядро продукта и точка входа в CV Studio.</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">Вайрфрейм: кабинет семьи · S004</span></span></div>
+      <div class="shot-crop"><img src="assets/svyaz-screenshot-status.png?v=10" alt="Вайрфрейм кабинета семьи с предупреждениями: низкий остаток участника и предстоящий платёж (S004)"></div>
+      <div class="shot-cap" lang="ru">Макет кабинета с предупреждениями: низкий остаток участника и предстоящий платёж — ровно то, что разбирает UX-ревью 06_ux_review_S004.md.</div>
+      
     </div>
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>cvstart.org — dashboard · EN</span></div>
-      <div class="shot-crop"><img src="assets/cv_dash_en.jpg?v=9" alt="Job-search dashboard CVStart (English): vacancy fit scoring against your resume"></div>
-      <div class="shot-cap"><span lang="ru">Английская версия дашборда: fit-скоринг против резюме, фильтры по джоб-бордам — то, что сравнивают с Jobscan/Teal.</span></div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">cvstart.org — карта вакансий · EN</span></span></div>
-      <div class="shot-crop"><img src="assets/cv_map_en.jpg?v=9" alt="Карта вакансий CVStart (English): job map"></div>
-      <div class="shot-cap"><span lang="ru">Карта вакансий: география предложений поверх скана ~129 джоб-бордов.</span></div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">cvstart.org — трекер заявок · EN</span></span></div>
-      <div class="shot-crop"><img src="assets/cv_tracker_en.jpg?v=9" alt="Трекер заявок CVStart (English): application tracker with follow-up"></div>
-      <div class="shot-cap"><span lang="ru">Трекер заявок с follow-up: воронка откликов удерживает пользователя между сессиями поиска — база retention hosted-версии.</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="ru">Архитектура агента</span></span></div>
+      <div class="shot-crop"><img src="assets/svyaz-architecture.png?v=10" alt="Схема архитектуры агента: ядро pfs, реестры источников/утверждений/решений, знания и субагенты"></div>
+      <div class="shot-cap" lang="ru">Схема архитектуры: CLI/MCP-ядро pfs, реестры источников, утверждений и решений, знания и субагенты — гарантии в коде, не в промптах.</div>
+      
     </div>
   </div>
 </div></section>
@@ -365,66 +359,66 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   
   <div class="tl-wrap rv d2"><div class="steps12-wrap"><div lang="ru"><ol class="steps12"><li><span class="n">1</span>Бриф</li><li><span class="n">2</span>Источники</li><li><span class="n">3</span>Исследование</li><li><span class="n">4</span>Сегменты</li><li><span class="n">5</span>Ситуация</li><li><span class="n">6</span>Варианты и red team</li><li><span class="n">7</span>Выбор</li><li><span class="n">8</span>Стратегии</li><li><span class="n">9</span>План проверки</li><li><span class="n">10</span>Ревью качества</li><li><span class="n">11</span>Решение</li><li><span class="n">12</span>Мониторинг</li></ol></div></div></div>
   <div class="tl-grid rv d3">
-    <div class="tl-cell"><b>1–4 · Discover</b><span lang="ru">бриф, 11 источников (cvstart.org, рыночные дайджесты), 20 утверждений, персоны-гипотезы из синтетики</span></div>
-    <div class="tl-cell"><b>5–7 · Define</b><span lang="ru">ситуация с пробелами, 5 вариантов A–E, red team: 15 возражений + 5 скрытых допущений, выбор человека</span></div>
-    <div class="tl-cell"><b>8–10 · Develop</b><span lang="ru">продуктовая + коммуникационная стратегии, план проверки, review 100/100, six-pager RU+EN + 4 книги Excel</span></div>
-    <div class="tl-cell human"><b>11–12 · Deliver</b><span lang="ru">решение D001 с основаниями и датой пересмотра, мониторинг обязательств открыт</span></div>
+    <div class="tl-cell"><b>1–4 · Discover</b><span lang="ru">бриф заказчика, 4 источника (бриф, ИИ-респонденты — гипотезы, вайрфрейм), 26 утверждений, учебные числа из задания</span></div>
+    <div class="tl-cell"><b>5–7 · Define</b><span lang="ru">ситуация с пробелами, 5 варианта A–E, red team: 15 возражений + 5 скрытых допущений — пороги записаны до данных</span></div>
+    <div class="tl-cell"><b>8–10 · Develop</b><span lang="ru">продуктовая + коммуникационная стратегии, план проверки, ревью 98/100 (check --strict: 0 ошибок), six-pager RU+EN + 4 книги Excel</span></div>
+    <div class="tl-cell human"><b>11–12 · Deliver</b><span lang="ru">решение D001 «Предупреждение до перебоя» с основаниями и датой пересмотра, мониторинг обязательств открыт</span></div>
   </div>
 </div></section>
 
 <section id="market"><div class="wrap">
-  <h2 class="rv" lang="ru">Что агент нашёл: рынок в цифрах с источниками</h2>
+  <h2 class="rv" lang="ru">Что известно: цифры брифа с источниками</h2>
   
-  <p class="lead rv d1" lang="ru">Каждое число реестра — с типом, силой A–D и источником. Цепочка S### → C### → D### прослеживается от ссылки до решения. Пример: дайджест Wiseguy Reports → утверждение «коридор $1,2–2,4 млрд» [C005] → решение D001.</p>
+  <p class="lead rv d1" lang="ru">Каждое число — с типом, силой A–D и источником S001 (бриф заказчика). Цепочка S001 → C### → решение D001 проверяется командой pfs impact.</p>
   
   <div class="facts">
-    <div class="fact rv"><b lang="ru">$1,2–2,4 млрд</b><span lang="ru">рынок resume builders, 2024–2025; оценки агрегаторов расходятся ×2 — рынок записан диапазонами</span><i>S006 · Wiseguy Reports → C005</i></div>
-    <div class="fact rv d1"><b lang="ru">13,1%</b><span lang="ru">CAGR AI-подсегмента resume builders — рост именно там, где CVStart</span><i><span lang="ru">S006 · агрегаторы рынка → C005</span></i></div>
-    <div class="fact rv d2"><b lang="ru">$8–40/мес</b><span lang="ru">7 конкурентов (Zety, resume.io, Novoresume, Kickresume, Enhancv, Teal, Rezi) — freemium с агрессивными автопродлениями</span><i>S004 · Rezi/Kickresume pricing → C006</i></div>
-    <div class="fact rv d3"><b>98%</b><span lang="ru">компаний Fortune 500 используют ATS — резюме фильтрует робот до человека</span><i>S007 · SkyQuest/Jobscan → C008</i></div>
-    <div class="fact rv"><b>31–74%</b><span lang="ru">соискателей применяют AI в поиске работы (разброс опросов 2025–2026)</span><i>S005 · Kickresume Press → C009</i></div>
-    <div class="fact rv d1"><b lang="ru">$37,97 млрд</b><span lang="ru">мировой рынок онлайн-рекрутинга, 2025 · CAGR 7,1%</span><i>S007 · SkyQuest → C011</i></div>
+    <div class="fact rv"><b lang="ru">285 млн ₽</b><span lang="ru">цель валовой прибыли планового года; прогноз «без изменений» — 279 млн ₽; разрыв 6 млн ₽</span><i>S001 · бриф → C002</i></div>
+    <div class="fact rv d1"><b lang="ru">12 000 мес</b><span lang="ru">доп. оплаченных месяцев × 500 ₽ закрывают разрыв 6 млн ₽ — граница решения из брифа</span><i><span lang="ru">S001 · бриф заказчика → C003</span></i></div>
+    <div class="fact rv d2"><b lang="ru">12% → 9%</b><span lang="ru">целевое снижение доли ограничений из-за исчерпания объёма (−3 п.п. = четверть) — гипотеза эффекта, проверяет пилот</span><i>S001 · бриф → C013 (гипотеза)</i></div>
+    <div class="fact rv d3"><b>100 тыс.</b><span lang="ru">домохозяйств доступны оператору из 300 тыс., которым нужна помощь со связью; владельцев нескольких номеров — 40 тыс. из 180 тыс.</span><i>S001 · бриф → C004</i></div>
+    <div class="fact rv"><b>+6,75 млн ₽</b><span lang="ru">целевой сценар: 5 500 номеров × 3 мес × 500 ₽ − 1,5 млн прямых расходов → 285,8 млн ₽ — цель достигается с запасом</span><i>S001 · economics.py → C021</i></div>
+    <div class="fact rv d1"><b lang="ru">8 000</b><span lang="ru">активных групп — цель года; сейчас 5 000 из 8 000 подключённых (62,5%): работать должны две трети групп</span><i>S001 · бриф → C002/C008</i></div>
   </div>
-  <div class="note rv" lang="ru">Незанятый угол — гипотеза [C013]: 19 локалей + приватность + open source при конкурентах на EN+5 языках. Синтетика (персоны Sarah и Markus, воронка беты [S008]) помечена origin=synthetic — это гипотезы и метод-иллюстрация, не факты. Полный реестр — в <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/REPORT.md" target="_blank" rel="noopener">REPORT.md</a>.</div>
+  <div class="note rv" lang="ru">Рынок учебный — все числа заданы брифом [S001]. Частоты причин перебоя — допущение [C011], проверка выгрузкой пилота. ИИ-респонденты дали только гипотезы [C019,C020] — синтетика не доказательство.</div>
   
 </div></section>
 
 <section id="options"><div class="wrap">
   <h2 class="rv" lang="ru">Варианты и red team: 5 путей, 20 ударов</h2>
   
-  <p class="lead rv d1" lang="ru">Red team — отдельный субагент, который атакует каждый вариант: 15 возражений + 5 скрытых допущений. Его удары не «прибиты», а встроены в митигации и пороги плана проверки.</p>
+  <p class="lead rv d1" lang="ru">Red team — отдельный субагент: 15 возражений + 5 скрытых допущений по выбранному варианту. Вердикт — «требует доработки до пилота»; удары встроены порогами [C021–C026].</p>
   
   <table class="rv d2">
-    <tr><th lang="ru">Вариант</th><th lang="ru">Суть</th><th lang="ru">ARR 12 мес (модель)</th><th lang="ru">Главный удар red team</th></tr>
+    <tr><th lang="ru">Вариант</th><th lang="ru">Суть</th><th lang="ru">Вклад в прибыль планового года</th><th lang="ru">Главный удар red team</th></tr>
     <tr>
-      <td lang="ru"><b>A</b> · статус-кво</td>
-      <td lang="ru">бесплатный open-source, локальный режим без изменений</td>
-      <td>$0</td>
-      <td lang="ru">«дорогое хобби»: MIT позволяет форку монетизировать ваш труд</td>
+      <td lang="ru"><b>A</b> · оставить как есть</td>
+      <td lang="ru">текущее обслуживание: группы и переключение номеров уже работают, предупреждений нет</td>
+      <td>0 → 279 млн ₽</td>
+      <td lang="ru">цели года не достигнуты по всем пяти строкам: −6 млн ₽ к плану, 5 000 активных из 8 000</td>
     </tr>
     <tr>
-      <td lang="ru"><b>B</b> · hosted freemium SaaS, глобально <span style="color:var(--accent)">← выбран</span></td>
-      <td lang="ru">тиры Free (BYOK) / Pro $12 / Unlimited $29; opt-in облако при MIT-core; честный прайсинг; волны локалей EN → DE/ES/PT-BR → JA/ZH; каналы PH, HN, SEO «open-source Jobscan alternative»</td>
-      <td lang="ru">≈ $18,4 тыс run-rate к нед. 12 беты (MRR $1 537 — модель [S008])</td>
-      <td lang="ru">доверие сообщества к коммерциализации MIT-core + инференс free-тира; митигации: BYOK-free, opt-in облако, честный прайсинг, пороги остановки</td>
+      <td lang="ru"><b>B</b> · «Предупреждение до перебоя» <span style="color:var(--accent)">← выбран</span></td>
+      <td lang="ru">сообщение организатору: низкий остаток участника (~20% на 3 дня) и предстоящий платёж (напоминание плательщику; гранулярные согласия)</td>
+      <td lang="ru"><b>+6,75 млн ₽</b> нетто → 285,8 млн (осн. ход: 5 500 номеров × 3 мес − 1,5 млн); неблагоприятный +1,5 млн → 280,5 млн</td>
+      <td lang="ru">инкрементальность платежей не доказана — сдвиги >30% при окне 90 дней обнуляют эффект [C021]; конверсия согласий неизвестна [C019]</td>
     </tr>
     <tr>
-      <td lang="ru"><b>C</b> · B2B white-label</td>
-      <td lang="ru">хостинг резюме-билдера под брендом партнёра</td>
-      <td lang="ru">$24–60 тыс</td>
-      <td lang="ru">у соло-разработчика нет продаж-компетенции — отложен</td>
+      <td lang="ru"><b>C</b> · «Семейный кабинет»</td>
+      <td lang="ru">сводная карточка остатков семьи + передача интернета в один клик</td>
+      <td lang="ru">прямой вклад не оценивается: боль в осведомлённости, не в UX [C005]</td>
+      <td lang="ru">≥4–5 чел.-мес — перебор ресурса Q2 [C010]; организатор всё равно узнаёт о перебое от близкого [C005]</td>
     </tr>
     <tr>
-      <td lang="ru"><b>D</b> · dual-license</td>
-      <td lang="ru">платная коммерческая лицензия поверх open-source</td>
-      <td lang="ru">$10–50 тыс</td>
-      <td lang="ru">юридически не работает поверх MIT — отклонён</td>
+      <td lang="ru"><b>D</b> · «Не думай о роутере»</td>
+      <td lang="ru">предупреждения по номерам устройств — владельцы первой очередью</td>
+      <td lang="ru">вклад меньше B: база 40 тыс. против 100 тыс. [C004]</td>
+      <td lang="ru">интеграция состояния устройства требует данных от вендоров [C006]; автоплатёж закрывает большинство случаев [C020]</td>
     </tr>
     <tr>
-      <td lang="ru"><b>E</b> · закрыть коммерцию</td>
-      <td lang="ru">продукт остаётся бесплатным OSS-проектом</td>
-      <td>$0</td>
-      <td lang="ru">отказ от актива на растущем рынке ($1,2–2,4 млрд, AI CAGR 13,1%)</td>
+      <td lang="ru"><b>E</b> · закрыть направление</td>
+      <td lang="ru">не финансировать услуги «близких» в плановом году, пересмотреть цели с руководством</td>
+      <td>0 → 279 млн ₽</td>
+      <td lang="ru">0 → 279 млн: цели не достигнуты осознанно; разрыв 6 млн достижим по формуле брифа [C003] — отказ без пилота преждевременен</td>
     </tr>
   </table>
 </div></section>
@@ -432,161 +426,160 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
 <section id="verdict"><div class="wrap">
   <h2 class="rv" lang="ru">Вывод агента: вариант B и его защита</h2>
   
-  <p class="lead rv d1" lang="ru">Рекомендация агента — не «лучший вариант вообще», а лучший при ограничениях руководителя: MIT-core сохраняется, соло-ресурсы, доверие локального режима не ломается.</p>
+  <p class="lead rv d1" lang="ru">Рекомендация — не «лучший вариант вообще», а лучший при ограничениях брифа: существующие данные и механика [C005,C006], ресурс 3 чел.-мес [C010], измеримый порог отката. D — вторая очередь Q3–Q4, C — кандидат на вторую итерацию B.</p>
   
   <div class="trio">
     <div class="agent-card rv">
       <h3 lang="ru">Вариант B — выбран</h3>
       
-      <p lang="ru"><b>Hosted freemium SaaS, глобально:</b> тиры Free (BYOK — нулевые инференс-затраты) / Pro $12 / Unlimited $29; opt-in облако при локальном MIT-core.</p>
+      <p lang="ru"><b>«Предупреждение до перебоя»:</b> своевременное сообщение организатору — «у участника N остаток ~20% на 3 дня» и «по номеру M 5-го спишется X руб. — отправь напоминание плательщику». Данные уже у оператора [C005,C006]; добавляется только информирование + UI согласий [C009].</p>
       
-      <p lang="ru">Честный прайсинг без автопродлений — позиционирование против конкурентов с подписными ловушками [C014].</p>
+      <p lang="ru">Пилот — к концу Q1: решение руководителя по порогам, записанным до данных; первые оценки эффекта — к концу Q2 [C013].</p>
       
-      <p lang="ru">Волны локалей EN → DE/ES/PT-BR → JA/ZH из 19 готовых; каналы: Product Hunt, HN, SEO «open-source Jobscan alternative».</p>
+      <p lang="ru">Экономика: основной ход +6,75 млн нетто → 285,8 млн ₽ (цель с запасом); неблагоприятный +1,5 млн → 280,5 млн; сценарии «ноль» и «минус» — в economics.py [C021].</p>
       
     </div>
     <div class="agent-card rv d1">
       <h3 lang="ru">Митигации red team</h3>
       
-      <p lang="ru"><b>BYOK-free-тир</b> — free-пользователи приносят свои ключи, переменные затраты ≈ 0.</p>
+      <p lang="ru"><b>Инкрементальность</b> — расчёт по датам платежей против контроля, окно каннибализации 90 дней; сдвиги >30% → эффект обнуляется [C021].</p>
       
-      <p lang="ru"><b>Opt-in облако</b> — локальный режим остаётся дефолтом, доверие первого комьюнити не ломается.</p>
+      <p lang="ru"><b>Гранулярные согласия</b> — 3 раздельных (остаток / платежи / оплата за меня); «подтвердите» убрано из текста; отзывы >15% — стоп-метрика [C009,C022].</p>
       
-      <p lang="ru"><b>Честный прайсинг</b> — без автопродлений и скрытых списаний.</p>
+      <p lang="ru"><b>Каннибализация</b> — раздельный лог реакций (перевод ГБ / оплата / ничего); вклад считается только по оплаченным месяцам [C023].</p>
       
-      <p lang="ru"><b>Пороги остановки</b> — если сообщество и метрики против, стоп → вариант E.</p>
+      <p lang="ru"><b>Точность канала</b> — precision ≥80%, ≤2 алерта/нед, «тихий режим» новых номеров, сверка автоплатежа при отправке [C026].</p>
       
     </div>
     <div class="agent-card rv d2">
       <h3 lang="ru">Осознанные отказы</h3>
       
-      <p lang="ru"><b>C — B2B white-label</b> ($24–60 тыс ARR): нет продаж-компетенции у соло — отложен.</p>
+      <p lang="ru"><b>C — «Семейный кабинет»:</b> ≥4–5 чел.-мес — перебор ресурса; кандидат на вторую итерацию B, если пилот покажет потребность в контексте всей семьи.</p>
       
-      <p lang="ru"><b>D — dual-license</b> ($10–50 тыс): юридически не работает поверх MIT — отклонён.</p>
+      <p lang="ru"><b>D — «Не думай о роутере»:</b> отложено на Q3–Q4 — интеграция с устройствами [C006], отодвигает семейную цель 8 000 [C002].</p>
       
-      <p lang="ru"><b>E — закрыть коммерцию:</b> отказ от актива на растущем рынке.</p>
+      <p lang="ru"><b>E — закрыть направление:</b> осознанный отказ от цели; правомерен только при пересмотре целей руководством.</p>
       
-      <p lang="ru"><b>A — статус-кво:</b> «дорогое хобби», которым может воспользоваться форк.</p>
+      <p lang="ru"><b>A — оставить как есть:</b> разрыв −6 млн ₽ и отставание базового года [C001] скорее усилятся.</p>
       
     </div>
   </div>
-  <div class="note rv" lang="ru"><b>Решение D001 — «Коммерческая версия CVStart: hosted freemium SaaS, глобально».</b> Основания: C019/C013/C014/C016/C005/C006. Обязательство: hosted beta в 3 EN-гео к 2026-12-15. Пересмотр: 2027-02-10. Триггер стопа → вариант E.</div>
-  <div class="note rv" lang="ru"><b>Основания D001:</b> <b>C019</b> — Комитет (демо) выбрал вариант B — hosted freemium SaaS глобально; обязательные митигации: BYOK-free-тир, opt-in облако при локальном core, честный прайсинг без автопродлений, волны локалей EN→DE/ES/PT-BR→JA/ZH; пороги остановки из плана проверки · <b>C013</b> — Незанятая ниша: мультиязычный (19 локалей) приватный AI-резюме-билдер с открытым кодом — западные конкуренты покрывают EN+5 и работают в облаке · <b>C014</b> — Честное ценообразование (без автопродлений) и open-source — работающий дифференциатор против конкурентов с агрессивными автопродлениями, особенно для технической аудитории · <b>C016</b> — Юнит-допущения модели (демо): paid-тариф $29/мес, переменные (инференс+инфра) 25%, CAC $60 (SEO/Product Hunt/сообщества), churn платящих 8%/мес · <b>C005</b> — Рынок resume builders: коридор оценок $1,2–2,4 млрд (2024–2025); AI-подсегмент $1,3→1,47 млрд, CAGR 13,1% · <b>C006</b> — 7 прямых конкурентов (Zety, resume.io, Novoresume, Kickresume, Enhancv, Teal, Rezi) работают на freemium с платным тарифом $8–40/мес и агрессивными автопродлениями</div>
+  <div class="note rv" lang="ru"><b>Решение D001 — «Предупреждение до перебоя» (вариант B):</b> A/B-пилот на 600 семейных группах (6 недель набора + 14 дней наблюдения, ITT, рандомизация по семьям). Расширение планового года — только при эффекте ≥−3 п.п. по ограничениям из-за исчерпания [C013]. Владельцы нескольких номеров — вторая очередь Q3–Q4 [C016]. Пересмотр — 2027-04-30.</div>
+  <div class="note rv" lang="ru"><b>Основания D001:</b> <b>C013</b> — гипотеза: предупреждение организатору до критического события снижает долю подходящих номеров с полным ограничением из-за исчерпания объёма с 12% до 9% (−3 п.п.) — проверка A/B-пилотом · <b>C016</b> — вывод: первые клиенты — семьи: доступная база 100 тыс. домохозяйств против 40 тыс. владельцев; владельцы — вторая очередь с переносом механики · <b>C017</b> — вывод: первая услуга — «предупреждение до перебоя»: данные об остатках и платежах уже у оператора, механика передачи интернета есть — добавляется только информирование · <b>C003</b> — факт: 500 руб. валовой прибыли за один доп. оплаченный месяц; для +6 млн руб. нужно 12 000 доп. оплаченных месяцев · <b>C015</b> — вывод: цель +6 млн руб. достижима, например, при 4 000 номерах × 3 мес или 6 000 номерах × 2 мес дополнительного удержания · <b>C027</b> — вывод: 600 групп — объём набора по темпу брифа (~100/нед × 6 недель); достаточность проверяется расчётом MDE до старта (мощность ≥80%, α=5%)</div>
   
-  <div class="note rv" lang="ru"><b>Метрика беты:</b> платящие hosted-беты: &gt;=40 к 2027-02-10 (базовый 0). Триггеры пересмотра: paid &lt; 20 к нед. 12 при activation &lt; 35% -&gt; закрыть коммерческую ветку (вариант E); падение звёзд GitHub &gt; 30% после анонса облака -&gt; пересобрать коммуникацию opt-in</div>
+  <div class="note rv" lang="ru"><b>Метрика беты:</b> Первичная метрика: дополнительные оплаченные месяцы на группу (ITT); клиентский результат: доля ограничений из-за исчерпания 12%→9% (−3 п.п.). Триггеры пересмотра: Отзывы согласий &gt;15% [C022] ; повторные списания ≥1 [C026] ; precision прогноза &lt;80% [C026] ; темп набора &lt;50 групп/нед 2 недели подряд [C012] ; сдвиг платежей &gt;30% (инкрементальность) [C021]</div>
   
 
   
 </div></section>
 
 <section id="econ"><div class="wrap">
-  <h2 class="rv" lang="ru">Экономика модели: юнит-математика платящего</h2>
+  <h2 class="rv" lang="ru">Экономика: от доп. месяцев к прибыли года</h2>
   
-  <p class="lead rv d1" lang="ru">Юнит-модель платящего подписчика на допущениях [C016]: ARPU $29/мес (топ-тариф Unlimited при Pro $12), переменные (инференс + инфра) 25%, CAC $60 (SEO/Product Hunt/сарафан). В Excel-книгах те же числа считаются живыми формулами — поменяйте «Ввод», пересчитается всё.</p>
+  <p class="lead rv d1" lang="ru">Граница решения задана брифом: 500 ₽ валовой прибыли за один доп. оплаченный месяц [C003]. 12 000 месяцев закрывают разрыв 6 млн ₽; целевой сценар — 5 500 номеров × 3 мес = 16 500 мес × 500 ₽ − 1,5 млн расходов = <b>+6,75 млн ₽</b>.</p>
   
-  <div class="wf-wrap rv d2"><svg class="wf-svg" viewBox="0 0 860 300" role="img" aria-label="Экономика платящего CVStart">
-    <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
-    <g font-size="13">
-      <g class="bar-g"><rect x="40"  y="170" width="120" height="60"  rx="8" fill="url(#wg)" opacity=".9"/><text x="100" y="162" text-anchor="middle" fill="#eef2ff" font-weight="700">$29</text></g>
-      <g class="bar-g"><rect x="230" y="200" width="120" height="30" rx="8" fill="#f472b6" opacity=".75"/><text x="290" y="192" text-anchor="middle" fill="#f472b6" font-weight="700">−$7,25</text></g>
-      <g class="bar-g"><rect x="420" y="170" width="120" height="60" rx="8" fill="url(#wg)" opacity=".9"/><text x="480" y="162" text-anchor="middle" fill="#eef2ff" font-weight="700">$21,75</text></g>
-      <g class="bar-g"><rect x="610" y="80" width="120" height="150" rx="8" fill="#818cf8" opacity=".6"/><text x="670" y="72" text-anchor="middle" fill="#eef2ff" font-weight="700">$271,88</text></g>
-      <text x="100" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">ARPU платящего / мес</tspan></text>
-      <text x="290" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">инференс + инфра ~25%</tspan></text>
-      <text x="480" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">вклад (CM) платящего</tspan></text>
-      <text x="670" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">LTV платящего (модель)</tspan></text>
+<div class="wf-wrap rv d2"><svg class="wf-svg" viewBox="0 0 860 300" role="img" aria-label="Сценарии экономики: вклад в прибыль планового года">
+    <g font-size="12.5">
+      <line x1="30" y1="150" x2="830" y2="150" stroke="rgba(214,210,204,.25)" stroke-dasharray="4 4"/>
+      <g class="bar-g"><rect x="60"  y="20" width="110" height="130" rx="8" fill="#EE8A3C" opacity=".95"/><text x="115" y="14" text-anchor="middle" fill="#F1EEE9" font-weight="700">+6,75</text></g>
+      <g class="bar-g"><rect x="215" y="65" width="110" height="85"  rx="8" fill="#EE8A3C" opacity=".6"/><text x="270" y="59" text-anchor="middle" fill="#F1EEE9" font-weight="700">+4,5</text></g>
+      <g class="bar-g"><rect x="370" y="122" width="110" height="28" rx="8" fill="#EE8A3C" opacity=".35"/><text x="425" y="116" text-anchor="middle" fill="#F1EEE9" font-weight="700">+1,5</text></g>
+      <g class="bar-g"><rect x="525" y="150" width="110" height="28" rx="8" fill="#E8B34B" opacity=".7"/><text x="580" y="192" text-anchor="middle" fill="#E8B34B" font-weight="700">−1,5</text></g>
+      <g class="bar-g"><rect x="680" y="150" width="110" height="66" rx="8" fill="#f472b6" opacity=".8"/><text x="735" y="230" text-anchor="middle" fill="#f472b6" font-weight="700">−3,5</text></g>
+      <text x="115" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">основной ход</tspan></text>
+      <text x="270" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">сдержанный</tspan></text>
+      <text x="425" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">неблагоприятный</tspan></text>
+      <text x="580" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">«ноль»</tspan></text>
+      <text x="735" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">«минус» с оттоком</tspan></text>
     </g>
     <g font-size="12.5">
-      <rect x="40" y="270" width="160" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="120" y="286" text-anchor="middle" fill="#2dd4bf"><tspan lang="ru">LTV / CAC ≈ 4,53</tspan></text>
-      <rect x="212" y="270" width="185" height="24" rx="7" fill="rgba(232,179,75,.1)" stroke="rgba(232,179,75,.35)"/><text x="304" y="286" text-anchor="middle" fill="#818cf8"><tspan lang="ru">окупаемость CAC ≈ 2,8 мес</tspan></text>
-      <rect x="409" y="270" width="200" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="509" y="286" text-anchor="middle" fill="#f472b6"><tspan lang="ru">брейк-евен ≈ 69 платящих</tspan></text>
-      <rect x="621" y="270" width="199" height="24" rx="7" fill="rgba(154,167,189,.08)" stroke="rgba(154,167,189,.3)"/><text x="720" y="286" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">допущения помечены [C016]</tspan></text>
+      <rect x="30" y="268" width="180" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="120" y="284" text-anchor="middle" fill="#EE8A3C"><tspan lang="ru">цель ≥ 285 млн ₽</tspan></text>
+      <rect x="226" y="268" width="200" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="326" y="284" text-anchor="middle" fill="#EE8A3C"><tspan lang="ru">порог расширения −3 п.п.</tspan></text>
+      <rect x="442" y="268" width="240" height="24" rx="7" fill="rgba(232,179,75,.1)" stroke="rgba(232,179,75,.35)"/><text x="562" y="284" text-anchor="middle" fill="#E8B34B"><tspan lang="ru">12 000 мес × 500 ₽ = +6 млн</tspan></text>
+      <rect x="698" y="268" width="132" height="24" rx="7" fill="rgba(154,167,189,.08)" stroke="rgba(154,167,189,.3)"/><text x="764" y="284" text-anchor="middle" fill="#9aa7bd"><tspan lang="ru">модель [C021]</tspan></text>
     </g>
   </svg></div>
-  <div class="note rv" lang="ru">Ожидание беты — модель, не факт: синтетическая бета-воронка (метод-иллюстрация [S008], seed=7, 12 недель). Факт модели нед. 12 [S008]: <b>32603 посетителей → 1793 регистрации → 1111 активаций → 53 платящих</b> (MRR $1 537). Реальная бета проверяется порогами из плана проверки ниже.</div>
+  <div class="note rv" lang="ru">Сценарии — модель до данных, расчёт воспроизводим: analysis/economics.py демо-проекта. Фактический вклад решает пилот: считаются только оплаченные месяцы, окно каннибализации 90 дней [C021,C023].</div>
   
 </div></section>
 
 <section id="sixpager"><div class="wrap">
   <h2 class="rv" lang="ru">Фрагменты six-pager: RU и EN</h2>
   
-  <p class="lead rv d1" lang="ru">Отчёт для комитета — в <b>формате референса стратегии роста</b>: нумерованные подпункты 1.1/1.2 и 2.1/2.2, инициативы-драйверы, матрица тактик, KPI в двух плоскостях, сноски-источники. Черновик собирается командой <code>pfs export --six-pager</code>, детализация — по промпт-спецификации <code>knowledge/templates/SIX_PAGER_PROMPT.md</code>; числа прослеживаются до утверждений C###.</p>
+  <p class="lead rv d1" lang="ru">Отчёт для комитета — в формате референса стратегии: FAQ-1…6, расчёты рядом с решениями, приложения Excel. Ниже — суть каждого раздела.</p>
   
   <div class="split2 rv d2">
-    <div class="colcard" lang="ru">
+<div class="colcard" lang="ru">
       <h3><span lang="ru">Six-pager — русский</span></h3>
       <div class="faq6">
-        <div class="f6"><b>1.1</b><span><b>Обзор рынка:</b> resume builders $1,2–2,4 млрд (диапазон — агрегаторы расходятся ×2, считаем по консервативной границе); AI-сегмент CAGR 13,1%; тренды: ATS-гейт найма, подписочная усталость, GenAI-стандарт · <i>S004–S007</i></span></div>
-        <div class="f6"><b>1.2</b><span><b>Конкуренты (таблица):</b> Mass-market SaaS / ATS-specialists / OSS — преимущества, стратегии роста и промо-механики, риски с оценкой Высокий–Средний–Низкий; окно возможностей — 2–3 квартала · <i>C005–C007</i></span></div>
-        <div class="f6"><b>2.1–2.2</b><span><b>Персоны и барьеры:</b> таблицы «Кто они / Что используют сегодня / Трудности» по трём сегментам + барьеры по этапам пути (поиск → выбор → резюме → постоплата) и «что сдерживает от старта» · <i>C017/C018 — гипотезы, синтетика</i></span></div>
-        <div class="f6"><b>3.1–3.3</b><span><b>Драйверы:</b> «Первый драйвер — честная монетизация» (BYOK-free), «Второй драйвер — путь „вакансия → ATS-резюме“», глобальное покрытие; UE пошагово: CM = 29 × 0,75 = 21,75 → LTV = 271,88 → LTV/CAC = 4,53 → брейк-евен 69 · <i>C016</i></span></div>
-        <div class="f6"><b>FAQ-4</b><span><b>Матрица тактик</b> «Инициатива | Фокус | Потребности | Решения»: BYOK-free-тир, страница цены без автопродлений, CV Studio (тюминг + ATS-буллеты), трекер с follow-up, волны локалей, OSS-дистрибуция</span></div>
-        <div class="f6"><b>FAQ-5–6</b><span><b>План и KPI:</b> вклад инициатив 50/30/20%; тайминг к январскому пику найма; KPI в двух плоскостях (бизнес: MRR ≥ $1 500, LTV/CAC ≥ 3 · продукт: активация ≥ 50%, churn ≤ 10%); сноски S001–S011 · <i>D001</i></span></div>
+        <div class="f6"><b>FAQ-1</b><span><b>Текущее состояние:</b> цель ≥285 млн ₽ при «без изменений» 279; разрыв 6 млн = 12 000 мес × 500 ₽ [C003]; база 6 500 групп, активных 4 000 [C001] · <i>S001</i></span></div>
+        <div class="f6"><b>FAQ-2</b><span><b>Аудитория:</b> семейные организаторы (доступны 100 тыс.) и владельцы номеров (40 тыс.) [C004]; барьер — «о перебое узнаёт из просьбы о помощи» [C005,C006]</span></div>
+        <div class="f6"><b>FAQ-3</b><span><b>Инициативы:</b> 5 вариантов A–E по одной оси; рекомендация B «Предупреждение до перебоя»: +6,75 млн → 285,8 млн ₽ [C003,C021]; D — вторая очередь Q3–Q4 [C016]</span></div>
+        <div class="f6"><b>FAQ-4</b><span><b>Тактики:</b> предупреждение о низком остатке (~20% на 3 дня), напоминание плательщику, 3 гранулярных согласия [C009,C022]; precision ≥80%, ≤2 алерта/нед [C026]</span></div>
+        <div class="f6"><b>FAQ-5</b><span><b>План:</b> Q1 — запуск пилота 600 групп (решение по порогам), Q2 — расширение/изменение/наблюдение; ориентир 3-го года ≥25% базы [C004]</span></div>
+        <div class="f6"><b>FAQ-6</b><span><b>KPI:</b> бизнес — валовая прибыль ≥285 млн ₽, доп. месяцы ≥15 000 [C003]; продукт — ограничения 12%→9% [C013], активные 8 000 [C002]</span></div>
       </div>
     </div>
-    
+
   </div>
   <div class="pbtn-row rv d3">
-    <a href="https://raw.githubusercontent.com/Fighter90/product-factory-strategist/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.pdf" target="_blank" rel="noopener" class="pbtn">SIX_PAGER_RU.pdf</a>
-    <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.docx" target="_blank" rel="noopener" class="pbtn ghost2">SIX_PAGER_RU.docx</a>
-    <a href="https://raw.githubusercontent.com/Fighter90/product-factory-strategist/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.pdf" target="_blank" rel="noopener" class="pbtn">SIX_PAGER_EN.pdf</a>
-    <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener" class="pbtn ghost2">SIX_PAGER_EN.docx</a>
-    <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER.md" target="_blank" rel="noopener" class="pbtn ghost2"><span lang="ru">SIX_PAGER.md — черновик от генератора</span></a>
-    <a href="materials.html?v=9" class="pbtn ghost2"><span lang="ru">все форматы и материалы →</span></a>
+<a href="https://raw.githubusercontent.com/Fighter90/product-factory-strategist/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER.docx" target="_blank" rel="noopener" class="pbtn">SIX_PAGER.docx</a>
+    <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener" class="pbtn ghost2">SIX_PAGER_EN.docx</a>
+    <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER.md" target="_blank" rel="noopener" class="pbtn ghost2"><span lang="ru">SIX_PAGER.md — черновик от генератора</span></a>
+    <a href="materials.html?v=10" class="pbtn ghost2"><span lang="ru">все форматы и материалы →</span></a>
   </div>
 </div></section>
 
 <section id="validation"><div class="wrap">
   <h2 class="rv" lang="ru">План проверки: пороги и контр-метрики</h2>
   
-  <p class="lead rv d1" lang="ru">Hosted-бета на 90 дней в 3 EN-гео (США + ЕС). Ожидание к неделе 12: 50–60 платящих (модель: 53), MRR ≥ $1 500, активация ≥ 50% регистраций. Три порога решают судьбу стратегии без новых совещаний.</p>
+  <p class="lead rv d1" lang="ru">A/B-пилот на 600 семейных группах: 6 недель набора (темп ≥100 впервые подходящих групп/нед [C012]) + до 14 дней наблюдения. ITT: в расчёте все включённые. Рандомизация по семьям — участники делят пакет.</p>
   
   <div class="trio">
     <div class="agent-card rv">
-      <h3 lang="ru">Продолжить</h3>
+      <h3 lang="ru">Расширять</h3>
       
-      <p><b>paid ≥ 40 · activation ≥ 50% · churn ≤ 10%</b></p>
-      <p lang="ru">→ запуск волны локалей DE/ES/PT-BR из 19 готовых.</p>
+      <p><b>эффект ≥ −3 п.п. · ложные <20% · повторные списания = 0</b></p>
+      <p lang="ru">→ расширение планового года: цель 285 млн ₽ остаётся, владельцы номеров — Q3–Q4.</p>
       
     </div>
     <div class="agent-card rv d1">
-      <h3 lang="ru">Изменить</h3>
+      <h3 lang="ru">Продлить наблюдение</h3>
       
-      <p><b><span lang="ru">paid 20–40 · paid &lt; 20 при activation ≥ 35%</span></b></p>
-      <p lang="ru">→ пересбор тира и цен (граница Free/Pro, ориентир $19?), бета продолжается.</p>
+      <p><b><b lang="ru">эффект в диапазоне −1…−3 п.п.</b></b></p>
+      <p lang="ru">→ расширяем набор (темп <50/нед 2 недели подряд — сузить вопрос проверки), решение откладывается, дата пересмотра фиксируется.</p>
       
     </div>
     <div class="agent-card rv d2">
       <h3 lang="ru">Остановить</h3>
       
-      <p><b lang="ru">paid &lt; 20 при activation &lt; 35%</b></p>
-      <p lang="ru">→ стоп коммерции, возврат к варианту E: продукт остаётся бесплатным OSS.</p>
+      <p><b lang="ru">эффект ≈0 · ложные >20% · повторные списания ≥1</b></p>
+      <p lang="ru">→ предложение не расширяется; разбор с заказчиком системы расчётов [S001].</p>
       
     </div>
   </div>
   <div class="mgrid" style="margin-top:18px">
-    <div class="fact rv"><b lang="ru">90 дней</b><span lang="ru">окно hosted-беты в 3 EN-гео (США + ЕС)</span></div>
-    <div class="fact rv d1"><b>50–60</b><span lang="ru">платящих к нед. 12 — ожидание (модель: 53 [S008])</span></div>
-    <div class="fact rv d2"><b>≥ $1 500</b><span lang="ru">MRR к нед. 12 · активация ≥ 50% регистраций</span></div>
-    <div class="fact rv d3"><b>2026-12-15</b><span lang="ru">дедлайн беты 2026-12-15 · пересмотр 2027-02-10</span></div>
+    <div class="fact rv"><b lang="ru">600 групп</b><span lang="ru">A/B-пилот: 6 недель набора + 14 дней наблюдения, ITT</span></div>
+    <div class="fact rv d1"><b>−3 п.п.</b><span lang="ru">порог расширения: доля ограничений из-за исчерпания 12% → 9% [C013]</span></div>
+    <div class="fact rv d2"><b>≥70%</b><span lang="ru">consent rate включённых групп — условие масштабирования [C024]</span></div>
+    <div class="fact rv d3"><b>2027-04-30</b><span lang="ru">решение утверждено 2026-11-19 · пересмотр D001</span></div>
   </div>
-  <div class="note rv" lang="ru">Контр-метрики: звёзды/форки GitHub не должны падать; жалобы GDPR — не более 5; инференс free-тира — не дороже $200/мес; NPS — не ниже 30. Любой выход за границу — пересмотр решения D001 до даты пересмотра.</div>
+  <div class="note rv" lang="ru">Контр-метрики: отключения опции >10% за 4 недели; ложные предупреждения >20% сработавших — стоп расширения; повторные списания ≥1 — стоп спорных операций; consent rate <50% за первые 4 недели — доработка приглашения; нагрузка на поддержку растёт — пересмотр текстов [C019,C022,C024].</div>
   
 </div></section>
 
 <section id="artifacts"><div class="wrap">
   <h2 class="rv" lang="ru">Артефакты прогона</h2>
   
-  <p class="lead rv d1" lang="ru">Всё лежит в открытом репозитории: <code lang="ru">projects/демо/outputs/</code>. Six-pager — в двух языках и трёх форматах; полный отчёт — REPORT.md; разбор вариантов с red team — 03_options.md.</p>
+  <p class="lead rv d1" lang="ru">Всё лежит в открытом репозитории: <code lang="ru">projects/связь-для-близких-и-собственных-устройств/outputs/</code>. Главный документ — <b>BRIEF_RESPONSE.md</b>: ответ на бриф одним документом из пяти частей, как требует заказчик; DEMO_README.md — чтение пакета за 60 секунд.</p>
   
   <div class="cta rv">
-    <a class="btn primary" href="materials.html?v=9"><span lang="ru">Материалы демо: six-pager, Excel, источники →</span></a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.pdf" target="_blank" rel="noopener">SIX_PAGER_RU.pdf</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.pdf" target="_blank" rel="noopener">SIX_PAGER_EN.pdf</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.docx" target="_blank" rel="noopener">SIX_PAGER_RU.docx</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener">SIX_PAGER_EN.docx</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/REPORT.md" target="_blank" rel="noopener">REPORT.md</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/03_options.md" target="_blank" rel="noopener">03_options.md</a>
+    <a class="btn primary" href="materials.html?v=10"><span lang="ru">Материалы демо: six-pager, Excel, источники →</span></a>
+<a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/BRIEF_RESPONSE.md" target="_blank" rel="noopener">BRIEF_RESPONSE.md</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER.docx" target="_blank" rel="noopener">SIX_PAGER.docx</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener">SIX_PAGER_EN.docx</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/REPORT.md" target="_blank" rel="noopener">REPORT.md</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/03_options.md" target="_blank" rel="noopener">03_options.md</a>
   </div>
 </div></section>
 

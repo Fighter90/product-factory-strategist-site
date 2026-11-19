@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Demo walkthrough: CVStart — from a director&#x27;s brief to a six-pager</title>
-<meta name="description" content="An end-to-end run of the AI agent on a live open-source product, cvstart.org: the director&#x27;s brief, 12 steps, the resume-builder market, options with red team, paying-user economics, a RU/EN six-pager with Excel, and decision D001.">
+<title>Demo walkthrough: Connection for Loved Ones — from a director&#x27;s brief to a six-pager</title>
+<meta name="description" content="An end-to-end 12-step run of the AI agent on a client brief, Connection for Loved ones and personal devices (a mobile operator): 26 claims with sources, 5 options and a red team — 20 hits, decision D001 &quot;Warn before the outage&quot; — a 600-group pilot with a −3 pp threshold.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Demo walkthrough: CVStart — from a director&#x27;s brief to a six-pager">
-<meta property="og:description" content="An end-to-end run of the AI agent on a live open-source product, cvstart.org: the director&#x27;s brief, 12 steps, the resume-builder market, options with red team, paying-user economics, a RU/EN six-pager with Excel, and decision D001.">
+<meta property="og:title" content="Demo walkthrough: Connection for Loved Ones — from a director&#x27;s brief to a six-pager">
+<meta property="og:description" content="An end-to-end 12-step run of the AI agent on a client brief, Connection for Loved ones and personal devices (a mobile operator): 26 claims with sources, 5 options and a red team — 20 hits, decision D001 &quot;Warn before the outage&quot; — a 600-group pilot with a −3 pp threshold.">
 <meta property="og:url" content="https://strategyproduct.ru/en/demo.html">
 <link rel="canonical" href="https://strategyproduct.ru/en/demo.html">
 <link rel="alternate" hreflang="ru" href="https://strategyproduct.ru/demo.html">
@@ -259,7 +259,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       
       <nav class="links" lang="en" aria-label="Sections"><a href="index.html">Home</a><a href="demo.html">Demo</a><a href="help.html">Help</a><a href="materials.html">Materials</a></nav>
       <div class="lang" role="group" aria-label="Язык / Language"><a href="../demo.html" hreflang="ru" data-goal="lang_switch">RU</a><a href="demo.html" class="on" aria-current="true">EN</a></div>
-      <a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click"><span lang="en">Repository</span></a>
+      <a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist" data-goal="github_click"><span lang="en">Repository</span></a>
       <details class="mlink">
         <summary aria-label="Меню"><span class="b" aria-hidden="true"></span></summary>
         
@@ -277,18 +277,18 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
 
 <div class="hero"><div class="wrap">
   
-  <h1 lang="en">Demo walkthrough: <span class="grad">CVStart</span> — from a director's brief to a six-pager</h1>
+  <h1 lang="en">Demo walkthrough: <span class="grad">Connection for Loved Ones</span> — from a director's brief to a six-pager</h1>
   
-  <p class="sub" lang="en">An end-to-end run of the agent on a live open-source product — cvstart.org, an AI resume builder with a job-search dashboard. Below: the brief itself, how the agent worked, what it found about the market, how it red-teamed its own options, and the final report with an Excel model. Every number comes with a source.</p>
+  <p class="sub" lang="en">An end-to-end run on a client brief — services of a fictional mobile operator for family groups and owners of several numbers. Below: the task itself, 12 steps, the evidence base, 5 options with a red team, and the decision with a pilot.</p>
   <div class="chips">
     <span class="chip"><b>12</b><span lang="en"> process steps</span></span>
-    <span class="chip"><b>11</b><span lang="en"> sources S001–S002, S004–S012</span></span>
-    <span class="chip"><b>20</b><span lang="en"> claims C001–C020</span></span>
+    <span class="chip"><b>4</b><span lang="en"> sources S001–S004</span></span>
+    <span class="chip"><b>26</b><span lang="en"> claims C001–C027</span></span>
     <span class="chip"><b>5</b><span lang="en"> options + red team</span></span>
     <span class="chip"><b>20</b><span lang="en"> red-team hits</span></span>
     <span class="chip"><b>4</b><span lang="en"> Excel workbooks</span></span>
-    <span class="chip"><b>RU + EN</b><span lang="en"> six-pager × 3 formats</span></span>
-    <span class="chip"><b>100/100</b> check --strict</span>
+    <span class="chip"><b>RU + EN</b><span lang="en"> six-pager × 2 formats</span></span>
+    <span class="chip"><b>98/100</b> review · check --strict: 0</span>
   </div>
   <div class="split">
     <div class="cv-card">
@@ -296,64 +296,58 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       <h3 lang="en">The product in this demo</h3>
       <div class="cv-head">
         <svg class="cv-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="cvGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset=".55" stop-color="#818cf8"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs><g fill="none" stroke="url(#cvGrad)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M13 6h15l8 8v22a6 6 0 0 1-6 6H13a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6Z"/><path d="M28 6v8h8" opacity=".65"/><path d="M15 23h14" opacity=".7"/><path d="M15 29h14" opacity=".5"/><path d="M15 35h8" opacity=".35"/></g></svg>
-        <div><div class="cv-name">CV<em>Start</em></div><div class="cv-tag">open-source AI resume builder · cvstart.org</div></div>
+        <div><div class="cv-name">Связь<em> для близких</em></div><div class="cv-tag">учебный бриф: услуги мобильного оператора</div></div>
       </div>
       
-      <p lang="en">An open-source (MIT) AI resume builder and job-search dashboard: scans ~129 job boards (124 EN + 5 RU — hh.ru, Habr Career, GeekJob, GetMatch, Trudvsem), AI vacancy scoring 0.0–5.0 against your resume, CV Studio (JD tuning, humanize, ATS bullets), PDF/DOCX export, cover letters, an auto pipeline, an application tracker with follow-ups, a job map, and mock interviews.</p>
+      <p lang="en">A teaching brief from a client: a fictional mobile operator; some customers help loved ones stay connected, others run several numbers of their own. The planned-year goal is gross profit ≥ 285M ₽; the gap to the "no change" forecast is 6M ₽ = 12,000 extra paid months × ₽500.</p>
       
-      <p lang="en">100% local — the data stays with the user; 18 BYOK + keyless LLM providers; 19 UI languages; ~7,602 automated tests. No monetization — "$0 forever" — and no public hosting.</p>
-      <p><a href="https://cvstart.org/" target="_blank" rel="noopener">cvstart.org</a> · <a href="https://github.com/Fighter90/career-ops-ui" target="_blank" rel="noopener">github.com/Fighter90/career-ops-ui</a></p>
+      <p lang="en">A complete run: 12 steps, 3 mandatory human pauses. The registry: 26 claims — 10 facts, 8 assumptions, 4 hypotheses, 4 inferences; 4 sources (the brief, 2 AI respondents — hypotheses only, a wireframe); calculations are reproducible: economics.py and 4 formula-based Excel workbooks.</p>
+      <p><a href="https://github.com/Fighter90/product-factory-strategist/tree/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2" target="_blank" rel="noopener">projects/связь-для-близких-и-собственных-устройств</a> · <a href="https://github.com/Fighter90/product-factory-strategist" target="_blank" rel="noopener">github.com/Fighter90/product-factory-strategist</a></p>
     </div>
     <div class="agent-card">
       
       <h3 lang="en">The director's brief</h3>
       
-      <p lang="en"><b>Brief to the agent:</b> "Develop a commercial version of cvstart.org (an open-source AI resume builder and job search: ~129 job boards scanned, AI scoring, CV Studio, a local pipeline, 19 languages) — resume building and job search — plus a go-to-market strategy for the entire world."</p>
+      <p lang="en"><b>Brief to the agent (verbatim from project.json):</b> "Your team runs the services of a fictional mobile operator. Some customers help loved ones stay connected. Others manage several numbers of their own. Decide who to help first, what exactly to change, and why the operator should invest money in it. Prepare a plan for the coming year and set a benchmark for the end of year three…"</p>
       
-      <p lang="en"><b>Comparison axis:</b> growth in paying subscribers and ARR.</p>
+      <p lang="en"><b>Comparison axis:</b> contribution to the planned-year gross profit (extra paid months × ₽500) and active groups (goal: 8,000).</p>
       
-      <p lang="en"><b>Constraints:</b> the open-source core stays MIT; a solo developer; don't break trust in the local mode (the director's answers in intake).</p>
+      <p lang="en"><b>Constraints:</b> all numbers are teaching numbers set by the brief; two decisions for the lead — end of Q1 (run the pilot?) and end of Q2 (expand?); participant consents are granular: balance / payments / pay on my behalf.</p>
     </div>
   </div>
 </div></div>
 
 <section id="shots"><div class="wrap">
   
-  <h2 class="rv" lang="en">The product in this demo: cvstart.org screenshots</h2>
+  <h2 class="rv" lang="en">Demo overview: run videos and materials</h2>
   
-  <p class="lead rv d1" lang="en">The live open-source product the agent worked on throughout the run: a landing page in two locales, a job-search dashboard with AI scoring, a job map, and an application tracker.</p>
+  <p class="lead rv d1" lang="en">The run overview video in Russian and English, a wireframe of the family dashboard with warnings (source S004), and the agent architecture diagram. Everything plays right on the page.</p>
   <div class="split rv d2">
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">cvstart.org — landing · RU</span></span></div>
-      <div class="shot-crop"><img src="../assets/cv_landing_ru.jpg?v=9" alt="Лендинг cvstart.org (русский): AI-конструктор резюме, скан ~129 джоб-бордов, AI-скоринг 0.0–5.0, 19 языков"></div>
-      <div class="shot-cap"><span lang="en">The landing page in the Russian locale: "$0 forever" positioning, ~129 job boards scanned (124 EN + 5 RU), 19 UI languages. Product source [S001].</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">svyaz-overview — video · RU · 4:20</span></span></div>
+      <video controls preload="metadata" poster="assets/svyaz-poster-ru.png" src="../assets/svyaz-overview-ru.mp4" style="width:100%;display:block;background:#000"></video>
+      
+      <div class="shot-cap" lang="en">The end-to-end run in 4 minutes: the task, the claim registry, the red team, decision D001 with the 600-group pilot.</div>
     </div>
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>cvstart.org — landing · EN</span></div>
-      <div class="shot-crop"><img src="../assets/cv_landing_en.jpg?v=9" alt="Лендинг cvstart.org (English): open-source AI resume builder, job-search dashboard, ATS bullets"></div>
-      <div class="shot-cap"><span lang="en">The same landing page in the English locale — one codebase, 19 language versions with hreflang: hence the locale waves in the strategy.</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">svyaz-overview — video · EN · 4:14</span></span></div>
+      <video controls preload="metadata" poster="assets/svyaz-poster-en.png" src="../assets/svyaz-overview-en.mp4" style="width:100%;display:block;background:#000"></video>
+      
+      <div class="shot-cap" lang="en">The same run in English — the six-pager, Excel and registries exist in two languages.</div>
     </div>
   </div>
-  <div class="shots4 rv d3">
+  <div class="split2 rv d3">
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">cvstart.org — dashboard · RU</span></span></div>
-      <div class="shot-crop"><img src="../assets/cv_dash_ru.jpg?v=9" alt="Дашборд поиска работы CVStart (русский): AI-скоринг вакансий против резюме"></div>
-      <div class="shot-cap"><span lang="en">The job-search dashboard: AI vacancy scoring 0.0–5.0 against your resume — the core of the product and the entry point into CV Studio.</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">Wireframe: family dashboard · S004</span></span></div>
+      <div class="shot-crop"><img src="../assets/svyaz-screenshot-status.png?v=10" alt="Вайрфрейм кабинета семьи с предупреждениями: низкий остаток участника и предстоящий платёж (S004)"></div>
+      
+      <div class="shot-cap" lang="en">The dashboard mock with warnings: a participant's low balance and an upcoming payment — exactly what 06_ux_review_S004.md reviews.</div>
     </div>
     <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>cvstart.org — dashboard · EN</span></div>
-      <div class="shot-crop"><img src="../assets/cv_dash_en.jpg?v=9" alt="Job-search dashboard CVStart (English): vacancy fit scoring against your resume"></div>
-      <div class="shot-cap"><span lang="en">The English version of the dashboard: fit scoring against your resume, job-board filters — what people compare to Jobscan/Teal.</span></div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">cvstart.org — job map · EN</span></span></div>
-      <div class="shot-crop"><img src="../assets/cv_map_en.jpg?v=9" alt="Карта вакансий CVStart (English): job map"></div>
-      <div class="shot-cap"><span lang="en">The job map: offer geography on top of the ~129 job boards scanned.</span></div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">cvstart.org — application tracker · EN</span></span></div>
-      <div class="shot-crop"><img src="../assets/cv_tracker_en.jpg?v=9" alt="Трекер заявок CVStart (English): application tracker with follow-up"></div>
-      <div class="shot-cap"><span lang="en">The application tracker with follow-ups: the application funnel keeps users engaged between job-search sessions — the retention foundation for the hosted version.</span></div>
+      <div class="shot-bar"><i></i><i></i><i></i><span><span lang="en">Agent architecture</span></span></div>
+      <div class="shot-crop"><img src="../assets/svyaz-architecture.png?v=10" alt="Схема архитектуры агента: ядро pfs, реестры источников/утверждений/решений, знания и субагенты"></div>
+      
+      <div class="shot-cap" lang="en">The architecture diagram: the pfs CLI/MCP core, source/claim/decision registries, knowledge and subagents — guarantees in code, not in prompts.</div>
     </div>
   </div>
 </div></section>
@@ -365,66 +359,66 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   <p class="lead rv d1" lang="en">The agent drove the work on its own, stopping only where a human decides: confirming the brief (step 1), choosing an option (step 7), approving the decision (step 11). Progress in one line, state kept in project files.</p>
   <div class="tl-wrap rv d2"><div class="steps12-wrap"><div lang="en"><ol class="steps12"><li><span class="n">1</span>Brief</li><li><span class="n">2</span>Sources</li><li><span class="n">3</span>Research</li><li><span class="n">4</span>Segments</li><li><span class="n">5</span>Situation</li><li><span class="n">6</span>Options & red team</li><li><span class="n">7</span>Choice</li><li><span class="n">8</span>Strategies</li><li><span class="n">9</span>Validation plan</li><li><span class="n">10</span>Quality review</li><li><span class="n">11</span>Decision</li><li><span class="n">12</span>Monitoring</li></ol></div></div></div>
   <div class="tl-grid rv d3">
-    <div class="tl-cell"><b>1–4 · Discover</b><span lang="en">the brief, 11 sources (cvstart.org, market digests), 20 claims, persona hypotheses from synthetic interviews</span></div>
-    <div class="tl-cell"><b>5–7 · Define</b><span lang="en">the situation with gaps, 5 options A–E, red team: 15 objections + 5 hidden assumptions, the human's choice</span></div>
-    <div class="tl-cell"><b>8–10 · Develop</b><span lang="en">product + communication strategies, a validation plan, review 100/100, a RU+EN six-pager + 4 Excel workbooks</span></div>
-    <div class="tl-cell human"><b>11–12 · Deliver</b><span lang="en">decision D001 with grounds and a review date, commitment monitoring open</span></div>
+    <div class="tl-cell"><b>1–4 · Discover</b><span lang="en">the client brief, 4 sources (the brief, AI respondents — hypotheses, a wireframe), 26 claims, teaching numbers from the task</span></div>
+    <div class="tl-cell"><b>5–7 · Define</b><span lang="en">the situation with gaps, 5 options A–E, red team: 15 objections + 5 hidden assumptions — thresholds written before data</span></div>
+    <div class="tl-cell"><b>8–10 · Develop</b><span lang="en">product + communication strategies, a validation plan, a 98/100 review (check --strict: 0 errors), a RU+EN six-pager + 4 Excel workbooks</span></div>
+    <div class="tl-cell human"><b>11–12 · Deliver</b><span lang="en">decision D001 "Warn before the outage" with grounds and a review date, commitment monitoring open</span></div>
   </div>
 </div></section>
 
 <section id="market"><div class="wrap">
   
-  <h2 class="rv" lang="en">What the agent found: the market in numbers, with sources</h2>
+  <h2 class="rv" lang="en">What is known: the brief's numbers with sources</h2>
   
-  <p class="lead rv d1" lang="en">Every number in the registry carries a type, an A–D strength grade and a source. The chain S### → C### → D### is traceable from a link to a decision. Example: the Wiseguy Reports digest → the claim "a $1.2–2.4B corridor" [C005] → decision D001.</p>
+  <p class="lead rv d1" lang="en">Every number carries a type, an A–D strength and source S001 (the client brief). The chain S001 → C### → decision D001 is checkable with pfs impact.</p>
   <div class="facts">
-    <div class="fact rv"><b lang="en">$1.2–2.4B</b><span lang="en">the resume-builder market, 2024–2025; aggregator estimates diverge ×2 — so the market is recorded as ranges</span><i>S006 · Wiseguy Reports → C005</i></div>
-    <div class="fact rv d1"><b lang="en">13.1%</b><span lang="en">CAGR of the AI sub-segment of resume builders — growth exactly where CVStart plays</span><i><span lang="en">S006 · market aggregators → C005</span></i></div>
-    <div class="fact rv d2"><b lang="en">$8–40/mo</b><span lang="en">7 competitors (Zety, resume.io, Novoresume, Kickresume, Enhancv, Teal, Rezi) — freemium with aggressive auto-renewals</span><i>S004 · Rezi/Kickresume pricing → C006</i></div>
-    <div class="fact rv d3"><b>98%</b><span lang="en">of Fortune 500 companies use an ATS — a robot filters resumes before a human sees them</span><i>S007 · SkyQuest/Jobscan → C008</i></div>
-    <div class="fact rv"><b>31–74%</b><span lang="en">of job seekers use AI in their job search (2025–2026 survey spread)</span><i>S005 · Kickresume Press → C009</i></div>
-    <div class="fact rv d1"><b lang="en">$37.97B</b><span lang="en">the global online recruiting market, 2025 · CAGR 7.1%</span><i>S007 · SkyQuest → C011</i></div>
+    <div class="fact rv"><b lang="en">285M ₽</b><span lang="en">the planned-year gross profit goal; the "no change" forecast is 279M ₽; the gap is 6M ₽</span><i>S001 · бриф → C002</i></div>
+    <div class="fact rv d1"><b lang="en">12,000 mo</b><span lang="en">extra paid months × ₽500 close the 6M ₽ gap — the decision boundary set by the brief</span><i><span lang="en">S001 · the client brief → C003</span></i></div>
+    <div class="fact rv d2"><b lang="en">12% → 9%</b><span lang="en">the target drop in exhaustion-driven restrictions (−3 pp = a quarter) — the effect hypothesis the pilot tests</span><i>S001 · бриф → C013 (гипотеза)</i></div>
+    <div class="fact rv d3"><b>100 тыс.</b><span lang="en">households available to the operator out of 300K needing connection help; owners of several numbers — 40K out of 180K</span><i>S001 · бриф → C004</i></div>
+    <div class="fact rv"><b>+6,75 млн ₽</b><span lang="en">the target scenario: 5,500 numbers × 3 mo × ₽500 − 1.5M direct costs → 285.8M ₽ — the goal met with margin</span><i>S001 · economics.py → C021</i></div>
+    <div class="fact rv d1"><b lang="en">8,000</b><span lang="en">active groups — the yearly goal; now 5,000 of 8,000 connected (62.5%): two thirds of groups must act</span><i>S001 · бриф → C002/C008</i></div>
   </div>
   
-  <div class="note rv" lang="en">The unoccupied corner is a hypothesis [C013]: 19 locales + privacy + open source, while competitors cover EN + 5 languages. Synthetic data (the Sarah and Markus personas, the beta funnel [S008]) is tagged origin=synthetic — hypotheses and method illustrations, not facts. The full registry is in <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/REPORT.md" target="_blank" rel="noopener">REPORT.md</a>.</div>
+  <div class="note rv" lang="en">The market is a teaching one — every number is set by the brief [S001]. The frequencies of outage causes are an assumption [C011] checked against pilot data. AI respondents produced hypotheses only [C019,C020] — synthetic data is not proof.</div>
 </div></section>
 
 <section id="options"><div class="wrap">
   
   <h2 class="rv" lang="en">Options and red team: 5 paths, 20 hits</h2>
   
-  <p class="lead rv d1" lang="en">The red team is a separate subagent that attacks every option: 15 objections + 5 hidden assumptions. Its hits aren't bolted on — they are built into the mitigations and the thresholds of the validation plan.</p>
+  <p class="lead rv d1" lang="en">The red team is a separate subagent: 15 objections + 5 hidden assumptions on the chosen option. Verdict: "needs rework before the pilot"; the hits are built into thresholds [C021–C026].</p>
   <table class="rv d2">
-    <tr><th lang="en">Option</th><th lang="en">The idea</th><th lang="en">ARR 12 mo (model)</th><th lang="en">Main red-team hit</th></tr>
+    <tr><th lang="en">Option</th><th lang="en">The idea</th><th lang="en">Planned-year profit contribution</th><th lang="en">Main red-team hit</th></tr>
     <tr>
-      <td lang="en"><b>A</b> · status quo</td>
-      <td lang="en">free open source, the local mode unchanged</td>
-      <td>$0</td>
-      <td lang="en">"an expensive hobby": MIT lets a fork monetize your work</td>
+      <td lang="en"><b>A</b> · keep as is</td>
+      <td lang="en">current service: groups and number switching already work, no warnings</td>
+      <td>0 → 279 млн ₽</td>
+      <td lang="en">yearly goals missed on all five lines: −6M ₽ to plan, 5,000 active out of 8,000</td>
     </tr>
     <tr>
-      <td lang="en"><b>B</b> · hosted freemium SaaS, globally <span style="color:var(--accent)">← chosen</span></td>
-      <td lang="en">Free (BYOK) / Pro $12 / Unlimited $29 tiers; opt-in cloud on top of an MIT core; honest pricing; locale waves EN → DE/ES/PT-BR → JA/ZH; channels: PH, HN, SEO for "open-source Jobscan alternative"</td>
-      <td lang="en">≈ $18.4K run-rate by beta week 12 (MRR $1,537 — model [S008])</td>
-      <td lang="en">community trust in monetizing an MIT core + free-tier inference costs; mitigations: BYOK-free, opt-in cloud, honest pricing, stop thresholds</td>
+      <td lang="en"><b>B</b> · "Warn before the outage" <span style="color:var(--accent)">← chosen</span></td>
+      <td lang="en">a message to the organizer: a participant's low balance (~20% for 3 days) and an upcoming payment (a reminder to the payer; granular consents)</td>
+      <td lang="en"><b>+6.75M ₽</b> net → 285.8M (base case: 5,500 numbers × 3 mo − 1.5M); downside +1.5M → 280.5M</td>
+      <td lang="en">payment incrementality is unproven — shifts >30% in a 90-day window nullify the effect [C021]; consent conversion unknown [C019]</td>
     </tr>
     <tr>
-      <td lang="en"><b>C</b> · B2B white-label</td>
-      <td lang="en">hosting the resume builder under a partner's brand</td>
-      <td lang="en">$24–60K</td>
-      <td lang="en">a solo developer has no sales capability — deferred</td>
+      <td lang="en"><b>C</b> · "Family dashboard"</td>
+      <td lang="en">a family balance card + one-click data sharing</td>
+      <td lang="en">direct contribution not estimable: the pain is awareness, not UX [C005]</td>
+      <td lang="en">≥4–5 person-months — over the Q2 budget [C010]; the organizer learns of outages from loved ones anyway [C005]</td>
     </tr>
     <tr>
-      <td lang="en"><b>D</b> · dual-license</td>
-      <td lang="en">a paid commercial license on top of open source</td>
-      <td lang="en">$10–50K</td>
-      <td lang="en">doesn't hold up legally on top of MIT — rejected</td>
+      <td lang="en"><b>D</b> · "Never think about the router"</td>
+      <td lang="en">warnings for device numbers — device owners served first</td>
+      <td lang="en">contribution below B: a 40K base vs 100K [C004]</td>
+      <td lang="en">device-state integration needs vendor data [C006]; autopay already covers most cases [C020]</td>
     </tr>
     <tr>
-      <td lang="en"><b>E</b> · shut down commerce</td>
-      <td lang="en">the product stays a free OSS project</td>
-      <td>$0</td>
-      <td lang="en">walking away from an asset on a growing market ($1.2–2.4B, AI CAGR 13.1%)</td>
+      <td lang="en"><b>E</b> · shut the track down</td>
+      <td lang="en">do not fund the "loved ones" services in the planned year; revise goals with management</td>
+      <td>0 → 279 млн ₽</td>
+      <td lang="en">0 → 279M: goals missed knowingly; the 6M gap is reachable per the brief's formula [C003] — quitting without a pilot is premature</td>
     </tr>
   </table>
 </div></section>
@@ -433,160 +427,159 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   
   <h2 class="rv" lang="en">The agent's verdict: option B and its defense</h2>
   
-  <p class="lead rv d1" lang="en">The agent's recommendation isn't "the best option in general" — it's the best one under the director's constraints: the MIT core stays, solo resources, and trust in the local mode is preserved.</p>
+  <p class="lead rv d1" lang="en">The recommendation is not "the best option overall" but the best under the brief's constraints: existing data and mechanics [C005,C006], a 3 person-month budget [C010], a measurable fallback threshold. D moves to Q3–Q4; C is a candidate for B's second iteration.</p>
   <div class="trio">
     <div class="agent-card rv">
       
       <h3 lang="en">Option B — chosen</h3>
       
-      <p lang="en"><b>Hosted freemium SaaS, globally:</b> Free (BYOK — zero inference costs) / Pro $12 / Unlimited $29 tiers; opt-in cloud on top of the local MIT core.</p>
+      <p lang="en"><b>"Warn before the outage":</b> a timely message to the organizer — "participant N has ~20% balance left for 3 days" and "number M will be charged X on the 5th — send the payer a reminder". The data already exists at the operator [C005,C006]; only notifications + a consent UI are added [C009].</p>
       
-      <p lang="en">Honest pricing with no auto-renewals — positioned against competitors with subscription traps [C014].</p>
+      <p lang="en">The pilot starts by end of Q1: the lead decides by thresholds written before data; first effect estimates by end of Q2 [C013].</p>
       
-      <p lang="en">Locale waves EN → DE/ES/PT-BR → JA/ZH out of 19 ready-made; channels: Product Hunt, HN, SEO for "open-source Jobscan alternative".</p>
+      <p lang="en">Economics: base case +6.75M net → 285.8M ₽ (goal met with margin); downside +1.5M → 280.5M; "zero" and "minus" scenarios live in economics.py [C021].</p>
     </div>
     <div class="agent-card rv d1">
       
       <h3 lang="en">Red-team mitigations</h3>
       
-      <p lang="en"><b>BYOK-free tier</b> — free users bring their own keys; variable costs ≈ 0.</p>
+      <p lang="en"><b>Incrementality</b> — computed from payment dates against control, a 90-day cannibalization window; shifts >30% nullify the effect [C021].</p>
       
-      <p lang="en"><b>Opt-in cloud</b> — the local mode stays the default; first-community trust is preserved.</p>
+      <p lang="en"><b>Granular consents</b> — 3 separate ones (balance / payments / pay for me); "confirm" removed from the copy; withdrawal >15% is a stop metric [C009,C022].</p>
       
-      <p lang="en"><b>Honest pricing</b> — no auto-renewals or hidden charges.</p>
+      <p lang="en"><b>Cannibalization</b> — reactions logged separately (share GB / pay / nothing); contribution counts paid months only [C023].</p>
       
-      <p lang="en"><b>Stop thresholds</b> — if the community and the metrics turn against it, stop → option E.</p>
+      <p lang="en"><b>Channel precision</b> — precision ≥80%, ≤2 alerts/week, a quiet mode for new numbers, autopay status checked on send [C026].</p>
     </div>
     <div class="agent-card rv d2">
       
       <h3 lang="en">Conscious rejections</h3>
       
-      <p lang="en"><b>C — B2B white-label</b> ($24–60K ARR): no sales capability as a solo dev — deferred.</p>
+      <p lang="en"><b>C — "Family dashboard":</b> ≥4–5 person-months — over budget; a candidate for B's second iteration if the pilot shows a need for whole-family context.</p>
       
-      <p lang="en"><b>D — dual-license</b> ($10–50K): doesn't hold up legally on top of MIT — rejected.</p>
+      <p lang="en"><b>D — "Never think about the router":</b> moved to Q3–Q4 — device integration [C006], delays the family goal of 8,000 [C002].</p>
       
-      <p lang="en"><b>E — shut down commerce:</b> walking away from an asset on a growing market.</p>
+      <p lang="en"><b>E — shut the track down:</b> a consciouswaiving of the goal; legitimate only if management revises the goals.</p>
       
-      <p lang="en"><b>A — status quo:</b> "an expensive hobby" a fork could exploit.</p>
+      <p lang="en"><b>A — keep as is:</b> the −6M ₽ gap and last year's shortfall [C001] will likely worsen.</p>
     </div>
   </div>
   
   
-  <div class="note rv" lang="en"><b>Grounds of D001:</b> <b>C019</b> — The demo committee chose option B — hosted freemium SaaS globally; required mitigations: a BYOK free tier, opt-in cloud on a local core, honest pricing without auto-renewals, locale waves EN→DE/ES/PT-BR→JA/ZH; stop thresholds from the validation plan · <b>C013</b> — An unoccupied niche: a multilingual (19 locales) privacy-first open-source AI resume builder — western competitors cover EN+5 languages and run in the cloud · <b>C014</b> — Honest pricing (no auto-renewals) and open source are a working differentiator against competitors with aggressive auto-renewals, especially for a technical audience · <b>C016</b> — Unit assumptions of the demo model: paid tier $29/mo, variable costs (inference + infrastructure) 25%, CAC $60 (SEO / Product Hunt / communities), payer churn 8%/mo · <b>C005</b> — Resume-builder market: estimates range $1.2–2.4B (2024–2025); the AI sub-segment grows $1.3→1.47B at a 13.1% CAGR · <b>C006</b> — 7 direct competitors (Zety, resume.io, Novoresume, Kickresume, Enhancv, Teal, Rezi) run freemium with paid tiers of $8–40/mo and aggressive auto-renewals</div>
+  <div class="note rv" lang="en"><b>Grounds of D001:</b> <b>C013</b> — hypothesis: a pre-outage warning to the organizer cuts the share of numbers fully restricted due to exhaustion from 12% to 9% (−3 pp) — tested by the A/B pilot · <b>C016</b> — inference: the first customers are families — 100K available households vs 40K device owners; owners come in the second wave with the same warning mechanics · <b>C017</b> — inference: the first service is "warn before the outage": balance and payment data already exist at the operator, data-sharing mechanics exist — only notifications are added · <b>C003</b> — fact: ₽500 of gross profit per extra paid month; +₽6M requires 12,000 extra paid months · <b>C015</b> — inference: the +₽6M goal is reachable, e.g. 4,000 numbers × 3 months or 6,000 numbers × 2 months of extra retention · <b>C027</b> — inference: 600 groups — the intake per the brief's rate (~100/week × 6 weeks); sufficiency is checked by an MDE calculation before launch (power ≥80%, α=5%)</div>
   
-  <div class="note rv" lang="en"><b>Beta metric:</b> &gt;=40 paying users of the hosted beta (baseline: 0). Review triggers: paid &lt; 20 by week 12 with activation &lt; 35% -&gt; close the commercial track (option E) ; GitHub stars fall &gt; 30% after the cloud announcement -&gt; rework the opt-in communication</div>
+  <div class="note rv" lang="en"><b>Beta metric:</b> Primary metric: extra paid months per group (ITT); client outcome: exhaustion-driven restrictions 12%→9% (−3 pp). Review triggers: Consent withdrawal &gt;15% [C022] ; repeat charges ≥1 [C026] ; forecast precision &lt;80% [C026] ; intake pace &lt;50 groups/week for 2 straight weeks [C012] ; payment shifts &gt;30% (incrementality) [C021]</div>
 
-  <div class="note rv" lang="en"><b>Decision D001 — "Commercial version of CVStart: hosted freemium SaaS, globally".</b> Grounds: C019/C013/C014/C016/C005/C006. Commitment: a hosted beta in 3 EN geos by 2026-12-15. Review: 2027-02-10. Stop trigger → option E.</div>
+  <div class="note rv" lang="en"><b>Decision D001 — "Warn before the outage" (option B):</b> an A/B pilot on 600 family groups (6 weeks of intake + 14 days of observation, ITT, cluster randomization by family). Planned-year expansion only if the effect is ≥−3 pp on exhaustion-driven restrictions [C013]. Owners of several numbers — the second wave, Q3–Q4 [C016]. Review: 2027-04-30.</div>
 </div></section>
 
 <section id="econ"><div class="wrap">
   
-  <h2 class="rv" lang="en">The model's economics: paying-user unit math</h2>
+  <h2 class="rv" lang="en">Economics: from extra months to yearly profit</h2>
   
-  <p class="lead rv d1" lang="en">The paying-subscriber unit model on assumptions [C016]: ARPU $29/mo (the top Unlimited tier, with Pro at $12), variable costs (inference + infrastructure) at 25%, CAC $60 (SEO / Product Hunt / word of mouth). The Excel workbooks compute the same numbers with live formulas — change an "Input" cell and everything recalculates.</p>
-  <div class="wf-wrap rv d2"><svg class="wf-svg" viewBox="0 0 860 300" role="img" aria-label="CVStart paying-user economics">
-    <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
-    <g font-size="13">
-      <g class="bar-g"><rect x="40"  y="170" width="120" height="60"  rx="8" fill="url(#wg)" opacity=".9"/><text x="100" y="162" text-anchor="middle" fill="#eef2ff" font-weight="700">$29</text></g>
-      <g class="bar-g"><rect x="230" y="200" width="120" height="30" rx="8" fill="#f472b6" opacity=".75"/><text x="290" y="192" text-anchor="middle" fill="#f472b6" font-weight="700">−$7.25</text></g>
-      <g class="bar-g"><rect x="420" y="170" width="120" height="60" rx="8" fill="url(#wg)" opacity=".9"/><text x="480" y="162" text-anchor="middle" fill="#eef2ff" font-weight="700">$21.75</text></g>
-      <g class="bar-g"><rect x="610" y="80" width="120" height="150" rx="8" fill="#818cf8" opacity=".6"/><text x="670" y="72" text-anchor="middle" fill="#eef2ff" font-weight="700">$271.88</text></g>
-      <text x="100" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">payer ARPU / mo</tspan></text>
-      <text x="290" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">inference + infra ~25%</tspan></text>
-      <text x="480" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">payer contribution margin (CM)</tspan></text>
-      <text x="670" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">payer LTV (model)</tspan></text>
+  <p class="lead rv d1" lang="en">The decision boundary is set by the brief: ₽500 of gross profit per extra paid month [C003]. 12,000 months close the 6M ₽ gap; the target scenario — 5,500 numbers × 3 mo = 16,500 mo × ₽500 − 1.5M costs = <b>+6.75M ₽</b>.</p>
+<div class="wf-wrap rv d2"><svg class="wf-svg" viewBox="0 0 860 300" role="img" aria-label="Economics scenarios: planned-year profit contribution">
+    <g font-size="12.5">
+      <line x1="30" y1="150" x2="830" y2="150" stroke="rgba(214,210,204,.25)" stroke-dasharray="4 4"/>
+      <g class="bar-g"><rect x="60"  y="20" width="110" height="130" rx="8" fill="#EE8A3C" opacity=".95"/><text x="115" y="14" text-anchor="middle" fill="#F1EEE9" font-weight="700">+6,75</text></g>
+      <g class="bar-g"><rect x="215" y="65" width="110" height="85"  rx="8" fill="#EE8A3C" opacity=".6"/><text x="270" y="59" text-anchor="middle" fill="#F1EEE9" font-weight="700">+4,5</text></g>
+      <g class="bar-g"><rect x="370" y="122" width="110" height="28" rx="8" fill="#EE8A3C" opacity=".35"/><text x="425" y="116" text-anchor="middle" fill="#F1EEE9" font-weight="700">+1,5</text></g>
+      <g class="bar-g"><rect x="525" y="150" width="110" height="28" rx="8" fill="#E8B34B" opacity=".7"/><text x="580" y="192" text-anchor="middle" fill="#E8B34B" font-weight="700">−1,5</text></g>
+      <g class="bar-g"><rect x="680" y="150" width="110" height="66" rx="8" fill="#f472b6" opacity=".8"/><text x="735" y="230" text-anchor="middle" fill="#f472b6" font-weight="700">−3,5</text></g>
+      <text x="115" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">base case</tspan></text>
+      <text x="270" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">conservative</tspan></text>
+      <text x="425" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">downside</tspan></text>
+      <text x="580" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">"zero"</tspan></text>
+      <text x="735" y="252" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">"minus" with churn</tspan></text>
     </g>
     <g font-size="12.5">
-      <rect x="40" y="270" width="160" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="120" y="286" text-anchor="middle" fill="#2dd4bf"><tspan lang="en">LTV / CAC ≈ 4.53</tspan></text>
-      <rect x="212" y="270" width="185" height="24" rx="7" fill="rgba(232,179,75,.1)" stroke="rgba(232,179,75,.35)"/><text x="304" y="286" text-anchor="middle" fill="#818cf8"><tspan lang="en">CAC payback ≈ 2.8 mo</tspan></text>
-      <rect x="409" y="270" width="200" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="509" y="286" text-anchor="middle" fill="#f472b6"><tspan lang="en">break-even ≈ 69 payers</tspan></text>
-      <rect x="621" y="270" width="199" height="24" rx="7" fill="rgba(154,167,189,.08)" stroke="rgba(154,167,189,.3)"/><text x="720" y="286" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">assumptions tagged [C016]</tspan></text>
+      <rect x="30" y="268" width="180" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="120" y="284" text-anchor="middle" fill="#EE8A3C"><tspan lang="en">target ≥ 285M ₽</tspan></text>
+      <rect x="226" y="268" width="200" height="24" rx="7" fill="rgba(238,138,60,.1)" stroke="rgba(238,138,60,.35)"/><text x="326" y="284" text-anchor="middle" fill="#EE8A3C"><tspan lang="en">scale-up threshold −3 pp</tspan></text>
+      <rect x="442" y="268" width="240" height="24" rx="7" fill="rgba(232,179,75,.1)" stroke="rgba(232,179,75,.35)"/><text x="562" y="284" text-anchor="middle" fill="#E8B34B"><tspan lang="en">12,000 mo × ₽500 = +6M</tspan></text>
+      <rect x="698" y="268" width="132" height="24" rx="7" fill="rgba(154,167,189,.08)" stroke="rgba(154,167,189,.3)"/><text x="764" y="284" text-anchor="middle" fill="#9aa7bd"><tspan lang="en">model [C021]</tspan></text>
     </g>
   </svg></div>
   
-  <div class="note rv" lang="en">The beta expectation is a model, not a fact: the synthetic beta funnel (a method illustration [S008], seed=7, 12 weeks). The week-12 model fact [S008]: <b>32,603 visitors → 1,793 signups → 1,111 activations → 53 paying users</b> (MRR $1,537). The real beta is judged against the thresholds in the validation plan below.</div>
+  <div class="note rv" lang="en">The scenarios are a pre-data model, reproducible via analysis/economics.py in the demo project. The pilot decides the actual contribution: paid months only, a 90-day cannibalization window [C021,C023].</div>
 </div></section>
 
 <section id="sixpager"><div class="wrap">
   
   <h2 class="rv" lang="en">Six-pager excerpts: RU and EN</h2>
   
-  <p class="lead rv d1" lang="en">The committee report follows the <b>growth-strategy reference format</b>: numbered sub-items 1.1/1.2 and 2.1/2.2, driver initiatives, a tactic matrix, KPIs in two planes, and source footnotes. The draft is assembled by the <code>pfs export --six-pager</code> command, with details per the prompt spec in <code>knowledge/templates/SIX_PAGER_PROMPT.md</code>; numbers trace back to claims C###.</p>
+  <p class="lead rv d1" lang="en">The committee report follows the growth-strategy reference format: FAQ-1…6, calculations next to decisions, Excel appendices. Below is the gist of each section.</p>
   <div class="split2 rv d2">
-    
-    <div class="colcard" lang="en">
+
+<div class="colcard" lang="en">
       <h3>Six-pager — English</h3>
       <div class="faq6">
-        <div class="f6"><b>1.1</b><span><b>Market overview:</b> resume builders $1.2–2.4B (a range — aggregators diverge ×2, we use the conservative floor); AI segment CAGR 13.1%; trends: the ATS gate, subscription fatigue, GenAI as standard · <i>S004–S007</i></span></div>
-        <div class="f6"><b>1.2</b><span><b>Competitors (table):</b> Mass-market SaaS / ATS-specialists / OSS — advantages, growth strategies and promo mechanics, risks rated High–Medium–Low; the window — 2–3 quarters · <i>C005–C007</i></span></div>
-        <div class="f6"><b>2.1–2.2</b><span><b>Personas and barriers:</b> "Who they are / What they use today / Difficulties" tables across three segments + stage-by-stage barriers (search → selection → resume → post-payment) and "what blocks them from starting" · <i>C017/C018 — hypotheses, synthetic</i></span></div>
-        <div class="f6"><b>3.1–3.3</b><span><b>Drivers:</b> "The first driver — honest monetization" (BYOK-free), "The second driver — the vacancy → ATS-ready resume path", global coverage; step-by-step UE: CM = 29 × 0.75 = 21.75 → LTV 271.88 → LTV/CAC 4.53 → break-even 69 · <i>C016</i></span></div>
-        <div class="f6"><b>FAQ-4</b><span><b>Tactic matrix</b> "Initiative | Focus | Needs | Solutions": BYOK-free tier, a no-auto-renewal pricing page, CV Studio (JD tuning + ATS bullets), follow-up tracker, locale waves, OSS distribution</span></div>
-        <div class="f6"><b>FAQ-5–6</b><span><b>Plan &amp; KPIs:</b> initiative contribution 50/30/20%; timing to the January hiring peak; KPIs in two planes (business: MRR ≥ $1,500, LTV/CAC ≥ 3 · product: activation ≥ 50%, churn ≤ 10%); footnotes S001–S011 · <i>D001</i></span></div>
+        <div class="f6"><b>FAQ-1</b><span><b>Current state:</b> the goal is ≥285M ₽ vs "no change" 279; the gap is 6M = 12,000 mo × ₽500 [C003]; the base is 6,500 groups, 4,000 active [C001] · <i>S001</i></span></div>
+        <div class="f6"><b>FAQ-2</b><span><b>Audience:</b> family organizers (100K available) and number owners (40K) [C004]; the barrier — "they learn of outages from a loved one's request" [C005,C006]</span></div>
+        <div class="f6"><b>FAQ-3</b><span><b>Initiatives:</b> 5 options A–E on one axis; the recommendation B "Warn before the outage": +6.75M → 285.8M ₽ [C003,C021]; D — the second wave Q3–Q4 [C016]</span></div>
+        <div class="f6"><b>FAQ-4</b><span><b>Tactics:</b> a low-balance warning (~20% for 3 days), a payer reminder, 3 granular consents [C009,C022]; precision ≥80%, ≤2 alerts/week [C026]</span></div>
+        <div class="f6"><b>FAQ-5</b><span><b>Plan:</b> Q1 — start the 600-group pilot (decision by thresholds), Q2 — expand/change/observe; the year-3 benchmark ≥25% of the base [C004]</span></div>
+        <div class="f6"><b>FAQ-6</b><span><b>KPIs:</b> business — gross profit ≥285M ₽, extra months ≥15,000 [C003]; product — restrictions 12%→9% [C013], 8,000 active groups [C002]</span></div>
       </div>
     </div>
   </div>
   <div class="pbtn-row rv d3">
-    <a href="https://raw.githubusercontent.com/Fighter90/product-factory-strategist/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.pdf" target="_blank" rel="noopener" class="pbtn">SIX_PAGER_RU.pdf</a>
-    <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.docx" target="_blank" rel="noopener" class="pbtn ghost2">SIX_PAGER_RU.docx</a>
-    <a href="https://raw.githubusercontent.com/Fighter90/product-factory-strategist/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.pdf" target="_blank" rel="noopener" class="pbtn">SIX_PAGER_EN.pdf</a>
-    <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener" class="pbtn ghost2">SIX_PAGER_EN.docx</a>
-    <a href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER.md" target="_blank" rel="noopener" class="pbtn ghost2"><span lang="en">SIX_PAGER.md — generator draft</span></a>
-    <a href="materials.html?v=9" class="pbtn ghost2"><span lang="en">all formats and materials →</span></a>
+<a href="https://raw.githubusercontent.com/Fighter90/product-factory-strategist/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER.docx" target="_blank" rel="noopener" class="pbtn">SIX_PAGER.docx</a>
+    <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener" class="pbtn ghost2">SIX_PAGER_EN.docx</a>
+    <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER.md" target="_blank" rel="noopener" class="pbtn ghost2"><span lang="en">SIX_PAGER.md — the generator's draft</span></a>
+    <a href="materials.html?v=10" class="pbtn ghost2"><span lang="en">all formats and materials →</span></a>
   </div>
 </div></section>
 
 <section id="validation"><div class="wrap">
   
-  <h2 class="rv" lang="en">The validation plan: thresholds and counter-metrics</h2>
+  <h2 class="rv" lang="en">Validation plan: thresholds and counter-metrics</h2>
   
-  <p class="lead rv d1" lang="en">A 90-day hosted beta in 3 EN geos (US + EU). Expected by week 12: 50–60 paying users (model: 53), MRR ≥ $1,500, activation ≥ 50% of signups. Three thresholds decide the strategy's fate without new meetings.</p>
+  <p class="lead rv d1" lang="en">An A/B pilot on 600 family groups: 6 weeks of intake (≥100 newly eligible groups/week [C012]) + up to 14 days of observation. ITT: everyone included counts. Randomization by family — participants share the data plan.</p>
   <div class="trio">
     <div class="agent-card rv">
       
-      <h3 lang="en">Continue</h3>
-      <p><b>paid ≥ 40 · activation ≥ 50% · churn ≤ 10%</b></p>
+      <h3 lang="en">Expand</h3>
+      <p><b>эффект ≥ −3 п.п. · ложные <20% · повторные списания = 0</b></p>
       
-      <p lang="en">→ launch the DE/ES/PT-BR locale wave out of 19 ready-made.</p>
+      <p lang="en">→ expand the planned year: the 285M ₽ goal stands, device owners come in Q3–Q4.</p>
     </div>
     <div class="agent-card rv d1">
       
-      <h3 lang="en">Adjust</h3>
-      <p><b><span lang="en">paid 20–40 · paid &lt; 20 with activation ≥ 35%</span></b></p>
+      <h3 lang="en">Extend observation</h3>
+      <p><b><b lang="en">the effect lands in −1…−3 pp</b></b></p>
       
-      <p lang="en">→ rework the tier and pricing (the Free/Pro boundary, anchor $19?); the beta continues.</p>
+      <p lang="en">→ extend intake (pace <50/week for 2 straight weeks — narrow the question), the decision is postponed, a review date is fixed.</p>
     </div>
     <div class="agent-card rv d2">
       
       <h3 lang="en">Stop</h3>
-      <p><b lang="en">paid &lt; 20 with activation &lt; 35%</b></p>
+      <p><b lang="en">effect ≈0 · false alerts >20% · repeat charges ≥1</b></p>
       
-      <p lang="en">→ stop commerce, fall back to option E: the product stays free OSS.</p>
+      <p lang="en">→ the service is not expanded; a review with the billing system's owner [S001].</p>
     </div>
   </div>
   <div class="mgrid" style="margin-top:18px">
-    <div class="fact rv"><b lang="en">90 days</b><span lang="en">the hosted-beta window in 3 EN geos (US + EU)</span></div>
-    <div class="fact rv d1"><b>50–60</b><span lang="en">paying users by week 12 — the expectation (model: 53 [S008])</span></div>
-    <div class="fact rv d2"><b>≥ $1 500</b><span lang="en">MRR by week 12 · activation ≥ 50% of signups</span></div>
-    <div class="fact rv d3"><b>2026-12-15</b><span lang="en">the beta deadline 2026-12-15 · review on 2027-02-10</span></div>
+    <div class="fact rv"><b lang="en">600 groups</b><span lang="en">A/B pilot: 6 weeks of intake + 14 days of observation, ITT</span></div>
+    <div class="fact rv d1"><b>−3 п.п.</b><span lang="en">expansion threshold: exhaustion-driven restrictions 12% → 9% [C013]</span></div>
+    <div class="fact rv d2"><b>≥70%</b><span lang="en">the consent rate of enrolled groups — the scaling condition [C024]</span></div>
+    <div class="fact rv d3"><b>2027-04-30</b><span lang="en">decision approved 2026-11-19 · D001 review</span></div>
   </div>
   
-  <div class="note rv" lang="en">Counter-metrics: GitHub stars/forks must not decline; GDPR complaints — no more than 5; free-tier inference — no more than $200/mo; NPS — no lower than 30. Crossing any of these lines means revisiting decision D001 before its review date.</div>
+  <div class="note rv" lang="en">Counter-metrics: opt-outs >10% in 4 weeks; false alerts >20% of triggers — stop expansion; repeat charges ≥1 — stop disputed operations; consent rate <50% in the first 4 weeks — rework the invitation; support load rising — rework the copy [C019,C022,C024].</div>
 </div></section>
 
 <section id="artifacts"><div class="wrap">
   
   <h2 class="rv" lang="en">Artifacts of the run</h2>
   
-  <p class="lead rv d1" lang="en">Everything lives in the open repository: . The six-pager — in two languages and three formats; the full report — REPORT.md; the options analysis with red team — 03_options.md.</p>
+  <p class="lead rv d1" lang="en">Everything lives in the open repository: <code lang="en">projects/связь-для-близких-и-собственных-устройств/outputs/</code>. The key document is <b>BRIEF_RESPONSE.md</b> — the answer to the brief as a single five-part document, as the client requires; DEMO_README.md reads the package in 60 seconds.</p>
   <div class="cta rv">
-    <a class="btn primary" href="materials.html?v=9"><span lang="en">Demo materials: six-pager, Excel, sources →</span></a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.pdf" target="_blank" rel="noopener">SIX_PAGER_RU.pdf</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.pdf" target="_blank" rel="noopener">SIX_PAGER_EN.pdf</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_RU.docx" target="_blank" rel="noopener">SIX_PAGER_RU.docx</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener">SIX_PAGER_EN.docx</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/REPORT.md" target="_blank" rel="noopener">REPORT.md</a>
-    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist-agent/blob/main/projects/%D0%B4%D0%B5%D0%BC%D0%BE/outputs/03_options.md" target="_blank" rel="noopener">03_options.md</a>
+    <a class="btn primary" href="materials.html?v=10"><span lang="en">Demo materials: six-pager, Excel, sources →</span></a>
+<a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/BRIEF_RESPONSE.md" target="_blank" rel="noopener">BRIEF_RESPONSE.md</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER.docx" target="_blank" rel="noopener">SIX_PAGER.docx</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/SIX_PAGER_EN.docx" target="_blank" rel="noopener">SIX_PAGER_EN.docx</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/REPORT.md" target="_blank" rel="noopener">REPORT.md</a>
+    <a class="btn ghost" href="https://github.com/Fighter90/product-factory-strategist/blob/main/projects/%D1%81%D0%B2%D1%8F%D0%B7%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B1%D0%BB%D0%B8%D0%B7%D0%BA%D0%B8%D1%85-%D0%B8-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2/outputs/03_options.md" target="_blank" rel="noopener">03_options.md</a>
   </div>
 </div></section>
 
