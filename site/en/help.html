@@ -283,7 +283,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <a href="#h-phrases" lang="en">Control phrases</a>
     <a href="#h-quickstart" lang="en">Quick start</a>
     <a href="#h-first" lang="en">First project</a>
-    <a href="#h-demo" lang="en">CVStart demo ★</a>
+    <a href="#h-demo" lang="en">Connection for Loved Ones demo ★</a>
 
     <div class="cap" lang="en">Process</div>
     <a href="#h-workflow" lang="en">Cycle overview</a>
@@ -377,16 +377,16 @@ $ pfs new "Why is retention dropping" "the request verbatim"</pre>
       <p lang="en">Switch projects with <code>pfs use &lt;slug&gt;</code>, list them with <code>pfs list</code>, inspect state with <code>pfs status</code>.</p></div>
 
     
-    <div class="faq rv" id="h-demo"><h3 lang="en">CVStart demo: how it was made and what to look at</h3>
+    <div class="faq rv" id="h-demo"><h3 lang="en">Connection for Loved Ones demo: how it was made and what to look at</h3>
       
-      <p lang="en">A full end-to-end run on a live open-source product — <b>cvstart.org</b> (AI resume builder + job search: 129 job boards, AI scoring, 19 languages): 12 steps, 5 options, 20 red-team objections, both strategies, a six-pager in 6 formats (RU/EN × MD/PDF/DOCX, each with its language's screenshots), 4 Excel workbooks, decision D001, <b>check --strict 100/100</b>. Project: <code>projects/демо/</code>; interactive walkthrough: <a href="demo.html">demo.html</a>.</p>
+      <p lang="en">A complete end-to-end run on a client brief — <b>Connection for Loved Ones and personal devices</b> (services of a fictional mobile operator): 12 steps, 5 options, 20 red-team hits (15 objections + 5 hidden assumptions), both strategies, a six-pager in 4 formats (RU/EN × MD/DOCX), 4 Excel workbooks, decision D001 — a 600-group pilot, <b>check --strict: 0 errors, a 98/100 review</b>. Project: <code>projects/связь-для-близких-и-собственных-устройств/</code>; interactive walkthrough: <a href="demo.html">demo.html</a>.</p>
       
-      <p lang="en"><b>What to look at (in order):</b> 00_brief → 01_research_plan → 02_situation → 03_options (5 options + 20 red-team objections) → 04/05 (strategies) → 06_validation_plan (thresholds, 90 days) → REPORT.md and SIX_PAGER_RU / SIX_PAGER_EN in .md/.pdf/.docx; Excel in outputs/attachments/; product screenshots in outputs/img/ (19 locales); the action log is log.jsonl.</p>
+      <p lang="en"><b>What to look at (in order):</b> 00_brief → 01_research_plan → 02_situation → 03_options (5 options + 20 red-team hits) → 04/05 (strategies) → 06_validation_plan (pilot thresholds, ~8–10 weeks) → BRIEF_RESPONSE.md (the 5-part answer to the brief), REPORT.md and SIX_PAGER / SIX_PAGER_EN in .md/.docx; Excel in outputs/attachments/; the dashboard wireframe in sources/raw/; the step log is log.jsonl.</p>
       
       <p lang="en"><b>How to repeat:</b></p>
       
       
-      <p lang="en"><b>Compliance check:</b> the mandatory minimum (task · materials · research · ≥3 options with objections · both strategies · validation plan · workflow · knowledge order · continuation after a break · transparency) and the extra level (synthetic data · media · data · decisions · review · routing · subagents/hooks · MCP/CLI · robustness · portability · comparison with a chat) — all closed; the full mapping is in <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/README.md#демонстрационный-проект-cvstart--полный-разбор">README</a> and <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/docs/COMPLIANCE.md">docs/COMPLIANCE.md</a>.</p>
+      <p lang="en"><b>Compliance check:</b> the mandatory minimum (task · materials · research · ≥3 options with objections · both strategies · validation plan · workflow · knowledge order · continuation after a break · transparency) and the extra level (synthetic data · media · data · decisions · review · routing · subagents/hooks · MCP/CLI · robustness · portability · comparison with a chat) — all closed; the full mapping is in <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/README.md">README</a> and <a href="https://github.com/Fighter90/product-factory-strategist/blob/main/docs/COMPLIANCE.md">docs/COMPLIANCE.md</a>.</p>
       
       <p lang="en"><b>Mistakes along the way (honestly):</b> market estimates from aggregators diverge ×2 — recorded as ranges [S006]; source numbering shifted during re-registration — tags re-bound and re-checked with check --strict; some C### links drifted to neighbouring claims during migration — caught by a registry audit and fixed. The human helped at three pauses: brief, option choice, decision D001 approval.</p>
     </div>
@@ -422,7 +422,7 @@ $ pfs new "Why is retention dropping" "the request verbatim"</pre>
 
     <div class="faq rv" id="h-step6"><h3><span class="lbl" lang="en">step 7</span><span lang="en">Choice — human pause</span></h3>
       
-      <p lang="en"><b>Agent:</b> shows the option comparison (criteria, economics, risks) and a single recommendation, then asks — <code>pfs ask "Which option do we take?" --options "A,B,C"</code>. <b>Human:</b> <span class="pause">picks the option</span> — the answer is stored in state.json and grounds the strategies and the D### decision (like S011 in the CVStart demo). No strategies are written before the choice.</p></div>
+      <p lang="en"><b>Agent:</b> shows the option comparison (criteria, economics, risks) and a single recommendation, then asks — <code>pfs ask "Which option do we take?" --options "A,B,C"</code>. <b>Human:</b> <span class="pause">picks the option</span> — the answer is stored in state.json and grounds the strategies and the D### decision (as in the Connection for Loved Ones demo: option B "Warn before the outage" chosen). No strategies are written before the choice.</p></div>
 
     <div class="faq rv" id="h-step7"><h3><span class="lbl" lang="en">step 8</span><span lang="en">Strategies</span></h3>
       
