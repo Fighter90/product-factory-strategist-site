@@ -116,16 +116,9 @@ u("demo_page", "k023",
   'granular: balance / payments / pay on my behalf.</p>')
 
 # --- demo_page: обзор — видео и материалы -----------------------------------
-u("demo_page", "k024",
-  '<h2 class="rv" lang="ru">Обзор демо: видео и материалы прогона</h2>',
-  '<h2 class="rv" lang="en">Demo overview: run videos and materials</h2>')
-u("demo_page", "k025",
-  '<p class="lead rv d1" lang="ru">Видео-обзор прогона на русском и английском, вайрфрейм кабинета '
-  'семьи с предупреждениями (источник S004) и схема архитектуры агента. Всё смотрится прямо со '
-  'страницы.</p>',
-  '<p class="lead rv d1" lang="en">The run overview video in Russian and English, a wireframe of the '
-  'family dashboard with warnings (source S004), and the agent architecture diagram. Everything '
-  'plays right on the page.</p>')
+# PRO-133/правка руководителя: секция «Обзор демо» удалена со страницы демо (видео — на materials и главной)
+u("demo_page", "k024", "", "")
+u("demo_page", "k025", "", "")
 u("demo_page", "k026",
   '<span lang="ru">svyaz-overview — видео · RU · 4:20</span>',
   '<span lang="en">svyaz-overview — video · RU · 4:20</span>')
@@ -839,50 +832,8 @@ def demo_template_fixes() -> list:
             f'<p><a href="{GH}/tree/main/projects/{P}" target="_blank" rel="noopener">projects/{PROJ}</a> · <a href="{GH}" target="_blank" rel="noopener">github.com/Fighter90/product-factory-strategist</a></p>'),
         (f, '<a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click">',
             f'<a class="pill pill-a pill-sm" href="{GH}" data-goal="github_click">'),
-        # shоты → видео + 2 схемы (k034/k035 остаются в i18n, не используются)
-        (f, '''<div class="split rv d2">
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>{{demo.ru.k026}}{{demo.en.k026}}</span></div>
-      <div class="shot-crop"><img src="assets/cv_landing_ru.jpg?v=9" alt="Лендинг cvstart.org (русский): AI-конструктор резюме, скан ~129 джоб-бордов, AI-скоринг 0.0–5.0, 19 языков"></div>
-      <div class="shot-cap">{{demo.ru.k027}}{{demo.en.k027}}</div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>cvstart.org — landing · EN</span></div>
-      <div class="shot-crop"><img src="assets/cv_landing_en.jpg?v=9" alt="Лендинг cvstart.org (English): open-source AI resume builder, job-search dashboard, ATS bullets"></div>
-      <div class="shot-cap">{{demo.ru.k028}}{{demo.en.k028}}</div>
-    </div>
-  </div>
-  <div class="shots4 rv d3">
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>{{demo.ru.k029}}{{demo.en.k029}}</span></div>
-      <div class="shot-crop"><img src="assets/cv_dash_ru.jpg?v=9" alt="Дашборд поиска работы CVStart (русский): AI-скоринг вакансий против резюме"></div>
-      <div class="shot-cap">{{demo.ru.k030}}{{demo.en.k030}}</div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>cvstart.org — dashboard · EN</span></div>
-      <div class="shot-crop"><img src="assets/cv_dash_en.jpg?v=9" alt="Job-search dashboard CVStart (English): vacancy fit scoring against your resume"></div>
-      <div class="shot-cap">{{demo.ru.k031}}{{demo.en.k031}}</div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>{{demo.ru.k032}}{{demo.en.k032}}</span></div>
-      <div class="shot-crop"><img src="assets/cv_map_en.jpg?v=9" alt="Карта вакансий CVStart (English): job map"></div>
-      <div class="shot-cap">{{demo.ru.k033}}{{demo.en.k033}}</div>
-    </div>
-    <div class="shot-card">
-      <div class="shot-bar"><i></i><i></i><i></i><span>{{demo.ru.k034}}{{demo.en.k034}}</span></div>
-      <div class="shot-crop"><img src="assets/cv_tracker_en.jpg?v=9" alt="Трекер заявок CVStart (English): application tracker with follow-up"></div>
-      <div class="shot-cap">{{demo.ru.k035}}{{demo.en.k035}}</div>
-    </div>
-  </div>''',
-            f'''<div class="split rv d2">
-    {VIDEO_CARD_RU}
-    {VIDEO_CARD_EN}
-  </div>
-  <div class="split2 rv d3">
-    {FIG_CARD_STATUS}
-    {FIG_CARD_ARCH}
-  </div>'''),
-        # факты: источники в подписях карточек
+        # PRO-133: секция shots удалена из шаблона demo (пары замен не нужны)
+        # PRO-133: старая пара замен shots-блока удалена (секция удалена из шаблона)
         (f, '<div class="fact rv">{{demo.ru.k044}}{{demo.en.k044}}{{demo.ru.k045}}{{demo.en.k045}}<i>S006 · Wiseguy Reports → C005</i></div>',
             '<div class="fact rv">{{demo.ru.k044}}{{demo.en.k044}}{{demo.ru.k045}}{{demo.en.k045}}<i>S001 · бриф → C002</i></div>'),
         (f, '<div class="fact rv d2">{{demo.ru.k049}}{{demo.en.k049}}{{demo.ru.k050}}{{demo.en.k050}}<i>S004 · Rezi/Kickresume pricing → C006</i></div>',
