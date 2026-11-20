@@ -383,37 +383,37 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   <div class="wrap">
     <div class="head">
       <div class="label">Цепочка доказательств</div>
-      <h2 id="proof-h">Фрагменты реальной работы <span class="acc">демо-проекта «Связь для близких»</span></h2>
+      <h2 id="proof-h">Фрагменты реальной работы <span class="acc">демо-проекта CVStart</span></h2>
       <p>Ниже — настоящие данные из реестра демо-проекта: сессия, утверждение с источником и расчёт. Ничего не нарисовано «для красоты».</p>
     </div>
     <div class="proof">
       <div class="term" aria-label="Фрагмент сессии агента в демо-проекте">
         <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
-        <pre><span class="p">$</span> pfs new "Связь для близких и собственных устройств" "Ваша команда отвечает за услуги вымышленного мобильного оператора. Одни клиенты помогают близким со связью…"
+        <pre><span class="p">$</span> pfs new "CVStart: платная версия" "Разработать коммерческую версию cvstart.org и стратегию вывода на рынок"
 <span class="a">Шаг 1/12 · intake</span> · бриф подтверждён · дальше: sources
-<span class="a">Шаг 2/12 · sources</span> · 4 источника · 0 запрещённых доменов · дальше: research
-<span class="p">$</span> pfs claim add "500 ₽ валовой прибыли за доп. оплаченный месяц; +6 млн ₽ = 12 000 мес" --kind fact --source S001 --grade A
-<span class="hi">C003 · факт · сила A · цитата сохранена</span>
-<span class="a">Шаг 3/12 · research</span> · 26 утверждений в реестре · дальше: discovery
+<span class="a">Шаг 2/12 · sources</span> · 11 источников · 0 запрещённых доменов · дальше: research
+<span class="p">$</span> pfs claim add "Мировой рынок онлайн-рекрутинга: $37,97 млрд (2025), CAGR 7,1% до 2033" --kind fact --source S007 --grade B
+<span class="hi">C011 · факт · сила B · цитата сохранена</span>
+<span class="a">Шаг 3/12 · research</span> · 20 утверждений в реестре · дальше: discovery
 <span class="p">&gt;</span> стоп — пауза: состояние в файлах, новый чат продолжит с шага 3</pre>
       </div>
       <div class="proof-side">
         <div class="claim">
-          <div class="tags"><span class="tag a">C003 · факт</span><span class="tag">сила A</span><span class="tag">источник S001</span></div>
-          <p>Учебная ставка: 500 руб. валовой прибыли за один дополнительный оплаченный месяц одного номера; для прибавки 6 млн руб. без новых прямых расходов нужно 12 000 доп. оплаченных месяцев</p>
+          <div class="tags"><span class="tag a">C011 · факт</span><span class="tag">сила B</span><span class="tag">источник S007</span></div>
+          <p>Мировой рынок онлайн-рекрутинга: $37,97 млрд (2025), CAGR 7,1% до 2033; Indeed — 60+ стран, 28 языков, 685 млн профилей; Bayt (MENA) — 59+ млн профилей</p>
           <div class="chain">
-            <span class="chip a"><em>C003</em> · факт · сила A</span><span aria-hidden="true" class="muted">→</span>
-            <span class="chip"><em>S001</em> · бриф заказчика · 2026-11-19</span><span aria-hidden="true" class="muted">→</span>
-            <span class="chip">six-pager · FAQ-1 · Анализ текущего состояния</span>
+            <span class="chip a"><em>C011</em> · факт · сила B</span><span aria-hidden="true" class="muted">→</span>
+            <span class="chip"><em>S007</em> · skyquestt.com · 2026-11-06</span><span aria-hidden="true" class="muted">→</span>
+            <span class="chip">six-pager · FAQ-3 · Стратегические инициативы</span>
           </div>
         </div>
         <div class="xl">
-          <div class="label" style="margin-bottom:10px">Excel · unit-econ</div>
+          <div class="label" style="margin-bottom:10px">Excel · лист «Ввод»</div>
           <table>
-            <tr><td>Ставка за доп. оплаченный месяц</td><td>500 ₽</td></tr>
-            <tr><td>Нужно месяцев (разрыв 6 млн ₽)</td><td>12 000</td></tr>
-            <tr><td>Осн. ход: 5 500 × 3 мес − 1,5 млн</td><td>+6,75 млн ₽</td></tr>
-            <tr><td>Итог года (осн. ход)</td><td>285,8 млн ₽</td></tr>
+            <tr><td>Цена Pro</td><td>$29/мес</td></tr>
+            <tr><td>Переменные 25% → вклад на покрытие</td><td>$21,75</td></tr>
+            <tr><td>LTV</td><td>≈ $272</td></tr>
+            <tr><td>LTV / CAC</td><td>≈ 4,5</td></tr>
           </table>
           <p class="muted" style="margin:10px 0 0;font-size:13px">Значения можно поменять — формулы пересчитаются.</p>
         </div>
@@ -426,19 +426,19 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   <div class="wrap demo">
     <div class="head" style="margin:0">
       <div class="label">Демо-проект</div>
-      <h2 id="demo-h">«Связь для близких»: <span class="acc">предупреждение до перебоя</span></h2>
-      <p>Задача руководителя дословно: «Ваша команда отвечает за услуги вымышленного мобильного оператора. Одни клиенты помогают близким со связью. Другие обслуживают несколько собственных номеров…» Числа — из проекта, не руками.</p>
+      <h2 id="demo-h">CVStart: <span class="acc">платная версия</span> и выход на рынок</h2>
+      <p>Задача руководителя дословно: «Разработать коммерческую версию cvstart.org и стратегию вывода на рынок на весь мир». Числа — из проекта, не руками.</p>
       <div><a class="pill pill-b pill-sm" href="demo.html" data-goal="cta_demo_click">Открыть разбор<span class="arr"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div>
     </div>
     <div>
-      <!-- числа подставляет scripts/build_svyaz.py из проекта «Связь для близких» -->
+      <!-- числа подставляет scripts/build_site.py из projects/demo -->
       <dl class="stats">
-        <div><dt><span>источников</span></dt><dd style="margin:0"><b>4</b></dd></div>
-        <div><dt><span>утверждений, из них факты — 10</span></dt><dd style="margin:0"><b>26</b></dd></div>
-        <div><dt><span>вариантов A–E, включая «закрыть»</span></dt><dd style="margin:0"><b>A–E</b></dd></div>
+        <div><dt><span>источников</span></dt><dd style="margin:0"><b>11</b></dd></div>
+        <div><dt><span>утверждений, из них факты — 12</span></dt><dd style="margin:0"><b>20</b></dd></div>
+        <div><dt><span>вариантов A–E, со статус-кво и закрытием</span></dt><dd style="margin:0"><b>A–E</b></dd></div>
         <div><dt><span>возражений и скрытых допущений red team</span></dt><dd style="margin:0"><b>15 + 5</b></dd></div>
-        <div><dt><span>выбор: «Предупреждение до перебоя»</span></dt><dd style="margin:0"><b>B</b></dd></div>
-        <div><dt><span>пересмотр решения D001</span></dt><dd style="margin:0"><b>2027-04-30</b></dd></div>
+        <div><dt><span>выбор: Hosted freemium SaaS</span></dt><dd style="margin:0"><b>B</b></dd></div>
+        <div><dt><span>пересмотр решения D001</span></dt><dd style="margin:0"><b>2027-02-10</b></dd></div>
       </dl>
     </div>
   </div>
@@ -449,7 +449,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
     <div class="head" style="margin:0 auto 48px;text-align:center;align-items:center">
       <div class="label">Архитектура</div>
       <h2 id="arch-h">Гарантии — не в промптах, <span class="acc">а в коде и файлах</span></h2>
-      <p>Автотесты CLI (937) проверяют ядро после каждого изменения. Состояние проекта лежит в файлах рядом с кодом — работа переживает перерыв и переезд между средами.</p>
+      <p>Автотесты CLI (969) проверяют ядро после каждого изменения. Состояние проекта лежит в файлах рядом с кодом — работа переживает перерыв и переезд между средами.</p>
     </div>
     <div class="stack">
       <div class="layer"><span class="n">1</span><div><b>Среда · AGENTS.md</b><small>правила: источник у каждого числа, синтетика — только гипотезы, существенное решает человек · навыков: 102 · субагентов: 10 · хуков: 6</small></div></div>
