@@ -1142,7 +1142,7 @@ def index_fixes() -> list:
           <p class="muted" style="margin:10px 0 0;font-size:13px">Значения можно поменять — формулы пересчитаются.</p>
         </div>'''),
         (ru, '<h2 id="demo-h">CVStart: <span class="acc">платная версия</span> и выход на рынок</h2>',
-            '<h2 id="demo-h">«Связь для близких»: <span class="acc">предупреждение до перебоя</span></h2>'),
+            '<h2 id="demo-h">Демо-разбор: «Связь для близких» — <span class="acc">предупреждение до перебоя</span></h2>'),
         (ru, '<p>Задача руководителя дословно: «Разработать коммерческую версию cvstart.org и стратегию вывода на рынок на весь мир». Числа — из проекта, не руками.</p>',
             f'<p>Задача руководителя дословно: {quote_ru} Числа — из проекта, не руками.</p>'),
         (ru, '''      <dl class="stats">
@@ -1219,7 +1219,7 @@ def index_fixes() -> list:
           <p class="muted" style="margin:10px 0 0;font-size:13px">Change the inputs and the formulas recalculate.</p>
         </div>'''),
         (en, '<h2 id="demo-h">CVStart: <span class="acc">a paid version</span> and a go-to-market plan</h2>',
-            '<h2 id="demo-h">Connection for Loved Ones: <span class="acc">warn before the outage</span></h2>'),
+            '<h2 id="demo-h">Demo walkthrough: <span class="acc">Connection for Loved Ones</span> — warn before the outage</h2>'),
         (en, '<p>The product lead’s request, word for word: “Build a commercial version of cvstart.org and a strategy to take it to market worldwide.” Numbers come from the project, not from hands.</p>',
             '<p>The product lead’s request, word for word: “Your team runs the services of a fictional mobile operator. Some customers help loved ones stay connected. Others manage several numbers of their own…” Numbers come from the project, not from hands.</p>'),
         (en, '''      <dl class="stats">
