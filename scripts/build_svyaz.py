@@ -755,7 +755,7 @@ VIDEO_CARD_EN = (
 FIG_CARD_STATUS = (
     '<div class="shot-card">\n'
     '      <div class="shot-bar"><i></i><i></i><i></i><span>{{demo.ru.k030}}{{demo.en.k030}}</span></div>\n'
-    '      <div class="shot-crop"><img src="assets/svyaz-screenshot-status.png?v=10" alt="Вайрфрейм кабинета семьи с предупреждениями: низкий остаток участника и предстоящий платёж (S004)"></div>\n'
+    '      <div class="shot-crop"><img src="assets/svyaz-screenshot-status.png?v=10" alt="{{demo.ru.k130}}{{demo.en.k130}}"></div>\n'
     '      {{demo.ru.k031}}\n'
     '      {{demo.en.k031}}\n'
     '    </div>'
@@ -763,7 +763,7 @@ FIG_CARD_STATUS = (
 FIG_CARD_ARCH = (
     '<div class="shot-card">\n'
     '      <div class="shot-bar"><i></i><i></i><i></i><span>{{demo.ru.k032}}{{demo.en.k032}}</span></div>\n'
-    '      <div class="shot-crop"><img src="assets/svyaz-architecture.png?v=10" alt="Схема архитектуры агента: ядро pfs, реестры источников/утверждений/решений, знания и субагенты"></div>\n'
+    '      <div class="shot-crop"><img src="assets/svyaz-architecture.png?v=10" alt="{{demo.ru.k131}}{{demo.en.k131}}"></div>\n'
     '      {{demo.ru.k033}}\n'
     '      {{demo.en.k033}}\n'
     '    </div>'
@@ -834,7 +834,7 @@ def demo_template_fixes() -> list:
         (f, '<span class="chip"><b>100/100</b> check --strict</span>',
             '<span class="chip"><b>98/100</b> review · check --strict: 0</span>'),
         (f, '<div><div class="cv-name">CV<em>Start</em></div><div class="cv-tag">open-source AI resume builder · cvstart.org</div></div>',
-            '<div><div class="cv-name">Связь<em> для близких</em></div><div class="cv-tag">учебный бриф: услуги мобильного оператора</div></div>'),
+            '<div><div class="cv-name">{{demo.ru.k134}}{{demo.en.k134}}</div><div class="cv-tag">{{demo.ru.k135}}{{demo.en.k135}}</div></div>'),
         (f, '<p><a href="https://cvstart.org/" target="_blank" rel="noopener">cvstart.org</a> · <a href="https://github.com/Fighter90/career-ops-ui" target="_blank" rel="noopener">github.com/Fighter90/career-ops-ui</a></p>',
             f'<p><a href="{GH}/tree/main/projects/{P}" target="_blank" rel="noopener">projects/{PROJ}</a> · <a href="{GH}" target="_blank" rel="noopener">github.com/Fighter90/product-factory-strategist</a></p>'),
         (f, '<a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click">',
@@ -886,7 +886,7 @@ def demo_template_fixes() -> list:
         (f, '<div class="fact rv">{{demo.ru.k044}}{{demo.en.k044}}{{demo.ru.k045}}{{demo.en.k045}}<i>S006 · Wiseguy Reports → C005</i></div>',
             '<div class="fact rv">{{demo.ru.k044}}{{demo.en.k044}}{{demo.ru.k045}}{{demo.en.k045}}<i>S001 · бриф → C002</i></div>'),
         (f, '<div class="fact rv d2">{{demo.ru.k049}}{{demo.en.k049}}{{demo.ru.k050}}{{demo.en.k050}}<i>S004 · Rezi/Kickresume pricing → C006</i></div>',
-            '<div class="fact rv d2">{{demo.ru.k049}}{{demo.en.k049}}{{demo.ru.k050}}{{demo.en.k050}}<i>S001 · бриф → C013 (гипотеза)</i></div>'),
+            '<div class="fact rv d2">{{demo.ru.k049}}{{demo.en.k049}}{{demo.ru.k050}}{{demo.en.k050}}<i>{{demo.ru.k133}}{{demo.en.k133}}</i></div>'),
         (f, '<div class="fact rv d3"><b>98%</b>{{demo.ru.k051}}{{demo.en.k051}}<i>S007 · SkyQuest/Jobscan → C008</i></div>',
             '<div class="fact rv d3"><b>100 тыс.</b>{{demo.ru.k051}}{{demo.en.k051}}<i>S001 · бриф → C004</i></div>'),
         (f, '<div class="fact rv"><b>31–74%</b>{{demo.ru.k052}}{{demo.en.k052}}<i>S005 · Kickresume Press → C009</i></div>',
@@ -971,7 +971,7 @@ def demo_template_fixes() -> list:
         sixpager_links_new),
         # план проверки: пороги
         (f, '      <p><b>paid ≥ {{PAID_TARGET}} · activation ≥ {{ACT_TARGET}}% · churn ≤ {{CHURN_MAX}}%</b></p>',
-            '      <p><b>эффект ≥ −3 п.п. · ложные <20% · повторные списания = 0</b></p>'),
+            '      <p><b>{{demo.ru.k132}}{{demo.en.k132}}</b></p>'),
         (f, '<div class="mgrid" style="margin-top:18px">\n    <div class="fact rv">{{demo.ru.k114}}{{demo.en.k114}}{{demo.ru.k115}}{{demo.en.k115}}</div>\n    <div class="fact rv d1"><b>{{TARGET_LO}}–{{TARGET_HI}}</b>{{demo.ru.k116}}{{demo.en.k116}}</div>\n    <div class="fact rv d2"><b>≥ $1 500</b>{{demo.ru.k117}}{{demo.en.k117}}</div>\n    <div class="fact rv d3"><b>2026-12-15</b>{{demo.ru.k118}}{{demo.en.k118}}</div>\n  </div>',
             '<div class="mgrid" style="margin-top:18px">\n    <div class="fact rv">{{demo.ru.k114}}{{demo.en.k114}}{{demo.ru.k115}}{{demo.en.k115}}</div>\n    <div class="fact rv d1"><b>−3 п.п.</b>{{demo.ru.k116}}{{demo.en.k116}}</div>\n    <div class="fact rv d2"><b>≥70%</b>{{demo.ru.k117}}{{demo.en.k117}}</div>\n    <div class="fact rv d3"><b>2027-04-30</b>{{demo.ru.k118}}{{demo.en.k118}}</div>\n  </div>'),
         # артефакты: ссылки на новое демо
@@ -998,7 +998,10 @@ def materials_template_fixes() -> list:
     m_fig2 = FIG_CARD_ARCH.replace("{{demo.", "{{materials.")
     shots_block_new = ('  <div class="shot-grid rv d2">\n    ' + m_video_ru + '\n    ' + m_video_en +
                        '\n    ' + m_fig1 + '\n    ' + m_fig2 + '\n  </div>')
-    return [
+    fixes = []
+    tmpl = (ROOT / "site_src" / "materials.html").read_text(encoding="utf-8")
+    if 'assets/cv_landing_ru.jpg' in tmpl:  # PRO-133: замена уже применена — не повторять
+        fixes.append(
         (f, '''  <div class="shot-grid rv d2">
     <div class="shot-card">
       <div class="shot-bar"><i></i><i></i><i></i><span>{{materials.ru.k042}}{{materials.en.k042}}</span></div>
@@ -1036,8 +1039,9 @@ def materials_template_fixes() -> list:
       {{materials.ru.k053}}
       {{materials.en.k053}}
     </div>
-  </div>''', shots_block_new),
+  </div>''', shots_block_new))
         # поток доказательств: подписи узлов
+    fixes.extend([
         (f, '<text x="60" y="106" fill="#9aa7bd" font-weight="400"><tspan lang="ru">{{SOURCES_COUNT}} · сайт + дайджесты</tspan><tspan lang="en">{{SOURCES_COUNT}} · site + digests</tspan></text>',
             '<text x="60" y="106" fill="#9aa7bd" font-weight="400"><tspan lang="ru">{{SOURCES_COUNT}} · бриф, синтетика, вайрфрейм</tspan><tspan lang="en">{{SOURCES_COUNT}} · brief, synthetic, wireframe</tspan></text>'),
         (f, '<text x="945" y="22" fill="#9aa7bd" font-weight="400">check 100/100</text>',
@@ -1067,7 +1071,8 @@ def materials_template_fixes() -> list:
             f'<div class="pdf-btns"><a href="{GH_BLOB}/projects/{P}/outputs/BRIEF_RESPONSE.md" target="_blank" rel="noopener" class="pbtn">{{{{materials.ru.k074}}}}{{{{materials.en.k074}}}}</a></div>'),
         # k043/k045/k047/k049/k051/k053 больше не нужны (слоты заняты видео/схемами) —
         # i18n-ключи перезаписаны, здесь шаблон чист.
-    ]
+    ])
+    return fixes
 
 def help_template_fixes() -> list:
     return []

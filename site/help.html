@@ -248,7 +248,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
       </a>
       <nav class="links" lang="ru" aria-label="Разделы"><a href="index.html">Главная</a><a href="demo.html">Демо</a><a href="help.html">Справка</a><a href="materials.html">Материалы</a></nav>
       
-      <div class="lang" role="group" aria-label="Язык / Language"><a href="help.html" class="on" aria-current="true">RU</a><a href="en/help.html" hreflang="en" data-goal="lang_switch">EN</a></div>
+      <div class="lang" role="group" aria-label="Язык"><a href="help.html" class="on" aria-current="true">RU</a><a href="en/help.html" hreflang="en" data-goal="lang_switch">EN</a></div>
       <a class="pill pill-a pill-sm" href="https://github.com/Fighter90/product-factory-strategist-agent" data-goal="github_click"><span lang="ru">Репозиторий</span></a>
       <details class="mlink">
         <summary aria-label="Меню"><span class="b" aria-hidden="true"></span></summary>
@@ -272,7 +272,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}fo
   
   <div class="meta" lang="ru">12 шагов · 111 карт знаний (RU + EN-индекс) · 102 навыков · 10 субагентов · 6 хуков · 18 MCP-инструментов · 0 зависимостей</div>
   
-  <div class="search"><input id="q" type="search" placeholder="Поиск по справке… / Search the help…" aria-label="Поиск по справке / Search the help"></div>
+  <div class="search"><input id="q" type="search" placeholder="Поиск по справке…" aria-label="Поиск по справке"></div>
 </div></div>
 
 <div class="wrap"><div class="layout">
@@ -645,14 +645,14 @@ requestAnimationFrame(frame);
 
 const io = new IntersectionObserver(() => {});
 
-// scrollspy сайдбара
+// sidebar scrollspy
 const sio = new IntersectionObserver(es => es.forEach(e => {
   const l = document.querySelector('.side a[href="#' + e.target.id + '"]');
   if (l) l.classList.toggle('on', e.isIntersecting);
 }), {rootMargin:'-25% 0px -65% 0px'});
 document.querySelectorAll('.faq[id]').forEach(s => sio.observe(s));
 
-// поиск-фильтр по всем блокам
+// search filter across all blocks
 (function(){
   const q = document.getElementById('q');
   if (!q) return;

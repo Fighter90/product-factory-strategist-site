@@ -130,7 +130,13 @@
     "k125": "<span lang=\"en\">← Landing page</span>",
     "k126": "<span lang=\"en\">Help</span>",
     "lead": "<p class=\"sub\" lang=\"en\">An end-to-end run on a client brief — services of a fictional mobile operator for family groups and owners of several numbers. Below: the task itself, 12 steps, the evidence base, 5 options with a red team, and the decision with a pilot.</p>",
-    "k127": "<b lang=\"en\">the effect lands in −1…−3 pp</b>"
+    "k127": "<b lang=\"en\">the effect lands in −1…−3 pp</b>",
+    "k130": "Wireframe of the family dashboard with alerts: a low member balance and an upcoming charge (S004)",
+    "k131": "Agent architecture: the pfs core, source/claim/decision registries, knowledge and subagents",
+    "k132": "effect ≥ −3 pp · false alerts <20% · double charges = 0",
+    "k133": "S001 · brief → C013 (hypothesis)",
+    "k134": "Connection<em> for Loved Ones</em>",
+    "k135": "a training brief: mobile carrier services"
   },
   "help_page": {
     "title": "Help — Product Factory Strategist",
@@ -417,7 +423,9 @@
     "k080": "<a href=\"index.html\" lang=\"en\">← Landing page</a>",
     "k081": "<a href=\"demo.html?v=10\" lang=\"en\">Demo</a>",
     "k082": "<a href=\"help.html?v=10\" lang=\"en\">Help</a>",
-    "lead": "<p class=\"sub\" lang=\"en\">Demo project materials: the committee six-pager in two languages and three formats, four Excel models with live formulas, product screenshots and a complete evidence base. Everything lives in the repository: <code>projects/демо/</code>.</p>"
+    "lead": "<p class=\"sub\" lang=\"en\">Demo project materials: the committee six-pager in two languages and three formats, four Excel models with live formulas, product screenshots and a complete evidence base. Everything lives in the repository: <code>projects/демо/</code>.</p>",
+    "k130": "Agent architecture: the pfs core, source/claim/decision registries, knowledge and subagents",
+    "k131": "Wireframe of the family dashboard with alerts: a low member balance and an upcoming charge (S004)"
   },
   "ui": {
     "aria_lang": "Language",
@@ -425,7 +433,12 @@
     "aria_econ": "Economics scenarios: planned-year profit contribution",
     "copy": "Copy",
     "copy_ok": "Copied",
-    "search_ph": "Search the help…"
+    "search_ph": "Search the help…",
+    "brand_aria": "Product Factory Strategist",
+    "menu_aria": "Menu",
+    "lang_aria": "Language",
+    "search_aria": "Search the help",
+    "side_aria": "Help sections"
   },
   "demo_data_en": {
     "claims": {
